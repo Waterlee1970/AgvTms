@@ -1,0 +1,107 @@
+
+> agv-tms-frontend@1.0.0 dev
+> vite
+
+
+  [32m[1mVITE[22m v5.4.21[39m  [2mready in [0m[1m425[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m3000[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m18:30:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/agv/status[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/tasks[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/agv/status[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/tasks[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:36[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/agv/status[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:36[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/tasks[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:36[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:41[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/agv/status[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:41[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/tasks[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:41[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:46[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/agv/status[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:46[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/tasks[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:46[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:51[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/agv/status[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:51[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/tasks[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:51[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:56[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/agv/status[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:56[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/tasks[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:30:56[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:45:40[22m [36m[1m[vite][22m[39m [32mvite.config.ts changed, restarting server...[39m
+[2m18:45:40[22m [36m[1m[vite][22m[39m server restarted.
+[2m18:45:41[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/algorithm/config[39m
+Error: connect ECONNREFUSED ::1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:45:41[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/algorithm/config[39m
+Error: connect ECONNREFUSED ::1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:45:45[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/algorithm/config[39m
+Error: connect ECONNREFUSED ::1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:45:45[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/algorithm/config[39m
+Error: connect ECONNREFUSED ::1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:49:08[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/algorithm/config[39m
+Error: connect ECONNREFUSED ::1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:49:08[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/algorithm/config[39m
+Error: connect ECONNREFUSED ::1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:51:24[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/algorithm/config[39m
+Error: connect ECONNREFUSED ::1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:51:24[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/algorithm/config[39m
+Error: connect ECONNREFUSED ::1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:52:34[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/algorithm/config[39m
+Error: connect ECONNREFUSED ::1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:52:34[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/algorithm/config[39m
+Error: connect ECONNREFUSED ::1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+[2m18:53:52[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/C:/codex/AgvTms/frontend/src/App.tsx[22m
+
+c:\codex\AgvTms\frontend>
