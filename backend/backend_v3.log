@@ -1,0 +1,559 @@
+
+╔══════════════════════════════════════════════════════════╗
+║         AGV-TMS 柔性物流调度系统 v1.0.0                    ║
+║                                                          ║
+║  算法引擎: 蚁群算法(ACO) + 模拟退火(SA) + 非线性规划(NLP)  ║
+║  API 文档: http://0.0.0.0:8000/docs                ║
+║  WebSocket: ws://0.0.0.0:8000/ws/schedule/live    ║
+╚══════════════════════════════════════════════════════════╝
+    
+INFO:     Started server process [32408]
+INFO:     Waiting for application startup.
+2026-06-18 15:41:41,733 [INFO] app.main: \U0001f680 Starting AGV-TMS v1.0.0
+2026-06-18 15:41:41,733 [INFO] app.main: \u2705 Application ready
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:50246 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50247 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50248 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50259 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50260 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50261 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50269 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50271 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50272 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50273 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50283 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50284 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50285 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50301 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50302 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50303 - "GET /api/metrics HTTP/1.1" 200 OK
+2026-06-18 15:42:06,651 [INFO] app.algorithms.v2.traffic_control.zone_controller: Auto-discovered 57 traffic zones (36 intersections, 1 corridors, 16 work zones)
+2026-06-18 15:42:06,651 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Orchestrator initialized: 62 nodes, 171 edges, 57 traffic zones
+2026-06-18 15:42:06,765 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Strategic] 100 tasks → 15 AGVs (114.0ms, status=OPTIMAL)
+2026-06-18 15:42:06,768 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Operational] 15 paths planned (3.2ms)
+2026-06-18 15:42:06,768 [WARNING] app.algorithms.v2.traffic_control.zone_controller: Deadlock resolved: preempted AGV001
+2026-06-18 15:42:06,769 [WARNING] app.algorithms.v2.hybrid_orchestrator.orchestrator: Safety issues: ['Deadlock detected, preempted AGV001']
+2026-06-18 15:42:06,769 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Scheduling complete: 15 assignments, makespan=93.9s, runtime=118ms
+2026-06-18 15:42:06,769 [INFO] app.services.schedule_service: V2 scheduling: 15 assignments, 118.3ms
+INFO:     127.0.0.1:50304 - "POST /api/v2/schedule/run HTTP/1.1" 200 OK
+C:\Users\Administrator\.workbuddy\binaries\python\versions\3.11.9\Lib\site-packages\pydantic\type_adapter.py:607: UserWarning: Pydantic serializer warnings:
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  return self.serializer.to_python(
+INFO:     127.0.0.1:50309 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50311 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50312 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50320 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50321 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50322 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50332 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50333 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50334 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50341 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50342 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50343 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50347 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50348 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50349 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50354 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50355 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50356 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50361 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50362 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50363 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50368 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50369 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50370 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50374 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50375 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50376 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50381 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50382 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50383 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50386 - "GET /api/map/graph HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50388 - "GET /api/map/graph HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50396 - "GET /api/map/graph HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50397 - "GET /api/map/graph HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50398 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50399 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50400 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50401 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50404 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50405 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50413 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50414 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50415 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50416 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50417 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50418 - "GET /api/metrics HTTP/1.1" 200 OK
+2026-06-18 15:42:57,053 [INFO] app.algorithms.v2.traffic_control.zone_controller: Auto-discovered 57 traffic zones (36 intersections, 1 corridors, 16 work zones)
+2026-06-18 15:42:57,053 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Orchestrator initialized: 62 nodes, 171 edges, 57 traffic zones
+2026-06-18 15:42:57,175 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Strategic] 100 tasks → 15 AGVs (121.6ms, status=OPTIMAL)
+2026-06-18 15:42:57,178 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Operational] 15 paths planned (3.2ms)
+2026-06-18 15:42:57,178 [WARNING] app.algorithms.v2.traffic_control.zone_controller: Deadlock resolved: preempted AGV001
+2026-06-18 15:42:57,178 [WARNING] app.algorithms.v2.hybrid_orchestrator.orchestrator: Safety issues: ['Deadlock detected, preempted AGV001']
+2026-06-18 15:42:57,178 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Scheduling complete: 15 assignments, makespan=93.9s, runtime=126ms
+2026-06-18 15:42:57,178 [INFO] app.services.schedule_service: V2 scheduling: 15 assignments, 125.9ms
+INFO:     127.0.0.1:50420 - "POST /api/schedule/run HTTP/1.1" 200 OK
+2026-06-18 15:43:00,662 [INFO] app.algorithms.v2.traffic_control.zone_controller: Auto-discovered 57 traffic zones (36 intersections, 1 corridors, 16 work zones)
+2026-06-18 15:43:00,662 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Orchestrator initialized: 62 nodes, 171 edges, 57 traffic zones
+2026-06-18 15:43:00,776 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Strategic] 100 tasks → 15 AGVs (114.2ms, status=OPTIMAL)
+2026-06-18 15:43:00,779 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Operational] 15 paths planned (3.1ms)
+2026-06-18 15:43:00,779 [WARNING] app.algorithms.v2.traffic_control.zone_controller: Deadlock resolved: preempted AGV001
+2026-06-18 15:43:00,779 [WARNING] app.algorithms.v2.hybrid_orchestrator.orchestrator: Safety issues: ['Deadlock detected, preempted AGV001']
+2026-06-18 15:43:00,780 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Scheduling complete: 15 assignments, makespan=93.9s, runtime=118ms
+2026-06-18 15:43:00,780 [INFO] app.services.schedule_service: V2 scheduling: 15 assignments, 118.5ms
+INFO:     127.0.0.1:50423 - "POST /api/schedule/run HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50426 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50428 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50429 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50433 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50434 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50435 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50440 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50441 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50442 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50448 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50450 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50451 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50456 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50457 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50458 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50463 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50464 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50465 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50469 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50470 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50471 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50475 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50477 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50478 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50482 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50483 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50484 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50489 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50490 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50491 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50494 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50496 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50497 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50502 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50503 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50504 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50509 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50510 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50511 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50515 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50516 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50517 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50521 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50523 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50524 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50527 - "GET /api/map/graph HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50529 - "GET /api/map/graph HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50537 - "GET /api/map/graph HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50538 - "GET /api/map/graph HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50544 - "GET /api/map/graph HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50548 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50550 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50558 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50559 - "GET /api/tasks HTTP/1.1" 200 OK
+2026-06-18 15:44:41,135 [INFO] app.algorithms.v2.traffic_control.zone_controller: Auto-discovered 57 traffic zones (36 intersections, 1 corridors, 16 work zones)
+2026-06-18 15:44:41,135 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Orchestrator initialized: 62 nodes, 171 edges, 57 traffic zones
+2026-06-18 15:44:41,240 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Strategic] 100 tasks → 15 AGVs (104.9ms, status=OPTIMAL)
+2026-06-18 15:44:41,243 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Operational] 15 paths planned (3.1ms)
+2026-06-18 15:44:41,243 [WARNING] app.algorithms.v2.traffic_control.zone_controller: Deadlock resolved: preempted AGV001
+2026-06-18 15:44:41,243 [WARNING] app.algorithms.v2.hybrid_orchestrator.orchestrator: Safety issues: ['Deadlock detected, preempted AGV001']
+2026-06-18 15:44:41,244 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Scheduling complete: 15 assignments, makespan=93.9s, runtime=109ms
+2026-06-18 15:44:41,244 [INFO] app.services.schedule_service: V2 scheduling: 15 assignments, 109.0ms
+INFO:     127.0.0.1:50560 - "POST /api/schedule/run HTTP/1.1" 200 OK
+2026-06-18 15:44:50,672 [INFO] app.algorithms.v2.traffic_control.zone_controller: Auto-discovered 57 traffic zones (36 intersections, 1 corridors, 16 work zones)
+2026-06-18 15:44:50,672 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Orchestrator initialized: 62 nodes, 171 edges, 57 traffic zones
+2026-06-18 15:44:50,775 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Strategic] 100 tasks → 15 AGVs (103.4ms, status=OPTIMAL)
+2026-06-18 15:44:50,778 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Operational] 15 paths planned (3.1ms)
+2026-06-18 15:44:50,778 [WARNING] app.algorithms.v2.traffic_control.zone_controller: Deadlock resolved: preempted AGV001
+2026-06-18 15:44:50,778 [WARNING] app.algorithms.v2.hybrid_orchestrator.orchestrator: Safety issues: ['Deadlock detected, preempted AGV001']
+2026-06-18 15:44:50,779 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Scheduling complete: 15 assignments, makespan=93.9s, runtime=108ms
+2026-06-18 15:44:50,779 [INFO] app.services.schedule_service: V2 scheduling: 15 assignments, 107.7ms
+INFO:     127.0.0.1:50566 - "POST /api/schedule/run HTTP/1.1" 200 OK
+2026-06-18 15:44:57,427 [INFO] app.algorithms.v2.traffic_control.zone_controller: Auto-discovered 57 traffic zones (36 intersections, 1 corridors, 16 work zones)
+2026-06-18 15:44:57,427 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Orchestrator initialized: 62 nodes, 171 edges, 57 traffic zones
+2026-06-18 15:44:57,543 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Strategic] 100 tasks → 15 AGVs (116.1ms, status=OPTIMAL)
+2026-06-18 15:44:57,548 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Operational] 15 paths planned (4.2ms)
+2026-06-18 15:44:57,548 [WARNING] app.algorithms.v2.traffic_control.zone_controller: Deadlock resolved: preempted AGV001
+2026-06-18 15:44:57,548 [WARNING] app.algorithms.v2.hybrid_orchestrator.orchestrator: Safety issues: ['Deadlock detected, preempted AGV001']
+2026-06-18 15:44:57,548 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Scheduling complete: 15 assignments, makespan=93.9s, runtime=121ms
+2026-06-18 15:44:57,548 [INFO] app.services.schedule_service: V2 scheduling: 15 assignments, 121.5ms
+INFO:     127.0.0.1:50568 - "POST /api/schedule/run HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50577 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50578 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50582 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50583 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50587 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50588 - "GET /api/tasks HTTP/1.1" 200 OK
+2026-06-18 15:45:05,464 [INFO] app.algorithms.v2.traffic_control.zone_controller: Auto-discovered 57 traffic zones (36 intersections, 1 corridors, 16 work zones)
+2026-06-18 15:45:05,464 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Orchestrator initialized: 62 nodes, 171 edges, 57 traffic zones
+2026-06-18 15:45:05,573 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Strategic] 100 tasks → 15 AGVs (109.7ms, status=OPTIMAL)
+2026-06-18 15:45:05,577 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Operational] 15 paths planned (3.3ms)
+2026-06-18 15:45:05,577 [WARNING] app.algorithms.v2.traffic_control.zone_controller: Deadlock resolved: preempted AGV001
+2026-06-18 15:45:05,577 [WARNING] app.algorithms.v2.hybrid_orchestrator.orchestrator: Safety issues: ['Deadlock detected, preempted AGV001']
+2026-06-18 15:45:05,577 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Scheduling complete: 15 assignments, makespan=93.9s, runtime=114ms
+2026-06-18 15:45:05,577 [INFO] app.services.schedule_service: V2 scheduling: 15 assignments, 114.0ms
+INFO:     127.0.0.1:50590 - "POST /api/schedule/run HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50593 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50595 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50604 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50605 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50609 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50610 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50612 - "GET /api/agv/status HTTP/1.1" 200 OK
+2026-06-18 15:45:23,766 [INFO] app.algorithms.v2.traffic_control.zone_controller: Auto-discovered 57 traffic zones (36 intersections, 1 corridors, 16 work zones)
+2026-06-18 15:45:23,766 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Orchestrator initialized: 62 nodes, 171 edges, 57 traffic zones
+2026-06-18 15:45:23,879 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Strategic] 100 tasks → 15 AGVs (113.3ms, status=OPTIMAL)
+2026-06-18 15:45:23,882 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Operational] 15 paths planned (3.2ms)
+2026-06-18 15:45:23,882 [WARNING] app.algorithms.v2.traffic_control.zone_controller: Deadlock resolved: preempted AGV001
+2026-06-18 15:45:23,883 [WARNING] app.algorithms.v2.hybrid_orchestrator.orchestrator: Safety issues: ['Deadlock detected, preempted AGV001']
+2026-06-18 15:45:23,883 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Scheduling complete: 15 assignments, makespan=93.9s, runtime=118ms
+2026-06-18 15:45:23,883 [INFO] app.services.schedule_service: V2 scheduling: 15 assignments, 117.7ms
+INFO:     127.0.0.1:50614 - "POST /api/schedule/run HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50616 - "GET /api/agv/status HTTP/1.1" 200 OK
+2026-06-18 15:45:24,627 [INFO] app.algorithms.v2.traffic_control.zone_controller: Auto-discovered 57 traffic zones (36 intersections, 1 corridors, 16 work zones)
+2026-06-18 15:45:24,627 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Orchestrator initialized: 62 nodes, 171 edges, 57 traffic zones
+2026-06-18 15:45:24,742 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Strategic] 100 tasks → 15 AGVs (115.6ms, status=OPTIMAL)
+2026-06-18 15:45:24,745 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Operational] 15 paths planned (3.1ms)
+2026-06-18 15:45:24,745 [WARNING] app.algorithms.v2.traffic_control.zone_controller: Deadlock resolved: preempted AGV001
+2026-06-18 15:45:24,746 [WARNING] app.algorithms.v2.hybrid_orchestrator.orchestrator: Safety issues: ['Deadlock detected, preempted AGV001']
+2026-06-18 15:45:24,746 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Scheduling complete: 15 assignments, makespan=93.9s, runtime=120ms
+2026-06-18 15:45:24,746 [INFO] app.services.schedule_service: V2 scheduling: 15 assignments, 119.8ms
+INFO:     127.0.0.1:50618 - "POST /api/schedule/run HTTP/1.1" 200 OK
+2026-06-18 15:45:25,183 [INFO] app.algorithms.v2.traffic_control.zone_controller: Auto-discovered 57 traffic zones (36 intersections, 1 corridors, 16 work zones)
+2026-06-18 15:45:25,183 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Orchestrator initialized: 62 nodes, 171 edges, 57 traffic zones
+2026-06-18 15:45:25,290 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Strategic] 100 tasks → 15 AGVs (107.5ms, status=OPTIMAL)
+2026-06-18 15:45:25,293 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Operational] 15 paths planned (3.1ms)
+2026-06-18 15:45:25,293 [WARNING] app.algorithms.v2.traffic_control.zone_controller: Deadlock resolved: preempted AGV001
+2026-06-18 15:45:25,293 [WARNING] app.algorithms.v2.hybrid_orchestrator.orchestrator: Safety issues: ['Deadlock detected, preempted AGV001']
+2026-06-18 15:45:25,293 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Scheduling complete: 15 assignments, makespan=93.9s, runtime=112ms
+2026-06-18 15:45:25,293 [INFO] app.services.schedule_service: V2 scheduling: 15 assignments, 111.7ms
+INFO:     127.0.0.1:50620 - "POST /api/schedule/run HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50622 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50624 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50627 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50629 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50631 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50634 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50636 - "GET /api/conveyor/segments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50638 - "GET /api/conveyor/segments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50646 - "GET /api/conveyor/segments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50647 - "GET /api/conveyor/segments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50649 - "GET /api/algorithm/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50652 - "GET /api/algorithm/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50660 - "GET /api/algorithm/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50661 - "GET /api/algorithm/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50663 - "GET /api/v2/evaluator/algorithms HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50664 - "GET /api/v2/evaluator/presets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50672 - "GET /api/v2/evaluator/algorithms HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50673 - "GET /api/v2/evaluator/presets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50674 - "GET /api/v2/evaluator/algorithms HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50675 - "GET /api/v2/evaluator/presets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50676 - "GET /api/algorithm/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50677 - "GET /api/algorithm/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50685 - "GET /api/algorithm/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50686 - "GET /api/algorithm/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50693 - "PUT /api/algorithm/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50717 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50719 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50720 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50722 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50725 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50726 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50734 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50735 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50736 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50737 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50738 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50739 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50743 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50744 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50745 - "GET /api/metrics HTTP/1.1" 200 OK
+2026-06-18 15:46:26,905 [INFO] app.algorithms.v2.traffic_control.zone_controller: Auto-discovered 57 traffic zones (36 intersections, 1 corridors, 16 work zones)
+2026-06-18 15:46:26,905 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Orchestrator initialized: 62 nodes, 171 edges, 57 traffic zones
+2026-06-18 15:46:27,021 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Strategic] 100 tasks → 15 AGVs (116.1ms, status=OPTIMAL)
+2026-06-18 15:46:27,025 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Operational] 15 paths planned (3.2ms)
+2026-06-18 15:46:27,025 [WARNING] app.algorithms.v2.traffic_control.zone_controller: Deadlock resolved: preempted AGV001
+2026-06-18 15:46:27,025 [WARNING] app.algorithms.v2.hybrid_orchestrator.orchestrator: Safety issues: ['Deadlock detected, preempted AGV001']
+2026-06-18 15:46:27,025 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Scheduling complete: 15 assignments, makespan=93.9s, runtime=121ms
+2026-06-18 15:46:27,025 [INFO] app.services.schedule_service: V2 scheduling: 15 assignments, 120.5ms
+INFO:     127.0.0.1:50747 - "POST /api/schedule/run HTTP/1.1" 200 OK
+2026-06-18 15:46:29,387 [INFO] app.algorithms.v2.traffic_control.zone_controller: Auto-discovered 57 traffic zones (36 intersections, 1 corridors, 16 work zones)
+2026-06-18 15:46:29,387 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Orchestrator initialized: 62 nodes, 171 edges, 57 traffic zones
+2026-06-18 15:46:29,501 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Strategic] 100 tasks → 15 AGVs (113.5ms, status=OPTIMAL)
+2026-06-18 15:46:29,504 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: [Operational] 15 paths planned (3.1ms)
+2026-06-18 15:46:29,504 [WARNING] app.algorithms.v2.traffic_control.zone_controller: Deadlock resolved: preempted AGV001
+2026-06-18 15:46:29,504 [WARNING] app.algorithms.v2.hybrid_orchestrator.orchestrator: Safety issues: ['Deadlock detected, preempted AGV001']
+2026-06-18 15:46:29,504 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Scheduling complete: 15 assignments, makespan=93.9s, runtime=118ms
+2026-06-18 15:46:29,505 [INFO] app.services.schedule_service: V2 scheduling: 15 assignments, 117.7ms
+INFO:     127.0.0.1:50749 - "POST /api/schedule/run HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50752 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50754 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50755 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50758 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50760 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50768 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50769 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50770 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50771 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50772 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50779 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50780 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50791 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50792 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50796 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50797 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50801 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50802 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50806 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50807 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50812 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50813 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50817 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50818 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50823 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50824 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50829 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50830 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50855 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50856 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50875 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50877 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50881 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50882 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50888 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50889 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50890 - "GET /api/conveyor/segments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50891 - "GET /api/conveyor/segments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50897 - "GET /api/conveyor/segments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50898 - "GET /api/conveyor/segments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50899 - "GET /api/algorithm/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50900 - "GET /api/algorithm/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50906 - "GET /api/algorithm/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50907 - "GET /api/algorithm/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50909 - "PUT /api/algorithm/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50911 - "GET /api/v2/evaluator/algorithms HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50912 - "GET /api/v2/evaluator/presets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50913 - "GET /api/v2/evaluator/algorithms HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50915 - "GET /api/v2/evaluator/presets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50923 - "GET /api/v2/evaluator/algorithms HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50924 - "GET /api/v2/evaluator/presets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50925 - "GET /api/v2/evaluator/algorithms HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50926 - "GET /api/v2/evaluator/presets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50928 - "POST /api/v2/evaluator/scenarios/generate HTTP/1.1" 200 OK
+2026-06-18 15:47:40,853 [INFO] app.algorithms.hybrid: Phase 1: SA task assignment for 40 tasks to 15 AGVs
+2026-06-18 15:47:41,453 [INFO] app.algorithms.sa: SA complete: best_cost=inf, makespan=inf, acceptance_rate=0.00%, runtime=600ms
+2026-06-18 15:47:41,454 [INFO] app.algorithms.hybrid: Phase 1 complete: cost=inf, makespan=inf, time=600ms
+2026-06-18 15:47:41,454 [INFO] app.algorithms.hybrid: Phase 2: ACO path planning for assigned tasks
+2026-06-18 15:48:14,422 [INFO] app.algorithms.aco: ACO complete: best_cost=118.00, iterations=100, runtime=32969ms
+2026-06-18 15:48:14,422 [INFO] app.algorithms.hybrid: Phase 2 complete: best_cost=118.00, time=32969ms
+2026-06-18 15:48:14,422 [INFO] app.algorithms.hybrid: Phase 3: No conveyor tasks, skipping NLP
+2026-06-18 15:48:14,422 [INFO] app.algorithms.hybrid: Phase 4: Resolving AGV-Conveyor conflicts
+2026-06-18 15:48:14,423 [INFO] app.algorithms.hybrid: Hybrid scheduling complete: makespan=86.67s, total_cost=inf, runtime=33570ms
+2026-06-18 15:48:14,431 [INFO] app.algorithms.v2.traffic_control.zone_controller: Auto-discovered 296 traffic zones (296 intersections, 0 corridors, 0 work zones)
+2026-06-18 15:48:14,431 [INFO] app.algorithms.v2.hybrid_orchestrator.orchestrator: Orchestrator initialized: 300 nodes, 1130 edges, 296 traffic zones
+INFO:     127.0.0.1:50929 - "POST /api/v2/evaluator/evaluate/single HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50934 - "GET /api/v2/evaluator/evaluate/progress/eval_1781768860345 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50947 - "GET /api/v2/evaluator/algorithms HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50948 - "GET /api/v2/evaluator/presets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50950 - "GET /api/v2/evaluator/algorithms HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50952 - "GET /api/v2/evaluator/presets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50954 - "GET /api/algorithm/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50956 - "GET /api/algorithm/config HTTP/1.1" 200 OK
+C:\Users\Administrator\.workbuddy\binaries\python\versions\3.11.9\Lib\site-packages\pydantic\type_adapter.py:607: UserWarning: Pydantic serializer warnings:
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='status', input_value='executing', input_type=str])
+  return self.serializer.to_python(
+INFO:     127.0.0.1:50960 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50961 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50962 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50964 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50966 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50968 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50972 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50973 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50974 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50982 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50985 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50986 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51024 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51027 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51028 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51108 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51109 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51110 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51136 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51137 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51138 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51148 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51150 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51151 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51155 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51156 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51157 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51165 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51166 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51167 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51173 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51175 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51176 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51180 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51182 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51183 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51191 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51192 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51193 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51202 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51203 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51204 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51207 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51209 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51210 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51214 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51215 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51216 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51249 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51250 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51251 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51256 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51258 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51259 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51263 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51264 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51265 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51271 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51274 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51275 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65420 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65421 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65422 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65428 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65429 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65430 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65435 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65436 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65437 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65443 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65444 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65445 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65448 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65450 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65451 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65456 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65457 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65458 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65464 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65465 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65466 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65478 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65479 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65480 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65489 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65491 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65492 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65498 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65499 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65500 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65504 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65505 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65506 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65514 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65516 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65517 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65525 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65526 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65527 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65533 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65534 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49152 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49157 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49158 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49159 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49165 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49166 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49167 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49177 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49178 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49179 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49183 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49184 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49185 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49190 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49191 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49192 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49198 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49199 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49200 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49206 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49207 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49208 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49220 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49222 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49223 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49227 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49228 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49229 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49233 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49234 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49235 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49243 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49244 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49245 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53546 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53547 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53548 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53552 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53553 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53554 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53559 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53560 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53561 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53572 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53573 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53574 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53585 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53586 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53587 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53592 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53593 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53594 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53598 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53599 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53600 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53609 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53611 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53612 - "GET /api/tasks HTTP/1.1" 200 OK

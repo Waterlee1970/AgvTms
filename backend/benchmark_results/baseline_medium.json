@@ -1,0 +1,45 @@
+{
+  "scenario": "scenario_medium",
+  "node_count": 1205,
+  "edge_count": 2135,
+  "num_agvs": 50,
+  "num_tasks": 50,
+  "planners": [
+    {
+      "name": "Bidirectional A*",
+      "avg_time_ms": 0.3,
+      "max_time_ms": 3.0,
+      "success_rate": 0.6,
+      "avg_expanded": 64.6,
+      "avg_distance": 88.9,
+      "avg_wait": 0.0
+    },
+    {
+      "name": "A* + TimeWindow",
+      "avg_time_ms": 0.28,
+      "max_time_ms": 0.86,
+      "success_rate": 0.6,
+      "avg_expanded": 56.5,
+      "avg_distance": 90.5,
+      "avg_wait": 0.0
+    },
+    {
+      "name": "SIPP (Safe Intervals)",
+      "avg_time_ms": 0.57,
+      "max_time_ms": 2.99,
+      "success_rate": 0.6,
+      "avg_expanded": 50.5,
+      "avg_distance": 90.5,
+      "avg_wait": 0.0
+    },
+    {
+      "name": "Dynamic Replanner",
+      "avg_time_ms": 0.17,
+      "max_time_ms": 0.0,
+      "success_rate": 1.0,
+      "avg_expanded": 0,
+      "avg_distance": 0.0,
+      "avg_wait": 0.0
+    }
+  ]
+}
