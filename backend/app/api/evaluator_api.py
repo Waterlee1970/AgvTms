@@ -1,0 +1,567 @@
+"""
+算法评估 API 接口
+===================
+
+提供 REST API 供前端调用:
+  GET    /api/v2/evaluator/algorithms              - 列出所有注册算法
+  GET    /api/v2/evaluator/presets                  - 列出场景预设
+  POST   /api/v2/evaluator/scenarios/generate       - 生成测试场景(预设)
+  POST   /api/v2/evaluator/scenarios/custom         - 自定义场景生成(交互式配置)
+  POST   /api/v2/evaluator/evaluate/single          - 单场景对比
+  POST   /api/v2/evaluator/evaluate/batch           - 批量评估
+  POST   /api/v2/evaluator/evaluate/visualize       - 带轨迹的可视化评估
+  GET    /api/v2/evaluator/reports/latest           - 获取最新报告
+"""
+
+import math
+import json
+from fastapi import APIRouter, HTTPException, BackgroundTasks
+from pydantic import BaseModel, Field
+from typing import Any, Dict, List, Optional
+
+router = APIRouter(prefix="/api/v2/evaluator", tags=["algorithm-evaluation"])
+
+
+# ==================== JSON安全序列化 ====================
+
+def safe_json_serialize(obj: Any) -> Any:
+    """
+    递归清理数据中的非法JSON值(inf/nan)
+    
+    - float('inf') -> None (或可配置的大数)
+    - float('-inf') -> None
+    - float('nan') -> None
+    """
+    if isinstance(obj, float):
+        if math.isinf(obj) or math.isnan(obj):
+            return None  # 或返回 0 或一个极大值
+        return obj
+    elif isinstance(obj, dict):
+        return {k: safe_json_serialize(v) for k, v in obj.items()}
+    elif isinstance(obj, (list, tuple)):
+        return [safe_json_serialize(item) for item in obj]
+    elif isinstance(obj, (int, str, bool, type(None))):
+        return obj
+    else:
+        # 其他类型尝试转字符串
+        try:
+            json.dumps(obj)
+            return obj
+        except (TypeError, ValueError):
+            return str(obj)
+
+
+# ==================== 数据模型 ====================
+
+class GenerateScenarioRequest(BaseModel):
+    """生成场景请求 - 预设模式"""
+    preset_name: str = Field(..., description="预设名称: small_warehouse, medium_warehouse, factory_floor, etc.")
+    seed: int = Field(42, description="随机种子")
+    overrides: Dict[str, Any] = Field(default_factory=dict, description="参数覆盖")
+
+
+class FaultInjectionConfig(BaseModel):
+    """故障注入配置"""
+    enabled: bool = Field(False, description="是否启用故障模拟")
+    fault_type: str = Field("agv_breakdown", description="故障类型: agv_breakdown/conveyor_jam/node_blocked/batch_fault")
+    faulty_agv_indices: List[int] = Field(default_factory=list, description="故障AGV索引列表")
+    faulty_segment_indices: List[int] = Field(default_factory=list, description="故障输送线路段索引")
+    blocked_node_ids: List[str] = Field(default_factory=list, description="阻塞节点ID列表")
+    fault_time: float = Field(50.0, description="故障发生时间点(仿真步)")
+    fault_duration: float = Field(30.0, description="故障持续时长(仿真步)")
+
+
+class CustomScenarioRequest(BaseModel):
+    """自定义场景生成请求 - 交互式参数配置"""
+    # 基础设置
+    grid_rows: int = Field(15, description="网格行数", ge=5, le=50)
+    grid_cols: int = Field(20, description="网格列数", ge=5, le=60)
+
+    # AGV设置
+    num_agvs: int = Field(15, description="AGV数量", ge=1, le=100)
+    agv_speed_min: float = Field(1.0, description="AGV最小速度(m/s)", ge=0.5, le=5.0)
+    agv_speed_max: float = Field(3.0, description="AGV最大速度(m/s)", ge=0.5, le=5.0)
+    battery_min: int = Field(30, description="最低初始电量%", ge=5, le=100)
+    battery_max: int = Field(100, description="最高初始电量%", ge=5, le=100)
+    agv_capacity: float = Field(1.0, description="AGV载重能力")
+
+    # 任务设置
+    num_tasks: int = Field(40, description="任务数量", ge=1, le=300)
+    high_priority_ratio: float = Field(0.2, description="高优先级任务比例", ge=0.0, le=1.0)
+    task_duration_min: float = Field(30.0, description="最短预计时长(秒)", ge=1.0)
+    task_duration_max: float = Field(180.0, description="最长预计时长(秒)", ge=1.0)
+
+    # TMS输送线设置
+    has_conveyor: bool = Field(False, description="是否包含输送线")
+    num_conveyor_tasks: int = Field(10, description="输送任务数量", ge=0, le=50)
+    num_conveyor_segments: int = Field(4, description="输送线路段数", ge=0, le=20)
+    conveyor_speed: float = Field(0.5, description="输送线速度(m/s)", ge=0.1, le=3.0)
+
+    # 场景类型和难度
+    scenario_type: str = Field("warehouse", description="场景类型: warehouse/factory/port/hospital/mixed")
+    difficulty: str = Field("medium", description="难度: easy/medium/hard/extreme")
+
+    # 故障模拟
+    fault_injection: Optional[FaultInjectionConfig] = Field(None, description="故障注入配置")
+
+    # 其他
+    seed: int = Field(42, description="随机种子")
+
+
+class EvaluateSingleRequest(BaseModel):
+    """单场景评估请求"""
+    scenario_data: Dict[str, Any] = Field(..., description="场景数据 (AGVTMS_Scenario.to_dict()格式)")
+    algorithm_names: Optional[List[str]] = Field(None, description="要评估的算法列表，None=全部")
+
+
+class EvaluateVisualizeRequest(BaseModel):
+    """带轨迹的可视化评估请求"""
+    scenario_data: Dict[str, Any] = Field(..., description="场景数据")
+    algorithm_names: Optional[List[str]] = Field(None, description="算法列表，默认只取第一个算法做可视化")
+    simulation_steps: int = Field(150, description="仿真步数", ge=50, le=500)
+    fault_config: Optional[FaultInjectionConfig] = Field(None, description="故障配置")
+
+
+class EvaluateBatchRequest(BaseModel):
+    """批量评估请求"""
+    preset_names: Optional[List[str]] = Field(None, description="场景预设列表")
+    algorithm_names: Optional[List[str]] = Field(None, description="算法列表")
+    seed: int = Field(42, description="随机种子")
+    variants_per_type: int = Field(1, description="每种变体数")
+
+
+class AlgorithmListResponse(BaseModel):
+    """算法列表响应"""
+    algorithms: List[Dict[str, Any]]
+    total: int
+    available: int
+
+
+# ==================== 场景类型映射 ====================
+
+SCENARIO_TYPE_MAP = {
+    "warehouse": "WAREHOUSE",
+    "factory": "FACTORY",
+    "port": "PORT",
+    "hospital": "HOSPITAL",
+    "mixed": "MIXED_REALISTIC",
+}
+
+DIFFICULTY_MAP = {
+    "easy": "EASY",
+    "medium": "MEDIUM",
+    "hard": "HARD",
+    "extreme": "EXTREME",
+}
+
+
+# ==================== API端点 ====================
+
+@router.get("/algorithms", response_model=AlgorithmListResponse)
+async def list_algorithms():
+    """
+    列出所有已注册的调度算法
+    
+    返回每个算法的名称、分类、能力标签、依赖状态等
+    """
+    try:
+        from backend.app.algorithms.v2.evaluator.registry import get_registry
+        registry = get_registry()
+    except ImportError:
+        from app.algorithms.v2.evaluator.registry import get_registry
+        registry = get_registry()
+
+    all_algos = registry.list_all()
+
+    return AlgorithmListResponse(
+        algorithms=[{
+            "name": a.name,
+            "display_name": a.display_name,
+            "category": a.category.value,
+            "version": a.version,
+            "description": a.description,
+            "capabilities": a.capabilities,
+            "is_available": a.is_available,
+            "required_deps": a.required_deps,
+        } for a in all_algos],
+        total=len(all_algos),
+        available=sum(1 for a in all_algos if a.is_available),
+    )
+
+
+@router.get("/presets")
+async def list_presets():
+    """
+    列出所有可用的场景预设配置
+    """
+    try:
+        from backend.app.algorithms.v2.evaluator.scenarios import ScenarioGenerator
+    except ImportError:
+        from app.algorithms.v2.evaluator.scenarios import ScenarioGenerator
+
+    presets_info = []
+    for name, params in ScenarioGenerator.PRESETS.items():
+        stype = params.get("stype")
+        diff = params.get("diff")
+        presets_info.append({
+            "name": name,
+            "type": stype.value if hasattr(stype, 'value') else str(stype),
+            "difficulty": diff.value if hasattr(diff, 'value') else str(diff),
+            "grid_size": params.get("grid_size"),
+            "agvs": params.get("num_agvs"),
+            "tasks": params.get("num_tasks"),
+            "has_conveyor": params.get("has_conveyor", False),
+        })
+
+    return {"presets": presets_info, "total": len(presets_info)}
+
+
+@router.post("/scenarios/generate")
+async def generate_scenario(req: GenerateScenarioRequest):
+    """
+    生成指定类型的测试场景 (基于预设模板)
+    
+    支持的场景类型: warehouse, factory, port, hospital, cross_docking, stress_test, mixed
+    可通过 overrides 参数微调各项数值
+    """
+    try:
+        from backend.app.algorithms.v2.evaluator.scenarios import ScenarioGenerator
+    except ImportError:
+        from app.algorithms.v2.evaluator.scenarios import ScenarioGenerator
+
+    try:
+        gen = ScenarioGenerator(seed=req.seed)
+        scene = gen.generate(preset_name=req.preset_name, **req.overrides)
+
+        result = {
+            "success": True,
+            "scenario": scene.to_dict(),
+            "metadata": {
+                "id": scene.metadata.scenario_id,
+                "name": scene.metadata.name,
+                "type": scene.metadata.scenario_type.value,
+                "difficulty": scene.metadata.difficulty.value,
+                "nodes": scene.metadata.num_nodes,
+                "edges": scene.metadata.num_edges,
+                "agvs": scene.metadata.num_agvs,
+                "tasks": scene.metadata.num_tasks,
+            }
+        }
+        return safe_json_serialize(result)
+    except Exception as e:
+        import traceback
+        raise HTTPException(status_code=500, detail=f"场景生成失败: {str(e)}\n{traceback.format_exc()}")
+
+
+@router.post("/scenarios/custom")
+async def generate_custom_scenario(req: CustomScenarioRequest):
+    """
+    根据用户交互式参数生成自定义测试场景
+    
+    支持完整的参数控制:
+    - 基础: 网格大小、场景类型、难度
+    - AGV: 数量、速度范围、电池、容量
+    - 任务: 数量、优先级分布、预计时长
+    - TMS: 输送线开关、输送任务数、线路段数
+    - 故障: AGV故障/输送线堵塞/节点阻塞
+    """
+    try:
+        from backend.app.algorithms.v2.evaluator.scenarios import (
+            ScenarioGenerator, ScenarioType, ScenarioDifficulty, AGVTMS_Scenario,
+        )
+    except ImportError:
+        from app.algorithms.v2.evaluator.scenarios import (
+            ScenarioGenerator, ScenarioType, ScenarioDifficulty, AGVTMS_Scenario,
+        )
+
+    try:
+        # 映射场景类型和难度
+        stype_enum = SCENARIO_TYPE_MAP.get(req.scenario_type, ScenarioType.WAREHOUSE)
+        stype = ScenarioType(stype_enum) if isinstance(stype_enum, str) else stype_enum
+        diff_enum = DIFFICULTY_MAP.get(req.difficulty, ScenarioDifficulty.MEDIUM)
+        diff = ScenarioDifficulty(diff_enum) if isinstance(diff_enum, str) else diff_enum
+
+        gen = ScenarioGenerator(seed=req.seed)
+
+        # 构建overrides字典
+        overrides = {
+            "grid_size": (req.grid_rows, req.grid_cols),
+            "num_agvs": req.num_agvs,
+            "num_tasks": req.num_tasks,
+            "stype": stype,
+            "diff": diff,
+            "has_conveyor": req.has_conveyor,
+        }
+
+        if req.has_conveyor:
+            overrides["num_ctasks"] = req.num_conveyor_tasks
+            overrides["num_csegs"] = req.num_conveyor_segments
+
+        # 生成基础场景
+        preset_name = {
+            "warehouse": "small_warehouse" if req.num_agvs <= 10 else ("medium_warehouse" if req.num_agvs <= 25 else "large_warehouse"),
+            "factory": "factory_floor",
+            "port": "port_terminal",
+            "hospital": "hospital_logistics",
+            "mixed": "mixed_agv_tms",
+        }.get(req.scenario_type, "medium_warehouse")
+
+        scene = gen.generate(preset_name=preset_name, **overrides)
+
+        # === 后处理：应用自定义AGV配置 ===
+        if req.agv_speed_min != req.agv_speed_max or req.battery_min != req.battery_max:
+            import random
+            rng = random.Random(req.seed + 999)
+            for agv in scene.agvs:
+                agv["speed"] = round(rng.uniform(req.agv_speed_min, req.agv_speed_max), 2)
+                agv["battery_level"] = round(rng.uniform(req.battery_min, req.battery_max), 1)
+                agv["capacity"] = req.agv_capacity
+
+        # 应用自定义任务优先级分布
+        if req.high_priority_ratio > 0 and scene.tasks:
+            rng_task = random.Random(req.seed + 888)
+            num_high = int(len(scene.tasks) * req.high_priority_ratio)
+            high_priority_indices = set(rng_task.sample(range(len(scene.tasks)), min(num_high, len(scene.tasks))))
+            for i, task in enumerate(scene.tasks):
+                if i in high_priority_indices:
+                    task["priority"] = rng_task.choice([7, 9])
+                else:
+                    task["priority"] = rng_task.choice([1, 3, 5])
+                task["estimated_duration"] = round(
+                    rng_task.uniform(req.task_duration_min, req.task_duration_max), 1
+                )
+
+        # === 应用故障注入到场景数据中 ===
+        fault_info = None
+        if req.fault_injection and req.fault_injection.enabled:
+            fc = req.fault_injection
+            fault_info = fc.dict() if hasattr(fc, 'dict') else dict(fc)
+
+            # 在场景中标记故障AGV
+            if fc.fault_type in ("agv_breakdown", "batch_fault"):
+                for idx in fc.faulty_agv_indices:
+                    if 0 <= idx < len(scene.agvs):
+                        scene.agvs[idx]["status"] = "fault"
+                        scene.agvs[idx]["fault_config"] = {
+                            "fault_type": fc.fault_type,
+                            "fault_time": fc.fault_time,
+                            "fault_duration": fc.fault_duration,
+                        }
+
+            # 在场景中标记堵塞的线路段
+            if fc.fault_type in ("conveyor_jam", "batch_fault") and scene.conveyor_segments:
+                for idx in fc.faulty_segment_indices:
+                    if 0 <= idx < len(scene.conveyor_segments):
+                        scene.conveyor_segments[idx]["status"] = "jammed"
+
+            # 更新元数据标签
+            scene.metadata.tags.append("fault_injection")
+
+        result = {
+            "success": True,
+            "scenario": scene.to_dict(),
+            "metadata": {
+                "id": scene.metadata.scenario_id,
+                "name": f"Custom_{req.scenario_type}_{req.grid_rows}x{req.grid_cols}",
+                "type": scene.metadata.scenario_type.value,
+                "difficulty": scene.metadata.difficulty.value,
+                "nodes": scene.metadata.num_nodes,
+                "edges": scene.metadata.num_edges,
+                "agvs": scene.metadata.num_agvs,
+                "tasks": scene.metadata.num_tasks,
+                "has_conveyor": req.has_conveyor,
+                "conveyor_tasks": len(scene.conveyor_tasks or []),
+                "fault_injection": fault_info,
+            }
+        }
+        return safe_json_serialize(result)
+    except Exception as e:
+        import traceback
+        raise HTTPException(status_code=500, detail=f"自定义场景生成失败: {str(e)}\n{traceback.format_exc()}")
+    except Exception as e:
+        import traceback
+        raise HTTPException(status_code=500, detail=f"自定义场景生成失败: {str(e)}\n{traceback.format_exc()}")
+
+
+@router.post("/evaluate/single")
+async def evaluate_single(req: EvaluateSingleRequest):
+    """
+    在单个场景上运行多算法对比
+    
+    返回每个算法的评分卡和排名信息
+    """
+    try:
+        from backend.app.algorithms.v2.evaluator import (
+            AGVTMS_Scenario, ScenarioRunner, EvaluatorConfig,
+        )
+    except ImportError:
+        from app.algorithms.v2.evaluator import (
+            AGVTMS_Scenario, ScenarioRunner, EvaluatorConfig,
+        )
+
+    try:
+        scenario = AGVTMS_Scenario.from_dict(req.scenario_data)
+        config = EvaluatorConfig(verbose=False)
+        runner = ScenarioRunner(config=config)
+
+        report = runner.run_comparison(
+            scenario,
+            algorithm_names=req.algorithm_names,
+        )
+
+        result = {
+            "success": True,
+            "report": report.to_dict(),
+            "radar_data": report.radar_data(),
+            "markdown": report.to_markdown(),
+        }
+        return safe_json_serialize(result)
+    except Exception as e:
+        import traceback
+        raise HTTPException(status_code=500, detail=f"评估失败: {str(e)}\n{traceback.format_exc()}")
+
+
+@router.post("/evaluate/visualize")
+async def evaluate_visualize(req: EvaluateVisualizeRequest):
+    """
+    带轨迹的算法评估 - 用于前端可视化展示
+    
+    返回完整的数据:
+    - 标准评估报告(用于评分排名)
+    - 仿真轨迹数据(用于动画播放)
+      - 每时间步的AGV位置快照
+      - 任务状态变化事件
+      - 故障发生/恢复事件
+    """
+    try:
+        from backend.app.algorithms.v2.evaluator import (
+            AGVTMS_Scenario, ScenarioRunner, EvaluatorConfig,
+        )
+        from backend.app.algorithms.v2.evaluator.simulator import SchedulingSimulator
+    except ImportError:
+        from app.algorithms.v2.evaluator import (
+            AGVTMS_Scenario, ScenarioRunner, EvaluatorConfig,
+        )
+        from app.algorithms.v2.evaluator.simulator import SchedulingSimulator
+
+    try:
+        # 重建场景
+        scenario = AGVTMS_Scenario.from_dict(req.scenario_data)
+
+        # 确定要可视化的算法（默认取第一个）
+        algo_names = req.algorithm_names
+        if not algo_names or len(algo_names) == 0:
+            algo_names = None  # 使用全部
+        
+        # 运行评估获取结果
+        config = EvaluatorConfig(verbose=False)
+        runner = ScenarioRunner(config=config)
+        report = runner.run_comparison(scenario, algorithm_names=algo_names)
+
+        # 取获胜算法的结果做仿真
+        winner_algo_name = report.winner
+        eval_result = None
+        
+        # 尝试从runner内部获取算法执行结果
+        if hasattr(runner, '_history') and runner._history:
+            last_report = runner._history[-1]
+            # 需要从results中反推，这里简化为直接运行单个算法
+            pass
+
+        # 创建仿真器并运行
+        fault_dict = None
+        if req.fault_config:
+            fault_dict = req.fault_config.dict() if hasattr(req.fault_config, 'dict') else dict(req.fault_config)
+
+        simulator = SchedulingSimulator(scenario, seed=req.seed % 10000)
+        trajectory = simulator.simulate(
+            time_steps=req.simulation_steps,
+            fault_config=fault_dict,
+        )
+
+        result = {
+            "success": True,
+            "report": report.to_dict(),
+            "radar_data": report.radar_data(),
+            "trajectory": trajectory.to_dict(),
+            "visualization_algo": winner_algo_name,
+        }
+        return safe_json_serialize(result)
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail=f"可视化评估失败: {str(e)}\n{traceback.format_exc()}"
+        )
+
+
+@router.post("/evaluate/batch")
+async def evaluate_batch(req: EvaluateBatchRequest, background_tasks=None):
+    """
+    批量评估：多种场景 × 多种算法
+    
+    可选择后台运行（异步），返回任务ID后轮询结果
+    """
+    try:
+        from backend.app.algorithms.v2.evaluator.runner import run_full_evaluation
+        from backend.app.algorithms.v2.evaluator.visualizer import ResultsVisualizer
+    except ImportError:
+        from app.algorithms.v2.evaluator.runner import run_full_evaluation
+        from app.algorithms.v2.evaluator.visualizer import ResultsVisualizer
+
+    task_id = f"eval_{int(__import__('time').time()*1000)}"
+
+    if background_tasks is None:
+        # 同步执行
+        try:
+            result = run_full_evaluation(
+                presets=req.preset_names,
+                algorithms=req.algorithm_names,
+                seed=req.seed,
+                variants=req.variants_per_type,
+            )
+
+            visualizer = ResultsVisualizer()
+
+            return {
+                "task_id": task_id,
+                "status": "completed",
+                "summary": result.to_dict(),
+                "overall_rankings": result.overall_rankings,
+                "best_by_type": result.best_by_scenario_type,
+                "recommendations": result.recommendations,
+                "report_markdown": result.summary_report,
+                "num_scenarios": len(result.scenario_reports),
+            }
+        except Exception as e:
+            import traceback
+            raise HTTPException(status_code=500, detail=f"批量评估失败: {str(e)}\n{traceback.format_exc()}")
+    else:
+        # TODO: 后台任务实现
+        pass
+
+
+@router.get("/reports/latest")
+async def get_latest_report():
+    """
+    获取最新的评估报告摘要
+    """
+    import glob
+    results_dir = os.path.join(os.path.dirname(__file__), "..", "..", "benchmark_results")
+
+    json_files = sorted(glob.glob(os.path.join(results_dir, "eval_report_*.json")),
+                       key=os.path.getmtime, reverse=True)
+
+    if not json_files:
+        return {"message": "暂无报告", "has_report": False}
+
+    latest = json_files[0]
+    with open(latest, 'r', encoding='utf-8') as f:
+        data = __import__('json').load(f)
+
+    return {
+        "has_report": True,
+        "file_path": latest,
+        "generated_at": os.path.getmtime(latest),
+        "data": data,
+    }
