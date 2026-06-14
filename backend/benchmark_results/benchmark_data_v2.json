@@ -1,0 +1,75 @@
+{
+  "metadata": {
+    "generated_at": "2026-06-15T17:46:31.299779",
+    "elapsed_seconds": 28.9,
+    "scenarios_tested": 5
+  },
+  "overall_rankings": {
+    "fcfs": 86.02238819993484,
+    "greedy": 85.83888097548886,
+    "rl_dqn": 83.72547224352556,
+    "v1_hybrid": 61.198319569285445,
+    "v2_orchestrator": 58.265845502993656,
+    "v2_mip": 58.124556968660315
+  },
+  "dimension_champions": {
+    "效率": {
+      "algorithm": "fcfs",
+      "score": 77.21
+    },
+    "质量": {
+      "algorithm": "v1_hybrid",
+      "score": 100.08
+    },
+    "资源利用": {
+      "algorithm": "greedy",
+      "score": 110.04
+    },
+    "实时性能": {
+      "algorithm": "fcfs",
+      "score": 100.0
+    },
+    "鲁棒性": {
+      "algorithm": "fcfs",
+      "score": 60.0
+    }
+  },
+  "compatibility_matrix": {
+    "fcfs": {
+      "success": 5,
+      "failure": 0,
+      "rate": 100.0,
+      "avg_score": 86.02
+    },
+    "greedy": {
+      "success": 5,
+      "failure": 0,
+      "rate": 100.0,
+      "avg_score": 85.84
+    },
+    "v1_hybrid": {
+      "success": 5,
+      "failure": 0,
+      "rate": 100.0,
+      "avg_score": 61.2
+    },
+    "v2_mip": {
+      "success": 5,
+      "failure": 0,
+      "rate": 100.0,
+      "avg_score": 58.12
+    },
+    "v2_orchestrator": {
+      "success": 5,
+      "failure": 0,
+      "rate": 100.0,
+      "avg_score": 58.27
+    },
+    "rl_dqn": {
+      "success": 5,
+      "failure": 0,
+      "rate": 100.0,
+      "avg_score": 83.73
+    }
+  }
+}

@@ -1,0 +1,103 @@
+# AGV-TMS Kubernetes Deployment (Helm values)
+# 对标海康RCS-2000集群部署能力
+
+apiVersion: v2
+name: agvtms
+description: AGV-TMS 柔性物流调度系统 - K8s部署
+type: application
+version: 2.0.0
+appVersion: "2.0.0"
+
+keywords:
+  - agv
+  - scheduling
+  - logistics
+  - rcs
+
+maintainers:
+  - name: AGV-TMS Team
+
+# Default values
+values:
+  replicaCount: 2
+
+  image:
+    repository: agvtms/backend
+    tag: "2.0.0"
+    pullPolicy: IfNotPresent
+
+  # Horizontal Pod Autoscaler
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+
+  # Service
+  service:
+    type: ClusterIP
+    port: 8000
+
+  # Ingress
+  ingress:
+    enabled: true
+    className: nginx
+    hosts:
+      - host: agvtms.local
+        paths:
+          - path: /
+            pathType: Prefix
+
+  # Resources
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+
+  # PostgreSQL dependency
+  postgresql:
+    enabled: true
+    auth:
+      postgresPassword: agvtms_dev
+      username: agvtms
+      password: agvtms_dev
+      database: agvtms
+    primary:
+      persistence:
+        size: 20Gi
+
+  # Redis dependency
+  redis:
+    enabled: true
+    auth:
+      enabled: false
+    master:
+      persistence:
+        size: 5Gi
+
+  # Monitoring
+  monitoring:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      interval: 15s
+      path: /metrics
+
+  # Probes
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 8000
+    initialDelaySeconds: 30
+    periodSeconds: 10
+
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 8000
+    initialDelaySeconds: 10
+    periodSeconds: 5

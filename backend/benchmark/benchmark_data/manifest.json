@@ -1,0 +1,33 @@
+{
+  "generated_at": "2026-06-14T21:26:12.885517",
+  "scenarios": {
+    "small": {
+      "file": "benchmark/benchmark_data/scenario_small.json",
+      "nodes": 258,
+      "edges": 440,
+      "agvs": 20,
+      "tasks": 50
+    },
+    "medium": {
+      "file": "benchmark/benchmark_data/scenario_medium.json",
+      "nodes": 1205,
+      "edges": 2135,
+      "agvs": 100,
+      "tasks": 500
+    },
+    "large": {
+      "file": "benchmark/benchmark_data/scenario_large.json",
+      "nodes": 5615,
+      "edges": 10160,
+      "agvs": 500,
+      "tasks": 2000
+    },
+    "stress": {
+      "file": "benchmark/benchmark_data/scenario_stress.json",
+      "nodes": 11470,
+      "edges": 20800,
+      "agvs": 1000,
+      "tasks": 5000
+    }
+  }
+}
