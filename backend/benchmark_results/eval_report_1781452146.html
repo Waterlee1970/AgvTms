@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgvTms 算法评估报告</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+               background: #f5f7fa; color: #333; line-height: 1.6; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 { text-align: center; color: #1890ff; margin-bottom: 10px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; }
+        .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .card h2 { border-left: 4px solid #1890ff; padding-left: 12px; margin-bottom: 16px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #fafafa; font-weight: 600; }
+        tr:hover { background: #f9fbff; }
+        .rank-1 { color: #f5222d; font-weight: bold; }
+        .rank-2 { color: #fa8c16; font-weight: bold; }
+        .rank-3 { color: #faad14; font-weight: bold; }
+        .chart-row { display: flex; gap: 24px; flex-wrap: wrap; }
+        .chart-box { flex: 1; min-width: 400px; height: 400px; }
+        .rec-box { background: #e6f7ff; border: 1px solid #91d5ff; border-radius: 8px;
+                   padding: 16px; margin-top: 16px; }
+        .rec-box h3 { color: #0050b3; margin-bottom: 8px; }
+        .tag { display: inline-block; padding: 2px 8px; border-radius: 4px;
+               font-size: 12px; margin-right: 4px; }
+        .tag-a { background: #f6ffed; color: #52c41a; border: 1px solid #b7eb8f; }
+        .tag-b { background: #fff7e6; color: #fa8c16; border: 1px solid #ffd591; }
+        .tag-c { background: #fff1f0; color: #f5222d; border: 1px solidffa393; }
+        footer { text-align: center; color: #999; margin-top: 40px; padding: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 AgvTms 多算法评估报告</h1>
+        <p class="subtitle">AGV+TMS 混合调度系统 | 多维度评价体系 | 自动化基准测试</p>
+
+        <!-- 综合排行榜 -->
+        <div class="card">
+            <h2>🏆 综合排行榜</h2>
+            <table>
+                <thead>
+                    <tr><th>排名</th><th>算法</th><th>平均分</th><th>最擅长的场景类型</th></tr>
+                </thead>
+                <tbody>
+            <tr>
+                <td>1</td>
+                <td><strong>fcfs</strong></td>
+                <td>84.5</td>
+                <td>factory</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td><strong>greedy</strong></td>
+                <td>84.4</td>
+                <td>warehouse</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td><strong>v2_mip</strong></td>
+                <td>57.1</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td><strong>v1_hybrid</strong></td>
+                <td>56.7</td>
+                <td>-</td>
+            </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 图表区域 -->
+        <div class="card">
+            <h2>📊 可视化分析</h2>
+            <div class="chart-row">
+                <div class="chart-box">
+                    <canvas id="radarChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 各场景详细结果 -->
+        <div class="card">
+            <h2>📋 分场景详细结果</h2>
+            
+            <h3 style="margin:16px 0 8px;">Warehouse8x12
+                <small style="color:#999;font-weight:normal;">
+                    (5 AGVs, 15 Tasks)
+                </small>
+            </h3>
+            <table>
+                <thead><tr><th>#</th><th>算法</th><th>总分</th><th>等级</th><th>耗时</th><th>分配数</th></tr></thead>
+                <tbody><tr>
+                    <td class="rank-1">#1</td>
+                    <td>先来先服务 (FCFS)</td>
+                    <td><strong>83.7</strong></td>
+                    <td><span class="tag tag-A">A</span></td>
+                    <td>0.0ms</td>
+                    <td>5</td>
+                </tr><tr>
+                    <td class="rank-2">#2</td>
+                    <td>最近邻贪心 (Greedy)</td>
+                    <td><strong>83.7</strong></td>
+                    <td><span class="tag tag-A">A</span></td>
+                    <td>0.2ms</td>
+                    <td>5</td>
+                </tr><tr>
+                    <td class="rank-3">#3</td>
+                    <td>V2 MIP 最优分配 (CP-SAT)</td>
+                    <td><strong>57.1</strong></td>
+                    <td><span class="tag tag-C">C</span></td>
+                    <td>0.1ms</td>
+                    <td>0</td>
+                </tr><tr>
+                    <td class="rank-3">#4</td>
+                    <td>V1 混合调度 (SA+ACO+NLP)</td>
+                    <td><strong>54.5</strong></td>
+                    <td><span class="tag tag-C">C</span></td>
+                    <td>318.4ms</td>
+                    <td>0</td>
+                </tr></tbody>
+            </table>
+            <h3 style="margin:16px 0 8px;">Warehouse15x20
+                <small style="color:#999;font-weight:normal;">
+                    (15 AGVs, 40 Tasks)
+                </small>
+            </h3>
+            <table>
+                <thead><tr><th>#</th><th>算法</th><th>总分</th><th>等级</th><th>耗时</th><th>分配数</th></tr></thead>
+                <tbody><tr>
+                    <td class="rank-1">#1</td>
+                    <td>最近邻贪心 (Greedy)</td>
+                    <td><strong>84.2</strong></td>
+                    <td><span class="tag tag-A">A</span></td>
+                    <td>1.1ms</td>
+                    <td>15</td>
+                </tr><tr>
+                    <td class="rank-2">#2</td>
+                    <td>先来先服务 (FCFS)</td>
+                    <td><strong>84.1</strong></td>
+                    <td><span class="tag tag-A">A</span></td>
+                    <td>0.1ms</td>
+                    <td>15</td>
+                </tr><tr>
+                    <td class="rank-3">#3</td>
+                    <td>V1 混合调度 (SA+ACO+NLP)</td>
+                    <td><strong>57.1</strong></td>
+                    <td><span class="tag tag-C">C</span></td>
+                    <td>0.3ms</td>
+                    <td>0</td>
+                </tr><tr>
+                    <td class="rank-3">#4</td>
+                    <td>V2 MIP 最优分配 (CP-SAT)</td>
+                    <td><strong>57.1</strong></td>
+                    <td><span class="tag tag-C">C</span></td>
+                    <td>0.0ms</td>
+                    <td>0</td>
+                </tr></tbody>
+            </table>
+            <h3 style="margin:16px 0 8px;">Factory20x25
+                <small style="color:#999;font-weight:normal;">
+                    (20 AGVs, 50 Tasks)
+                </small>
+            </h3>
+            <table>
+                <thead><tr><th>#</th><th>算法</th><th>总分</th><th>等级</th><th>耗时</th><th>分配数</th></tr></thead>
+                <tbody><tr>
+                    <td class="rank-1">#1</td>
+                    <td>先来先服务 (FCFS)</td>
+                    <td><strong>84.9</strong></td>
+                    <td><span class="tag tag-A">A</span></td>
+                    <td>0.2ms</td>
+                    <td>20</td>
+                </tr><tr>
+                    <td class="rank-2">#2</td>
+                    <td>最近邻贪心 (Greedy)</td>
+                    <td><strong>84.9</strong></td>
+                    <td><span class="tag tag-A">A</span></td>
+                    <td>2.2ms</td>
+                    <td>20</td>
+                </tr><tr>
+                    <td class="rank-3">#3</td>
+                    <td>V1 混合调度 (SA+ACO+NLP)</td>
+                    <td><strong>57.1</strong></td>
+                    <td><span class="tag tag-C">C</span></td>
+                    <td>0.5ms</td>
+                    <td>0</td>
+                </tr><tr>
+                    <td class="rank-3">#4</td>
+                    <td>V2 MIP 最优分配 (CP-SAT)</td>
+                    <td><strong>57.1</strong></td>
+                    <td><span class="tag tag-C">C</span></td>
+                    <td>0.0ms</td>
+                    <td>0</td>
+                </tr></tbody>
+            </table>
+            <h3 style="margin:16px 0 8px;">Port30x40
+                <small style="color:#999;font-weight:normal;">
+                    (25 AGVs, 60 Tasks)
+                </small>
+            </h3>
+            <table>
+                <thead><tr><th>#</th><th>算法</th><th>总分</th><th>等级</th><th>耗时</th><th>分配数</th></tr></thead>
+                <tbody><tr>
+                    <td class="rank-1">#1</td>
+                    <td>先来先服务 (FCFS)</td>
+                    <td><strong>84.2</strong></td>
+                    <td><span class="tag tag-A">A</span></td>
+                    <td>0.5ms</td>
+                    <td>25</td>
+                </tr><tr>
+                    <td class="rank-2">#2</td>
+                    <td>最近邻贪心 (Greedy)</td>
+                    <td><strong>84.2</strong></td>
+                    <td><span class="tag tag-A">A</span></td>
+                    <td>4.0ms</td>
+                    <td>25</td>
+                </tr><tr>
+                    <td class="rank-3">#3</td>
+                    <td>V1 混合调度 (SA+ACO+NLP)</td>
+                    <td><strong>57.1</strong></td>
+                    <td><span class="tag tag-C">C</span></td>
+                    <td>1.1ms</td>
+                    <td>0</td>
+                </tr><tr>
+                    <td class="rank-3">#4</td>
+                    <td>V2 MIP 最优分配 (CP-SAT)</td>
+                    <td><strong>57.1</strong></td>
+                    <td><span class="tag tag-C">C</span></td>
+                    <td>0.0ms</td>
+                    <td>0</td>
+                </tr></tbody>
+            </table>
+            <h3 style="margin:16px 0 8px;">Hospital18x22
+                <small style="color:#999;font-weight:normal;">
+                    (10 AGVs, 30 Tasks)
+                </small>
+            </h3>
+            <table>
+                <thead><tr><th>#</th><th>算法</th><th>总分</th><th>等级</th><th>耗时</th><th>分配数</th></tr></thead>
+                <tbody><tr>
+                    <td class="rank-1">#1</td>
+                    <td>先来先服务 (FCFS)</td>
+                    <td><strong>83.8</strong></td>
+                    <td><span class="tag tag-A">A</span></td>
+                    <td>0.1ms</td>
+                    <td>10</td>
+                </tr><tr>
+                    <td class="rank-2">#2</td>
+                    <td>最近邻贪心 (Greedy)</td>
+                    <td><strong>83.8</strong></td>
+                    <td><span class="tag tag-A">A</span></td>
+                    <td>0.4ms</td>
+                    <td>10</td>
+                </tr><tr>
+                    <td class="rank-3">#3</td>
+                    <td>V1 混合调度 (SA+ACO+NLP)</td>
+                    <td><strong>57.1</strong></td>
+                    <td><span class="tag tag-C">C</span></td>
+                    <td>0.3ms</td>
+                    <td>0</td>
+                </tr><tr>
+                    <td class="rank-3">#4</td>
+                    <td>V2 MIP 最优分配 (CP-SAT)</td>
+                    <td><strong>57.1</strong></td>
+                    <td><span class="tag tag-C">C</span></td>
+                    <td>0.0ms</td>
+                    <td>0</td>
+                </tr></tbody>
+            </table>
+        </div>
+
+        <!-- 建议 -->
+        <div class="card">
+            <h2>💡 使用建议</h2>
+            <div class="rec-box">
+                <h3>基于测试结果的推荐策略</h3>
+                <ul><li>[总体最优] **fcfs** 综合表现最佳，适合作为默认调度策略</li><li>[warehouse] **greedy** 在此类场景中表现更优</li><li>[低延迟需求] **greedy** 计算速度最快，适合实时性要求高的场景</li></ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>Generated by AgvTms Evaluator v2.0 | 多算法兼容评价系统</p>
+        </footer>
+    </div>
+
+    <script>
+        // 雷达图
+        const radarData = {"labels": ["效率", "质量", "资源利用", "实时性能", "鲁棒性"], "datasets": [{"name": "fcfs", "values": [73.6, 90.0, 97.8, 100.0, 60.0], "color": "#1890ff"}, {"name": "greedy", "values": [73.7, 89.7, 98.1, 99.3, 60.0], "color": "#52c41a"}, {"name": "v1_hybrid", "values": [35.0, 100.1, 40.0, 66.6, 60.0], "color": "#faad14"}, {"name": "v2_mip", "values": [35.0, 100.1, 40.0, 70.3, 60.0], "color": "#f5222d"}]};
+        new Chart(document.getElementById('radarChart'), {
+            type: 'radar',
+            data: {
+                labels: radarData.labels || ['效率','质量','资源','实时性','鲁棒性'],
+                datasets: (radarData.datasets || []).map((ds, i) => ({
+                    label: ds.name || '',
+                    data: ds.values || [],
+                    borderColor: '#1890ff',
+                    backgroundColor: '#1890ff20',
+                    pointRadius: 4,
+                }))
+            },
+            options: { responsive: true, maintainAspectRatio: false,
+                        scales: { r: { beginAtZero: true, max: 100 } } }
+        });
+
+        // 柱状图
+        const barData = {"labels": ["fcfs", "greedy", "v2_mip", "v1_hybrid"], "datasets": [{"name": "综合得分", "values": [84.5, 84.4, 57.1, 56.7], "colors": ["#1890ff", "#52c41a", "#faad14", "#f5222d"]}]};
+        new Chart(document.getElementById('barChart'), {
+            type: 'bar',
+            data: {
+                labels: barData.labels || [],
+                datasets: [{
+                    label: '综合得分',
+                    data: barData.datasets?.[0]?.values || [],
+                    backgroundColor: ['#1890ff','#52c41a','#faad14','#f5222d','#722ed1',
+                                       '#13c2c2','#eb2f96','#fa8c16'],
+                    borderRadius: 6,
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: true, max: 100 } } }
+        });
+    </script>
+</body>
+</html>

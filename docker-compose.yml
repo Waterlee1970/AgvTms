@@ -1,0 +1,82 @@
+# AGV-TMS Docker Compose — Sprint 1 工程化基座
+# 一键启动: docker compose up -d
+# 前端: http://localhost:3000
+# 后端: http://localhost:8000/docs
+
+version: '3.8'
+
+services:
+  # ---- PostgreSQL 数据库 ----
+  postgres:
+    image: postgres:16-alpine
+    container_name: agvtms-postgres
+    environment:
+      POSTGRES_DB: agvtms
+      POSTGRES_USER: agvtms
+      POSTGRES_PASSWORD: agvtms_dev
+      TZ: Asia/Shanghai
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agvtms"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  # ---- Redis 缓存 ----
+  redis:
+    image: redis:7-alpine
+    container_name: agvtms-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  # ---- 后端 FastAPI ----
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: agvtms-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://agvtms:agvtms_dev@postgres:5432/agvtms
+      REDIS_URL: redis://redis:6379/0
+      USE_DB_PERSISTENCE: "true"
+      USE_REDIS_CACHE: "true"
+      ACTIVE_ALGORITHM_VERSION: v2
+      HOST: "0.0.0.0"
+      PORT: "8000"
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  # ---- 前端 Vite ----
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: agvtms-frontend
+    depends_on:
+      - backend
+    environment:
+      VITE_API_BASE: http://localhost:8000
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+volumes:
+  pg_data:
+    driver: local
