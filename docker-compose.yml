@@ -1,82 +1,404 @@
-# AGV-TMS Docker Compose — Sprint 1 工程化基座
-# 一键启动: docker compose up -d
-# 前端: http://localhost:3000
-# 后端: http://localhost:8000/docs
+# AGV-TMS Docker Compose — Phase 5.5 高可用架构 (SLA 99.5%)
+# 
+# 架构升级 (v3):
+#   v1: 基础版 (PostgreSQL + Redis)
+#   v2: 工程化版 (+ CI/CD, 测试, 断路器)
+#   v3: 高可用版 (+ Kafka, InfluxDB, HA健康检查, 主备切换)
+#
+# 启动方式:
+#   基础服务:   docker compose up -d postgres redis kafka influxdb
+#   完整服务:   docker compose up -d --build
+#
+# 端口映射:
+#   Frontend:   http://localhost:3000
+#   Backend:    http://localhost:8000/docs
+#   PostgreSQL: localhost:5432
+#   Redis:      localhost:6379
+#   Kafka:      localhost:9092 (内部), 29092 (外部Host访问)
+#   InfluxDB:   localhost:8086 (UI), localhost:8087 (RPC)
 
 version: '3.8'
 
 services:
-  # ---- PostgreSQL 数据库 ----
+
+  # ============================================================
+  # 核心存储层 (P0 - 必须)
+  # ============================================================
+
+  # ---- PostgreSQL 16 主库 (支持未来 Patroni 集群) ----
   postgres:
     image: postgres:16-alpine
-    container_name: agvtms-postgres
+    container_name: agvtms-postgres-primary
     environment:
       POSTGRES_DB: agvtms
       POSTGRES_USER: agvtms
-      POSTGRES_PASSWORD: agvtms_dev
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-agvtms_dev}
       TZ: Asia/Shanghai
+      # WAL 配置 (为主从复制做准备)
+      POSTGRES_INITDB_ARGS: "--wal-segsize=1024 --checkpoint-completion-target=0.9"
+    command: >
+      postgres
+      -c wal_level=replica
+      -c max_wal_senders=5
+      -c max_replication_slots=5
+      -c hot_standby=on
+      -c shared_preload_libraries=pg_stat_statements
     ports:
       - "5432:5432"
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - pg_primary_data:/var/lib/postgresql/data
+      - ./deploy/sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U agvtms"]
+      test: ["CMD-SHELL", "pg_isready -U agvtms -d agvtms"]
       interval: 5s
       timeout: 3s
-      retries: 10
+      retries: 15
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1.0'
     restart: unless-stopped
+    networks:
+      - agvtms-network
 
-  # ---- Redis 缓存 ----
+  # ---- Redis 7 缓存 + 消息队列 (支持 Sentinel 升级) ----
   redis:
     image: redis:7-alpine
     container_name: agvtms-redis
+    command: >
+      redis-server
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+      --appendonly yes
+      --appendfsync everysec
+      --save 60 1000
+      --tcp-backlog 511
+      --timeout 0
     ports:
       - "6379:6379"
-    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
       timeout: 3s
-      retries: 10
+      retries: 12
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
     restart: unless-stopped
+    networks:
+      - agvtms-network
 
-  # ---- 后端 FastAPI ----
+  # ============================================================
+  # 消息队列层 (P0-2 - 异步事件驱动)
+  # ============================================================
+
+  # ---- Kafka 3.x (Zookeeper 内置模式) ----
+  # 用于解耦调度引擎与API层，支撑大规模异步事件处理
+  kafka:
+    image: apache/kafka:latest
+    container_name: agvtms-kafka
+    ports:
+      - "9092:9092"       # 外部访问 (Host)
+      - "29092:29092"     # 内部网络访问 (Docker容器间)
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093,PLAINTEXT_HOST://:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://${DOCKER_HOST_IP:-localhost}:29092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      # Topic 预创建配置
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_NUM_PARTITIONS: 4
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+      # 性能调优 (适合高频AGV遥测数据)
+      KAFKA_NUM_NETWORK_THREADS: 4
+      KAFKA_NUM_IO_THREADS: 8
+      KAFKA_SOCKET_SEND_BUFFER_BYTES: 2097152   # 2MB
+      KAFKA_SOCKET_RECEIVE_BUFFER_BYTES: 2097152
+      # 日志清理策略
+      KAFKA_LOG_RETENTION_HOURS: 168             # 保留7天
+      KAFKA_LOG_SEGMENT_BYTES: 1073741824         # 1GB per segment
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.5'
+    restart: unless-stopped
+    networks:
+      - agvtms-network
+
+  # ---- Kafka UI (可选，可视化 Kafka 管理) ----
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: agvtms-kafka-ui
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: agvtms-kafka-cluster
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    depends_on:
+      kafka:
+        condition: service_healthy
+    profiles:
+      - dev                    # 仅在开发环境启动: docker compose --profile dev up
+    networks:
+      - agvtms-network
+
+  # ============================================================
+  # 时序数据库 (P0-3 - 历史数据分析)
+  # ============================================================
+
+  # ---- InfluxDB 2.x (时序数据存储) ----
+  # 存储: AGV历史轨迹 / 电池曲线 / 速度变化 / 系统指标
+  influxdb:
+    image: influxdb:2.7-alpine
+    container_name: agvtms-influxdb
+    ports:
+      - "8086:8086"       # HTTP API + Web UI
+      - "8087:8087"       # RPC (gRPC/Protobuf)
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB_PASSWORD:-admin_dev_password}
+      DOCKER_INFLUXDB_INIT_ORG: agv-tms
+      DOCKER_INFLUXDB_INIT_BUCKET: agv_data
+      DOCKER_INFLUXDB_INIT_RETENTION: 168h              # 数据保留7天
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_TOKEN:-my-super-secret-influxdb-token}
+      TZ: Asia/Shanghai
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+      - influxdb_config:/etc/influxdb2
+    healthcheck:
+      test: ["CMD-SHELL", "influx ping 2>/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.75'
+    restart: unless-stopped
+    networks:
+      - agvtms-network
+
+  # ============================================================
+  # 应用层
+  # ============================================================
+
+  # ---- 后端 FastAPI (多实例就绪) ----
+  # 生产部署建议: docker compose --scale backend=3 up
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: agvtms-backend
+      args:
+        INSTALL_DEV_DEPS: "false"
+    container_name: agvtms-backend-1
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
+      kafka:
+        condition: service_healthy
+      influxdb:
+        condition: service_healthy
     environment:
-      DATABASE_URL: postgresql+asyncpg://agvtms:agvtms_dev@postgres:5432/agvtms
+      # 数据库连接
+      DATABASE_URL: postgresql+asyncpg://agvtms:${POSTGRES_PASSWORD:-agvtms_dev}@postgres:5432/agvtms
       REDIS_URL: redis://redis:6379/0
+      
+      # Kafka 连接 (Phase 5.5)
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      ENABLE_KAFKA: "true"
+      
+      # InfluxDB 连接 (Phase 5.5)
+      INFLUXDB_URL: http://influxdb:8086
+      INFLUXDB_TOKEN: ${INFLUXDB_TOKEN:-my-super-secret-influxdb-token}
+      INFLUXDB_ORG: agv-tms
+      INFLUXDB_BUCKET: agv_data
+      ENABLE_INFLUXDB: "true"
+      
+      # 功能开关
       USE_DB_PERSISTENCE: "true"
       USE_REDIS_CACHE: "true"
       ACTIVE_ALGORITHM_VERSION: v2
+      
+      # HA 配置
+      HEALTH_CHECK_INTERVAL: "30"
+      DB_RECONNECT_MAX_ATTEMPTS: "10"
+      GRACEFUL_SHUTDOWN_TIMEOUT: "30"
+      
+      # 服务配置
       HOST: "0.0.0.0"
       PORT: "8000"
+      WORKERS: "${BACKEND_WORKERS:-4}"
+      LOG_LEVEL: "info"
+    
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend/app:/app/app:ro           # 开发时挂载代码(只读)
+      - backend_logs:/app/logs
+    
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz')\" || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 45s
+    
+    deploy:
+      replicas: 1                             # 生产环境可改为 >1 实现负载均衡
+      resources:
+        limits:
+          memory: 1G
+          cpus: '2.0'
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
     restart: unless-stopped
+    networks:
+      - agvtms-network
 
-  # ---- 前端 Vite ----
+  # ---- Nginx 负载均衡 + 反向代理 (可选) ----
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: agvtms-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./deploy/nginx/conf.d:/etc/nginx/conf.d:ro
+      # - ./ssl/certs:/etc/nginx/ssl:ro       # SSL证书(生产环境必须)
+    depends_on:
+      - backend
+      - frontend
+    healthcheck:
+      test: ["CMD-SHELL", "nginx -t && curl -f http://localhost/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    profiles:
+      - prod                   # 仅在生产环境启动
+    restart: unless-stopped
+    networks:
+      - agvtms-network
+
+  # ---- 前端 Vite (React SPA) ----
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        NODE_ENV: production
     container_name: agvtms-frontend
     depends_on:
       - backend
     environment:
       VITE_API_BASE: http://localhost:8000
+      # 3D 渲染配置
+      VITE_USE_THREEJS: "true"
+      VITE_FALLBACK_TO_CANVAS: "true"
     ports:
       - "3000:3000"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
     restart: unless-stopped
+    networks:
+      - agvtms-network
 
+  # ============================================================
+  # 监控层 (可选 - 运维监控)
+  # ============================================================
+
+  # ---- Prometheus (指标采集) ----
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: agvtms-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./deploy/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=168h'     # 保留7天
+      - '--web.enable-lifecycle'
+    profiles:
+      - monitoring
+    restart: unless-stopped
+    networks:
+      - agvtms-network
+
+  # ---- Grafana (可视化仪表盘) ----
+  grafana:
+    image: grafana/grafana:10.2.0
+    container_name: agvtms-grafana
+    ports:
+      - "3001:3000"            # 避免与前端冲突
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin_dev}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./deploy/grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus
+    profiles:
+      - monitoring
+    restart: unless-stopped
+    networks:
+      - agvtms-network
+
+# ==================== 网络配置 ====================
+networks:
+  agvtms-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+# ==================== 数据卷 (持久化) ====================
 volumes:
-  pg_data:
+  pg_primary_data:
+    driver: local
+  redis_data:
+    driver: local
+  kafka_data:
+    driver: local
+  influxdb_data:
+    driver: local
+  influxdb_config:
+    driver: local
+  backend_logs:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
     driver: local
