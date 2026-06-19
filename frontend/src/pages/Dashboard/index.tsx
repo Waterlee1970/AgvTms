@@ -1,7 +1,8 @@
 /**
- * Dashboard - 系统总览仪表盘
+ * Dashboard - 系统总览仪表盘 (V2 升级版)
  *
- * Shows key metrics, AGV status, task progress, and schedule visualization.
+ * Shows key metrics, AGV status, task progress, schedule visualization.
+ * P0修复: 增加 HybridScheduler 控制区 + 交通管制开关
  */
 
 import React, { useEffect, useState, useCallback, useRef } from 'react';
@@ -21,6 +22,9 @@ import {
   Tooltip,
   message,
   Divider,
+  Select,
+  Switch,
+  Alert,
 } from 'antd';
 import {
   RobotOutlined,
@@ -35,8 +39,13 @@ import {
   TruckOutlined,
   SwapOutlined,
   MergeCellsOutlined,
+  AimOutlined,
+  TeamOutlined,
+  SafetyCertificateOutlined,
+  ApiOutlined,
 } from '@ant-design/icons';
 import * as api from '../../services/api';
+import * as v2Api from '../../services/v2AlgorithmApi';
 import { useStore } from '../../store/useStore';
 
 const { Text, Title } = Typography;
@@ -53,6 +62,12 @@ const Dashboard: React.FC = () => {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [scheduleRunning, setScheduleRunning] = useState(false);
+
+  // ===== P0修复: V2 HybridScheduler 控制状态 =====
+  const [hybridMode, setHybridMode] = useState<'auto' | 'force_theta' | 'force_ecbs'>('auto');
+  const [enableTrafficControl, setEnableTrafficControl] = useState(true);
+  const [enableDeadlockPrevention, setEnableDeadlockPrevention] = useState(true);
+  const [hybridConfigLoading, setHybridConfigLoading] = useState(false);
 
   const fetchData = useCallback(async () => {
     setLoading('dashboard', true);
@@ -143,10 +158,22 @@ const Dashboard: React.FC = () => {
   const handleRunSchedule = async () => {
     setScheduleRunning(true);
     try {
-      const result = await api.runSchedule();
+      // P0修复: 使用 HybridScheduler 替代旧版 runSchedule
+      const result = await v2Api.runHybridSchedule({
+        force_mode: hybridMode,
+      });
       setScheduleResult(result);
+      message.success(`混合调度完成 (${hybridMode}模式)`);
     } catch (e) {
       console.error('Schedule run error:', e);
+      // Fallback to V1 if V2 fails
+      try {
+        const result = await api.runSchedule();
+        setScheduleResult(result);
+        message.info('已降级至V1调度引擎');
+      } catch (e2) {
+        message.error('调度失败');
+      }
     } finally {
       setScheduleRunning(false);
     }
@@ -246,6 +273,86 @@ const Dashboard: React.FC = () => {
           </Card>
         </Col>
       </Row>
+
+      {/* ===== P0修复: HybridScheduler 控制区 ===== */}
+      <Card
+        title={<span><TeamOutlined style={{ color: '#722ed1', marginRight: 8 }} />混合调度引擎控制</span>}
+        size="small"
+        style={{ marginBottom: 16, border: '1px solid rgba(114,46,209,0.3)', background: 'rgba(114,46,209,0.02)' }}
+      >
+        <Row gutter={[24, 16]} align="middle">
+          <Col xs={24} sm={8}>
+            <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>调度模式</Text>
+            <Select
+              value={hybridMode}
+              onChange={(v) => setHybridMode(v as any)}
+              style={{ width: '100%' }}
+              options={[
+                { value: 'auto', label: '🤖 自动智能选择 (≤3→Theta*, >3→ECBS)' },
+                { value: 'force_theta', label: '🎯 强制 Theta* (最优单agent)' },
+                { value: 'force_ecbs', label: '🔗 强制 ECBS (最优多agent)' },
+              ]}
+            />
+          </Col>
+
+          <Col xs={12} sm={6}>
+            <Space direction="vertical" size={4}>
+              <Switch
+                checked={enableTrafficControl}
+                onChange={setEnableTrafficControl}
+                checkedChildren="交通管制ON"
+                unCheckedChildren="交通管制OFF"
+              />
+              <Text style={{ fontSize: 11 }}>交通管制</Text>
+            </Space>
+          </Col>
+
+          <Col xs={12} sm={6}>
+            <Space direction="vertical" size={4}>
+              <Switch
+                checked={enableDeadlockPrevention}
+                onChange={setEnableDeadlockPrevention}
+                checkedChildren="死锁预防ON"
+                unCheckedChildren="死锁预防OFF"
+              />
+              <Text style={{ fontSize: 11 }}>死锁预防</Text>
+            </Space>
+          </Col>
+
+          <Col xs={24} sm={4}>
+            <Button
+              type="primary"
+              icon={<PlayCircleOutlined />}
+              loading={scheduleRunning || hybridConfigLoading}
+              onClick={handleRunSchedule}
+              block
+              style={{ background: '#722ed1', borderColor: '#722ed1', height: 40 }}
+            >
+              执行混合调度
+            </Button>
+          </Col>
+        </Row>
+
+        <Divider style={{ margin: '12px 0' }} />
+
+        <Alert
+          message={`当前调度引擎: HybridScheduler (${hybridMode}模式)`}
+          description={
+            <div>
+              <Text type="secondary">
+                • Theta*: 改进任意角度路径规划 (LOS检查 + 平滑优化)
+                {' | '}
+                • ECBS: 有界次优多agent协同 (ω=2.5)
+                {' | '}
+                • SIPP: 安全间隔路径规划 (防碰撞核心)
+              </Text>
+            </div>
+          }
+          type="info"
+          showIcon
+          icon={<ApiOutlined />}
+        />
+      </Card>
 
       {/* 输送线任务类型分布 */}
       {totalConveyorTasks > 0 && (

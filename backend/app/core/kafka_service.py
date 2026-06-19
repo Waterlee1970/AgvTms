@@ -26,6 +26,7 @@ import json
 import time
 import logging
 import threading
+import os
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import (
@@ -34,8 +35,9 @@ from typing import (
 )
 from contextlib import asynccontextmanager
 from collections import deque
+from pathlib import Path
 import hashlib
-from datetime import datetime
+from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
 
@@ -157,30 +159,232 @@ class KafkaConfig:
     serializer: str = "json"                # json / avro / protobuf
 
 
-# ==================== 内存降级队列 ====================
+# ==================== 文件降级存储 (第三级) ====================
+
+class KafkaFileFallback:
+    """
+    Kafka 消息文件持久化 — 第三级降级方案
+    
+    当 MemoryQueue 也接近满时，将消息写入本地文件。
+    进程重启后可通过 replay 恢复消息。
+    
+    特性:
+      - JSON Lines 格式 (.jsonl)
+      - 按 Topic + 日期分文件
+      - 异步写入 (不阻塞生产者)
+      - 自动清理过期文件 (默认 7 天)
+      - 支持 replay 恢复
+    """
+    
+    def __init__(
+        self,
+        base_dir: Optional[str] = None,
+        max_file_size: int = 50 * 1024 * 1024,   # 50MB per file
+        retention_days: int = 7
+    ):
+        self._base_dir = Path(base_dir or os.path.join(
+            os.path.dirname(__file__), '..', '..', 'data', 'kafka_fallback'
+        ))
+        self._max_file_size = max_file_size
+        self._retention_days = retention_days
+        self._lock = asyncio.Lock()
+        self._write_count: int = 0
+        self._error_count: int = 0
+        
+        # 确保目录存在
+        self._base_dir.mkdir(parents=True, exist_ok=True)
+        
+        logger.info(
+            f"[KafkaFileFallback] Initialized at {self._base_dir}, "
+            f"retention={retention_days}d"
+        )
+    
+    async def write(self, topic: KafkaTopic, message: Message) -> bool:
+        """
+        写入消息到文件
+        
+        Args:
+            topic: 目标 Topic
+            message: 消息对象
+            
+        Returns:
+            是否写入成功
+        """
+        try:
+            date_str = datetime.now().strftime('%Y-%m-%d')
+            safe_topic = topic.value.replace('.', '_')
+            
+            filename = f"{safe_topic}_{date_str}.jsonl"
+            filepath = self._base_dir / filename
+            
+            # 序列化消息
+            data = {
+                'message_id': message.message_id,
+                'topic': message.topic.value,
+                'key': message.key,
+                'value': message.value,
+                'timestamp': message.timestamp,
+                'headers': dict(message.headers) if message.headers else {},
+                'created_at': datetime.now().isoformat(),
+            }
+            line = json.dumps(data, ensure_ascii=False, default=str) + '\n'
+            
+            # 检查文件大小，超过则创建新文件
+            if filepath.exists() and filepath.stat().st_size > self._max_file_size:
+                filename = f"{safe_topic}_{date_str}_{int(time.time())}.jsonl"
+                filepath = self._base_dir / filename
+            
+            # 异步写文件 (使用线程池避免阻塞事件循环)
+            loop = asyncio.get_event_loop()
+            await loop.run_in_executor(None, self._sync_write, filepath, line)
+
+            async with self._lock:
+                self._write_count += 1
+
+            return True
+
+        except Exception as e:
+            async with self._lock:
+                self._error_count += 1
+            logger.error(f"[KafkaFileFallback] Write failed: {e}")
+            return False
+    
+    def _sync_write(self, filepath: Path, line: str):
+        """同步写入文件 (在 executor 中运行)"""
+        with open(filepath, 'a', encoding='utf-8') as f:
+            f.write(line)
+    
+    async def replay(
+        self,
+        topic: Optional[KafkaTopic] = None,
+        since: Optional[datetime] = None,
+        limit: int = 1000
+    ) -> List[Dict[str, Any]]:
+        """
+        重放/恢复文件中的消息
+        
+        Args:
+            topic: 可选的 Topic 过滤
+            since: 起始时间
+            limit: 最大返回数量
+            
+        Returns:
+            恢复的消息列表
+        """
+        results = []
+        pattern = '*.jsonl' if topic is None else f"{topic.value.replace('.', '_')}_*.jsonl"
+        
+        for filepath in sorted(self._base_dir.glob(pattern), reverse=True):
+            if len(results) >= limit:
+                break
+                
+            try:
+                loop = asyncio.get_event_loop()
+                lines = await loop.run_in_executor(None, self._sync_read, filepath)
+                
+                for line in lines:
+                    line = line.strip()
+                    if not line:
+                        continue
+                        
+                    try:
+                        msg = json.loads(line)
+                        
+                        # 时间过滤
+                        if since:
+                            created_at = msg.get('created_at', '')
+                            if created_at:
+                                msg_time = datetime.fromisoformat(created_at)
+                                if msg_time < since:
+                                    continue
+                        
+                        results.append(msg)
+                        
+                        if len(results) >= limit:
+                            break
+                            
+                    except json.JSONError:
+                        continue
+                        
+            except Exception as e:
+                logger.warning(f"[KafkaFileFallback] Failed to read {filepath}: {e}")
+        
+        logger.info(f"[KafkaFileFallback] Replayed {len(results)} messages")
+        return results
+    
+    def _sync_read(self, filepath: Path) -> List[str]:
+        """同步读取文件"""
+        with open(filepath, 'r', encoding='utf-8') as f:
+            return f.readlines()
+    
+    async def cleanup_expired(self) -> int:
+        """清理过期文件"""
+        cutoff = datetime.now() - timedelta(days=self._retention_days)
+        removed = 0
+        
+        for filepath in self._base_dir.glob('*.jsonl'):
+            try:
+                mtime = datetime.fromtimestamp(filepath.stat().st_mtime)
+                if mtime < cutoff:
+                    filepath.unlink()
+                    removed += 1
+                    logger.debug(f"[KafkaFileFallback] Removed expired: {filepath.name}")
+            except Exception as e:
+                logger.warning(f"[KafkaFileFallback] Cleanup error for {filepath}: {e}")
+        
+        if removed > 0:
+            logger.info(f"[KafkaFileFallback] Cleaned up {removed} expired files")
+        return removed
+    
+    def get_stats(self) -> Dict[str, Any]:
+        """获取统计信息"""
+        total_files = len(list(self._base_dir.glob('*.jsonl')))
+        total_size = sum(f.stat().st_size for f in self._base_dir.glob('*.jsonl'))
+        
+        return {
+            'fallback_type': 'file',
+            'base_dir': str(self._base_dir),
+            'total_files': total_files,
+            'total_size_bytes': total_size,
+            'total_size_mb': round(total_size / (1024 * 1024), 2),
+            'write_count': self._write_count,
+            'error_count': self._error_count,
+            'retention_days': self._retention_days,
+        }
+
+
+# ==================== 内存降级队列 (第二级) ====================
 
 class MemoryMessageQueue:
     """
-    内存消息队列 — Kafka 不可用时的降级方案
+    内存消息队列 — Kafka 不可用时的二级降级方案
     
-    特性:
-      - 每个 Topic 一个 deque
-      - FIFO 先进先出
-      - 有界容量 (满时丢弃最旧或阻塞)
-      - 线程安全 (asyncio.Lock)
-      - 支持批量消费
+    三级降级策略:
+      Level 1: Kafka (正常路径)
+      Level 2: MemoryMessageQueue (快速内存缓冲)
+      Level 3: KafkaFileFallback (磁盘持久化)
+    
+    当内存队列使用率 >80% 时，自动溢写到文件。
     """
     
-    def __init__(self, max_size_per_topic: int = 10000):
+    def __init__(
+        self, 
+        max_size_per_topic: int = 10000,
+        file_fallback: Optional[KafkaFileFallback] = None,
+        spill_threshold: float = 0.8  # 80% 使用率时溢写到文件
+    ):
         self._queues: Dict[KafkaTopic, deque] = {}
         self._max_size = max_size_per_topic
         self._lock = asyncio.Lock()
-        self._total_messages = 0
-        self._dropped_count = 0
+        self._total_messages = int()
+        self._dropped_count = int()
+        self._spill_to_file_count: int = 0
+        self._file_fallback: Optional[KafkaFileFallback] = file_fallback
+        self._spill_threshold: float = spill_threshold
         
         # 预创建常用 topic 队列
-        for topic in KafkaTopic:
-            self._queues[topic] = deque(maxlen=max_size_per_topic)
+        for t in KafkaTopic:
+            self._queues[t] = deque(maxlen=max_size_per_topic)
     
     async def produce(
         self, 
@@ -228,6 +432,16 @@ class MemoryMessageQueue:
         
         queue.append(message)
         self._total_messages += 1
+        
+        # 三级降级: 检查内存队列使用率，超过阈值时溢写到文件
+        if (self._file_fallback is not None and 
+            len(queue) >= self._max_size * self._spill_threshold):
+            try:
+                await self._file_fallback.write(topic, message)
+                self._spill_to_file_count += 1
+            except Exception as e:
+                logger.warning(f"[MemoryMQ] Spill to file failed for {topic}: {e}")
+        
         return True
     
     async def consume_batch(
@@ -813,6 +1027,7 @@ class EventBus:
         self.config = config or KafkaConfig()
         self._producer: Optional[KafkaProducerService] = None
         self._consumer: Optional[KafkaConsumerService] = None
+        self._file_fallback: Optional[KafkaFileFallback] = None
         self._initialized = False
     
     @classmethod
@@ -823,17 +1038,30 @@ class EventBus:
         return cls._instance
     
     async def initialize(self):
-        """初始化生产者和消费者"""
+        """初始化生产者和消费者（含三级降级链）"""
         if self._initialized:
             return
         
+        # 初始化三级降级: File → Memory → Kafka
+        self._file_fallback = KafkaFileFallback()
+        
+        # 创建带文件溢写的内存队列
+        memory_queue = MemoryMessageQueue(
+            max_size_per_topic=self.config.fallback_queue_size,
+            file_fallback=self._file_fallback,
+            spill_threshold=0.8,
+        )
+
         self._producer = KafkaProducerService(self.config)
+        # 将降级队列注入到 producer (用于内部降级)
+        if hasattr(self._producer, '_fallback'):
+            self._producer._fallback = memory_queue
         self._consumer = KafkaConsumerService(self.config, self._producer)
         
         await self._producer.start()
         self._initialized = True
         
-        logger.info("[EventBus] Initialized successfully")
+        logger.info("[EventBus] Initialized with 3-tier fallback: Kafka → Memory → File")
     
     async def shutdown(self):
         """关闭所有组件"""

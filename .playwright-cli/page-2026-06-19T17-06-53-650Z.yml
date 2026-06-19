@@ -1,0 +1,356 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img "api" [ref=e7]:
+          - img [ref=e8]
+        - generic [ref=e10]: AGV-TMS
+      - menu [ref=e11]:
+        - menuitem "dashboard 系统总览" [ref=e12] [cursor=pointer]:
+          - img "dashboard" [ref=e13]:
+            - img [ref=e14]
+          - generic [ref=e16]: 系统总览
+        - menuitem "environment 地图配置" [ref=e17] [cursor=pointer]:
+          - img "environment" [ref=e18]:
+            - img [ref=e19]
+          - generic [ref=e21]: 地图配置
+        - menuitem "unordered-list 任务管理" [ref=e22] [cursor=pointer]:
+          - img "unordered-list" [ref=e23]:
+            - img [ref=e24]
+          - generic [ref=e26]: 任务管理
+        - menuitem "robot AGV监控" [ref=e27] [cursor=pointer]:
+          - img "robot" [ref=e28]:
+            - img [ref=e29]
+          - generic [ref=e31]: AGV监控
+        - menuitem "car 车型管理" [ref=e32] [cursor=pointer]:
+          - img "car" [ref=e33]:
+            - img [ref=e34]
+          - generic [ref=e36]: 车型管理
+        - menuitem "node-index 输送线配置" [ref=e37] [cursor=pointer]:
+          - img "node-index" [ref=e38]:
+            - img [ref=e39]
+          - generic [ref=e41]: 输送线配置
+        - separator [ref=e42]
+        - text: 算法引擎
+        - group [ref=e43]:
+          - menuitem "setting 算法配置" [ref=e44] [cursor=pointer]:
+            - img "setting" [ref=e45]:
+              - img [ref=e46]
+            - generic [ref=e48]: 算法配置
+          - menuitem "experiment 算法评测" [ref=e49] [cursor=pointer]:
+            - img "experiment" [ref=e50]:
+              - img [ref=e51]
+            - generic [ref=e53]: 算法评测
+          - menuitem "bulb RL实验 / A/B测试" [ref=e54] [cursor=pointer]:
+            - img "bulb" [ref=e55]:
+              - img [ref=e56]
+            - generic [ref=e58]: RL实验 / A/B测试
+        - text: 高级功能 (Phase 5-8)
+        - group [ref=e59]:
+          - menuitem "api 策略与协议" [ref=e60] [cursor=pointer]:
+            - img "api" [ref=e61]:
+              - img [ref=e62]
+            - generic [ref=e64]: 策略与协议
+          - menuitem "box-plot 3D 数字孪生" [ref=e65] [cursor=pointer]:
+            - img "box-plot" [ref=e66]:
+              - img [ref=e67]
+            - generic [ref=e69]: 3D 数字孪生
+  - generic [ref=e70]:
+    - banner [ref=e71]:
+      - generic [ref=e72]:
+        - button "menu-fold" [ref=e74] [cursor=pointer]:
+          - img "menu-fold" [ref=e76]:
+            - img [ref=e77]
+        - generic [ref=e79]: 柔性物流调度系统
+        - generic [ref=e83]: 系统运行中
+      - generic [ref=e84]:
+        - generic [ref=e86]: Phase 5-8
+        - img "thunderbolt" [ref=e88]:
+          - img [ref=e89]
+        - generic [ref=e91]: v1.6
+        - generic [ref=e94]: A
+    - main [ref=e95]:
+      - generic [ref=e97]:
+        - generic [ref=e98]:
+          - img "dashboard" [ref=e99]:
+            - img [ref=e100]
+          - text: 系统总览
+          - generic [ref=e102]:
+            - button "poweroff 重新启动" [ref=e104] [cursor=pointer]:
+              - img "poweroff" [ref=e106]:
+                - img [ref=e107]
+              - generic [ref=e109]: 重新启动
+            - button "play-circle 执行调度" [ref=e111] [cursor=pointer]:
+              - img "play-circle" [ref=e113]:
+                - img [ref=e114]
+              - generic [ref=e117]: 执行调度
+            - button "reload 刷新" [ref=e119] [cursor=pointer]:
+              - img "reload" [ref=e121]:
+                - img [ref=e122]
+              - generic [ref=e124]: 刷新
+        - generic [ref=e125]:
+          - generic [ref=e128] [cursor=pointer]:
+            - img "robot" [ref=e129]:
+              - img [ref=e130]
+            - generic [ref=e132]:
+              - generic [ref=e133]: AGV总数 / 活跃
+              - generic [ref=e134]:
+                - generic [ref=e135]: "15"
+                - generic [ref=e137]: / 0 活跃
+          - generic [ref=e140] [cursor=pointer]:
+            - img "thunderbolt" [ref=e141]:
+              - img [ref=e142]
+            - generic [ref=e144]:
+              - generic [ref=e145]: 普通任务 / 已完成
+              - generic [ref=e146]:
+                - generic [ref=e147]: "100"
+                - generic [ref=e149]: / 0 完成
+          - generic [ref=e152] [cursor=pointer]:
+            - img "clock-circle" [ref=e153]:
+              - img [ref=e154]
+            - generic [ref=e157]:
+              - generic [ref=e158]: 总完工时间 (Makespan)
+              - generic [ref=e159]:
+                - generic [ref=e160]: "--"
+                - generic [ref=e161]: s
+          - generic [ref=e164] [cursor=pointer]:
+            - img "node-index" [ref=e165]:
+              - img [ref=e166]
+            - generic [ref=e168]:
+              - generic [ref=e169]: AGV利用率
+              - generic [ref=e170]:
+                - generic [ref=e171]: "--"
+                - generic [ref=e172]: "%"
+        - generic [ref=e173]:
+          - generic [ref=e177]:
+            - img "team" [ref=e178]:
+              - img [ref=e179]
+            - text: 混合调度引擎控制
+          - generic [ref=e181]:
+            - generic [ref=e182]:
+              - generic [ref=e183]:
+                - generic [ref=e184]: 调度模式
+                - generic [ref=e185] [cursor=pointer]:
+                  - generic [ref=e187]:
+                    - combobox [ref=e189]
+                    - generic "🤖 自动智能选择 (≤3→Theta*, >3→ECBS)" [ref=e190]
+                  - generic:
+                    - img:
+                      - img
+              - generic [ref=e192]:
+                - switch "交通管制ON 交通管制OFF" [checked] [ref=e194] [cursor=pointer]:
+                  - generic [ref=e196]:
+                    - generic: 交通管制ON
+                    - generic: 交通管制OFF
+                - generic [ref=e197]: 交通管制
+              - generic [ref=e199]:
+                - switch "死锁预防ON 死锁预防OFF" [checked] [ref=e201] [cursor=pointer]:
+                  - generic [ref=e203]:
+                    - generic: 死锁预防ON
+                    - generic: 死锁预防OFF
+                - generic [ref=e204]: 死锁预防
+              - button "play-circle 执行混合调度" [ref=e206] [cursor=pointer]:
+                - img "play-circle" [ref=e208]:
+                  - img [ref=e209]
+                - generic [ref=e212]: 执行混合调度
+            - separator [ref=e213]
+            - alert [ref=e214]:
+              - img "api" [ref=e215]:
+                - img [ref=e216]
+              - generic [ref=e218]:
+                - generic [ref=e219]: "当前调度引擎: HybridScheduler (auto模式)"
+                - generic [ref=e222]: "• Theta*: 改进任意角度路径规划 (LOS检查 + 平滑优化) | • ECBS: 有界次优多agent协同 (ω=2.5) | • SIPP: 安全间隔路径规划 (防碰撞核心)"
+        - generic [ref=e223]:
+          - generic [ref=e225]:
+            - generic [ref=e227]:
+              - generic [ref=e228]: AGV 状态
+              - generic [ref=e230]:
+                - button "reload" [ref=e232] [cursor=pointer]:
+                  - img "reload" [ref=e234]:
+                    - img [ref=e235]
+                - button "play-circle 执行调度" [ref=e238] [cursor=pointer]:
+                  - img "play-circle" [ref=e240]:
+                    - img [ref=e241]
+                  - generic [ref=e244]: 执行调度
+            - generic [ref=e245]:
+              - generic [ref=e246]:
+                - img "robot" [ref=e247]:
+                  - img [ref=e248]
+                - generic [ref=e250]:
+                  - generic [ref=e251]:
+                    - strong [ref=e253]: AGV-1号
+                    - generic [ref=e254]: 空闲
+                  - generic [ref=e256]: "位置: (0.0, 0.0)"
+                - generic [ref=e257]:
+                  - text: 电量
+                  - progressbar [ref=e258]:
+                    - generic "95%" [ref=e262]
+              - generic [ref=e263]:
+                - img "robot" [ref=e264]:
+                  - img [ref=e265]
+                - generic [ref=e267]:
+                  - generic [ref=e268]:
+                    - strong [ref=e270]: AGV-2号
+                    - generic [ref=e271]: 空闲
+                  - generic [ref=e273]: "位置: (12.0, 0.0)"
+                - generic [ref=e274]:
+                  - text: 电量
+                  - progressbar [ref=e275]:
+                    - generic "88%" [ref=e279]
+              - generic [ref=e280]:
+                - img "robot" [ref=e281]:
+                  - img [ref=e282]
+                - generic [ref=e284]:
+                  - generic [ref=e285]:
+                    - strong [ref=e287]: AGV-3号
+                    - generic [ref=e288]: 空闲
+                  - generic [ref=e290]: "位置: (24.0, 0.0)"
+                - generic [ref=e291]:
+                  - text: 电量
+                  - progressbar [ref=e292]:
+                    - generic "72%" [ref=e296]
+              - generic [ref=e297]:
+                - img "robot" [ref=e298]:
+                  - img [ref=e299]
+                - generic [ref=e301]:
+                  - generic [ref=e302]:
+                    - strong [ref=e304]: AGV-4号
+                    - generic [ref=e305]: 空闲
+                  - generic [ref=e307]: "位置: (36.0, 0.0)"
+                - generic [ref=e308]:
+                  - text: 电量
+                  - progressbar [ref=e309]:
+                    - generic "100%" [ref=e313]
+              - generic [ref=e314]:
+                - img "robot" [ref=e315]:
+                  - img [ref=e316]
+                - generic [ref=e318]:
+                  - generic [ref=e319]:
+                    - strong [ref=e321]: AGV-5号
+                    - generic [ref=e322]: 空闲
+                  - generic [ref=e324]: "位置: (48.0, 0.0)"
+                - generic [ref=e325]:
+                  - text: 电量
+                  - progressbar [ref=e326]:
+                    - generic "85%" [ref=e330]
+              - generic [ref=e331]:
+                - img "robot" [ref=e332]:
+                  - img [ref=e333]
+                - generic [ref=e335]:
+                  - generic [ref=e336]:
+                    - strong [ref=e338]: AGV-6号
+                    - generic [ref=e339]: 空闲
+                  - generic [ref=e341]: "位置: (60.0, 0.0)"
+                - generic [ref=e342]:
+                  - text: 电量
+                  - progressbar [ref=e343]:
+                    - generic "60%" [ref=e347]
+              - generic [ref=e348]:
+                - img "robot" [ref=e349]:
+                  - img [ref=e350]
+                - generic [ref=e352]:
+                  - generic [ref=e353]:
+                    - strong [ref=e355]: AGV-7号
+                    - generic [ref=e356]: 空闲
+                  - generic [ref=e358]: "位置: (72.0, 0.0)"
+                - generic [ref=e359]:
+                  - text: 电量
+                  - progressbar [ref=e360]:
+                    - generic "90%" [ref=e364]
+              - generic [ref=e365]:
+                - img "robot" [ref=e366]:
+                  - img [ref=e367]
+                - generic [ref=e369]:
+                  - generic [ref=e370]:
+                    - strong [ref=e372]: AGV-8号
+                    - generic [ref=e373]: 空闲
+                  - generic [ref=e375]: "位置: (84.0, 0.0)"
+                - generic [ref=e376]:
+                  - text: 电量
+                  - progressbar [ref=e377]:
+                    - generic "78%" [ref=e381]
+              - generic [ref=e382]:
+                - img "robot" [ref=e383]:
+                  - img [ref=e384]
+                - generic [ref=e386]:
+                  - generic [ref=e387]:
+                    - strong [ref=e389]: AGV-9号
+                    - generic [ref=e390]: 空闲
+                  - generic [ref=e392]: "位置: (12.0, 10.0)"
+                - generic [ref=e393]:
+                  - text: 电量
+                  - progressbar [ref=e394]:
+                    - generic "92%" [ref=e398]
+              - generic [ref=e399]:
+                - img "robot" [ref=e400]:
+                  - img [ref=e401]
+                - generic [ref=e403]:
+                  - generic [ref=e404]:
+                    - strong [ref=e406]: AGV-10号
+                    - generic [ref=e407]: 空闲
+                  - generic [ref=e409]: "位置: (36.0, 10.0)"
+                - generic [ref=e410]:
+                  - text: 电量
+                  - progressbar [ref=e411]:
+                    - generic "65%" [ref=e415]
+              - generic [ref=e416]:
+                - img "robot" [ref=e417]:
+                  - img [ref=e418]
+                - generic [ref=e420]:
+                  - generic [ref=e421]:
+                    - strong [ref=e423]: AGV-11号
+                    - generic [ref=e424]: 空闲
+                  - generic [ref=e426]: "位置: (60.0, 10.0)"
+                - generic [ref=e427]:
+                  - text: 电量
+                  - progressbar [ref=e428]:
+                    - generic "82%" [ref=e432]
+              - generic [ref=e433]:
+                - img "robot" [ref=e434]:
+                  - img [ref=e435]
+                - generic [ref=e437]:
+                  - generic [ref=e438]:
+                    - strong [ref=e440]: AGV-12号
+                    - generic [ref=e441]: 空闲
+                  - generic [ref=e443]: "位置: (84.0, 10.0)"
+                - generic [ref=e444]:
+                  - text: 电量
+                  - progressbar [ref=e445]:
+                    - generic "55%" [ref=e449]
+              - generic [ref=e450]:
+                - img "robot" [ref=e451]:
+                  - img [ref=e452]
+                - generic [ref=e454]:
+                  - generic [ref=e455]:
+                    - strong [ref=e457]: AGV-13号
+                    - generic [ref=e458]: 空闲
+                  - generic [ref=e460]: "位置: (0.0, 40.0)"
+                - generic [ref=e461]:
+                  - text: 电量
+                  - progressbar [ref=e462]:
+                    - generic "98%" [ref=e466]
+              - generic [ref=e467]:
+                - img "robot" [ref=e468]:
+                  - img [ref=e469]
+                - generic [ref=e471]:
+                  - generic [ref=e472]:
+                    - strong [ref=e474]: AGV-14号
+                    - generic [ref=e475]: 空闲
+                  - generic [ref=e477]: "位置: (24.0, 40.0)"
+                - generic [ref=e478]:
+                  - text: 电量
+                  - progressbar [ref=e479]:
+                    - generic "70%" [ref=e483]
+              - generic [ref=e484]:
+                - img "robot" [ref=e485]:
+                  - img [ref=e486]
+                - generic [ref=e488]:
+                  - generic [ref=e489]:
+                    - strong [ref=e491]: AGV-15号
+                    - generic [ref=e492]: 空闲
+                  - generic [ref=e494]: "位置: (60.0, 40.0)"
+                - generic [ref=e495]:
+                  - text: 电量
+                  - progressbar [ref=e496]:
+                    - generic "88%" [ref=e500]
+          - generic [ref=e505]: AGV 位置可视化

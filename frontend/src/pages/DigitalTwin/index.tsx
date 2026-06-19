@@ -28,6 +28,11 @@ import {
   EyeOutlined, ApiOutlined, WarningOutlined,
 } from '@ant-design/icons';
 import { get3DScene, SceneModel, Agv3DModel, MapElement3D } from '../../services/advancedApi';
+import {
+  digitalTwinWsManager,
+  DigitalTwinWsManager,
+  UnifiedAgvStatus,
+} from '../../services/unifiedApi';
 
 // 3D 引擎组件 (动态导入，避免无Three.js时报错)
 import ThreeDigitalTwin, { ThreeDigitalTwinProps as ThreeDigitalTwinPropsType } from '../../components/ThreeDigitalTwin';
@@ -146,6 +151,11 @@ const DigitalTwinPage: React.FC = () => {
   const [animSpeed, setAnimSpeed] = useState(1.0);
   const [simMode, setSimMode] = useState(true); // 模拟模式: 无调度数据也显示动画
 
+  // ===== P1修复: WebSocket 实时推送状态 (30FPS) =====
+  const [wsConnected, setWsConnected] = useState(false);
+  const [wsMessageCount, setWsMessageCount] = useState(0);
+  const wsManagerRef = useRef<DigitalTwinWsManager | null>(null);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animFrameRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
@@ -168,6 +178,69 @@ const DigitalTwinPage: React.FC = () => {
   }, []);
 
   useEffect(() => { refreshScene(); }, [refreshScene]);
+
+  // ===== P1修复: WebSocket 连接管理 (30FPS实时推送) =====
+  useEffect(() => {
+    // 初始化WebSocket管理器
+    wsManagerRef.current = digitalTwinWsManager;
+
+    // 订阅连接状态事件
+    const unsubConnected = wsManagerRef.current.on('connected', () => {
+      setWsConnected(true);
+      message.success('🟢 WebSocket 已连接 - 接收30FPS实时数据');
+    });
+
+    // 订阅断开事件
+    const unsubDisconnected = wsManagerRef.current.on('disconnected', () => {
+      setWsConnected(false);
+      message.warning('🔴 WebSocket 已断开 - 使用本地模拟数据');
+    });
+
+    // 订阅AGV数据更新事件 (核心: 30FPS驱动)
+    const unsubUpdate = wsManagerRef.current.on('update', (unifiedAgv: UnifiedAgvStatus) => {
+      setWsMessageCount(prev => prev + 1);
+
+      // 将WS数据合并到模拟AGV状态 (驱动动画)
+      simAgvsRef.current = simAgvsRef.current.map(agv =>
+        agv.id === unifiedAgv.id
+          ? {
+              ...agv,
+              x: unifiedAgv.x,
+              y: unifiedAgv.y,
+              rotation: unifiedAgv.rotation || agv.rotation,
+              speed: unifiedAgv.speed || agv.speed,
+              state: unifiedAgv.status,
+              batteryLevel: unifiedAgv.battery,
+              color: unifiedAgv.vehicle_type === 'forklift' ? '#faad14' :
+                     unifiedAgv.vehicle_type === 'latent' ? '#722ed1' :
+                     unifiedAgv.vehicle_type === 'lift' ? '#52c41a' :
+                     unifiedAgv.vehicle_type === 'sorter' ? '#eb2f96' : agv.color,
+            }
+          : agv
+      );
+    });
+
+    // 自动连接WebSocket
+    if (!wsManagerRef.current.isConnected) {
+      wsManagerRef.current.connect().then(() => {
+        console.log('[DigitalTwin] WebSocket connected successfully');
+      }).catch((err) => {
+        console.warn('[DigitalTwin] WebSocket connection failed, using simulation mode:', err);
+        // WS连接失败时自动启用本地模拟模式
+        setSimMode(true);
+      });
+    } else {
+      setWsConnected(true);
+    }
+
+    // 清理函数
+    return () => {
+      unsubConnected();
+      unsubDisconnected();
+      unsubUpdate();
+      // 注意: 不在此处断开WS，让全局单例保持连接
+    };
+  }, []);
 
   // ========== 核心：requestAnimationFrame 动画循环 ==========
   useEffect(() => {
@@ -421,6 +494,20 @@ const DigitalTwinPage: React.FC = () => {
         <Col span={8}>
           <Card size="small">
             <Space wrap>
+              {/* P1修复: WebSocket连接状态指示器 */}
+              <Tooltip title={wsConnected ? 'WebSocket已连接 (30FPS实时推送)' : 'WebSocket未连接 (本地模拟模式)'}>
+                <Badge status={wsConnected ? 'success' : 'default'} text={
+                  <Tag color={wsConnected ? 'success' : 'default'} style={{ cursor: 'pointer' }}>
+                    {wsConnected ? '🟢 实时' : '🔴 模拟'}
+                  </Tag>
+                } />
+              </Tooltip>
+
+              {/* WS消息计数 */}
+              <Text type="secondary" style={{ fontSize: 10 }}>
+                WS: {wsMessageCount} 帧
+              </Text>
+
               <Button icon={<ReloadOutlined />} onClick={refreshScene} loading={loading} size="small">刷新</Button>
               <Button type={playing?'default':'primary'} size="small"
                 icon={playing?<PauseCircleOutlined/>:<PlayCircleOutlined/>}
@@ -433,6 +520,31 @@ const DigitalTwinPage: React.FC = () => {
                   setPlaying(true);
                 }}>
                   启动模拟
+                </Button>
+              </Tooltip>
+
+              {/* P1修复: WebSocket连接控制按钮 */}
+              <Tooltip title={wsConnected ? '断开WebSocket (切换到模拟模式)' : '连接WebSocket (30FPS实时数据)'}>
+                <Button
+                  size="small"
+                  type={wsConnected ? 'dashed' : 'primary'}
+                  onClick={() => {
+                    if (wsConnected) {
+                      wsManagerRef.current?.disconnect();
+                      setWsConnected(false);
+                      message.info('已断开WebSocket，切换到本地模拟模式');
+                    } else {
+                      wsManagerRef.current = digitalTwinWsManager;
+                      wsManagerRef.current.connect().then(() => {
+                        setWsConnected(true);
+                        message.success('WebSocket已重新连接');
+                      }).catch((err) => {
+                        message.error('连接失败: ' + err);
+                      });
+                    }
+                  }}
+                >
+                  {wsConnected ? '断开WS' : '连接WS'}
                 </Button>
               </Tooltip>
               <Space>

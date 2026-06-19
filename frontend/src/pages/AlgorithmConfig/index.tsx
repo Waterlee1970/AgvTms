@@ -1,22 +1,27 @@
 /**
- * AlgorithmConfig - 算法参数配置页面
+ * AlgorithmConfig - 算法参数配置页面 (V1+V2 双版本)
  *
- * Configure ACO, SA, NLP, and Hybrid algorithm parameters.
+ * V1: ACO / SA / NLP 原型算法
+ * V2: Theta* / ECBS / SIPP / D* 工业级算法栈
+ * Hybrid: 统一调度引擎配置
  */
 
 import React, { useEffect, useState, useCallback } from 'react';
 import {
   Row, Col, Card, Typography, Slider, InputNumber, Button,
   Space, Switch, Select, message, Spin, Divider, Tag, Tooltip,
-  Empty, Statistic, Tabs,
+  Empty, Statistic, Tabs, Alert, Progress,
 } from 'antd';
 import {
   SettingOutlined, SaveOutlined, ReloadOutlined,
   ThunderboltOutlined, ExperimentOutlined, DashboardOutlined,
   BulbOutlined, RocketOutlined, FireOutlined,
   TruckOutlined, SwapOutlined, MergeCellsOutlined,
+  AimOutlined, NodeIndexOutlined, TeamOutlined,
+  SafetyCertificateOutlined, ApiOutlined,
 } from '@ant-design/icons';
 import * as api from '../../services/api';
+import * as v2Api from '../../services/v2AlgorithmApi';
 import { useStore } from '../../store/useStore';
 import type { AlgorithmConfig } from '../../services/api';
 
@@ -27,6 +32,33 @@ const defaultConfig: AlgorithmConfig = {
   sa: { initial_temp: 1000, cooling_rate: 0.95, iterations: 500, min_temp: 0.01 },
   nlp: { solver: 'SLSQP', tolerance: 1e-6, max_iter: 1000, verbose: false },
   hybrid: { aco_weight: 0.4, sa_weight: 0.3, nlp_weight: 0.3, strategy: 'sequential' },
+};
+
+// ==================== V2 工业级算法默认配置 ====================
+
+const defaultV2Config = {
+  theta_star: {
+    weight_heuristic: 1.2,
+    los_check: true,
+    smooth_factor: 0.8,
+    corner_penalty: 2.0,
+  },
+  ecbs: {
+    omega: 2.5,
+    max_runtime_ms: 5000,
+    conflict_limit: 100,
+    restart_count: 3,
+  },
+  sipp: {
+    safe_interval_margin: 0.5,
+    max_wait_time: 30,
+  },
+  d_star: {
+    replan_threshold: 3.0,
+    lookahead_factor: 2.0,
+  },
+  hybrid_mode: 'auto' as const,
+  enable_fallback: true,
 };
 
 const presets: Record<string, { label: string; icon: React.ReactNode; config: Record<string, Record<string, unknown>>; desc: string }> = {
@@ -66,6 +98,10 @@ const AlgorithmConfigPage: React.FC = () => {
   const { algorithmConfig, setAlgorithmConfig, loading, setLoading } = useStore();
   const [config, setConfig] = useState<AlgorithmConfig>(algorithmConfig || defaultConfig);
   const [activePreset, setActivePreset] = useState<string | null>(null);
+
+  // ===== P0修复: V2 算法配置状态 =====
+  const [v2Config, setV2Config] = useState(defaultV2Config);
+  const [v2Loading, setV2Loading] = useState(false);
 
   const fetchConfig = useCallback(async () => {
     setLoading('algoConfig', true);
@@ -121,6 +157,43 @@ const AlgorithmConfigPage: React.FC = () => {
     setActivePreset(null);
   };
 
+  // ===== P0修复: V2 算法参数更新方法 =====
+  const updateThetaStar = (field: string, value: unknown) => {
+    setV2Config(prev => ({ ...prev, theta_star: { ...prev.theta_star, [field]: value } }));
+  };
+
+  const updateEcbs = (field: string, value: unknown) => {
+    setV2Config(prev => ({ ...prev, ecbs: { ...prev.ecbs, [field]: value } }));
+  };
+
+  const updateSipp = (field: string, value: unknown) => {
+    setV2Config(prev => ({ ...prev, sipp: { ...prev.sipp, [field]: value } }));
+  };
+
+  const updateDStar = (field: string, value: unknown) => {
+    setV2Config(prev => ({ ...prev, d_star: { ...prev.d_star, [field]: value } }));
+  };
+
+  // V2配置保存/加载
+  const handleSaveV2Config = async () => {
+    setV2Loading(true);
+    try {
+      await v2Api.updateHybridSchedulerConfig({
+        mode: v2Config.hybrid_mode,
+        enable_fallback: v2Config.enable_fallback,
+        theta_star: v2Config.theta_star,
+        ecbs: v2Config.ecbs,
+        sipp: v2Config.sipp,
+        d_star: v2Config.d_star,
+      });
+      message.success('V2算法配置已保存');
+    } catch (e) {
+      message.error('保存失败，请检查后端连接');
+    } finally {
+      setV2Loading(false);
+    }
+  };
+
   // ---- Render helpers ----
 
   const renderSlider = (
@@ -159,8 +232,232 @@ const AlgorithmConfigPage: React.FC = () => {
 
   const items = [
     {
+      key: 'v1_algorithms',
+      label: <span><FireOutlined /> V1 原型算法</span>,
+      children: (
+        <Tabs
+          type="card"
+          size="small"
+          items={[
+            {
+              key: 'aco',
+              label: <span><FireOutlined /> 蚁群算法 (ACO)</span>,
+              children: (
+                <div>
+                  <Text type="secondary" style={{ fontSize: 12 }}>
+                    蚁群算法用于多AGV路径规划。蚂蚁通过信息素在图中寻找最优路径，α控制信息素权重，β控制启发式权重。
+                  </Text>
+                  <Divider style={{ margin: '12px 0' }} />
+                  {renderSlider('蚂蚁数量', config.aco.num_ants, 5, 500, 5, (v) => v && updateAco('num_ants', v), '每代蚂蚁数量，越多探索越充分但计算量越大')}
+                  {renderSlider('信息素权重 α', config.aco.alpha, 0, 5, 0.1, (v) => v && updateAco('alpha', v), '信息素的重要性，越大越依赖历史经验')}
+                  {renderSlider('启发式权重 β', config.aco.beta, 0, 5, 0.1, (v) => v && updateAco('beta', v), '启发式信息的重要性，越大越倾向短路径')}
+                  {renderSlider('蒸发率 ρ', config.aco.evaporation_rate, 0.01, 0.9, 0.01, (v) => v && updateAco('evaporation_rate', v), '信息素蒸发速率，控制探索与利用平衡')}
+                  {renderSlider('迭代次数', config.aco.iterations, 10, 1000, 10, (v) => v && updateAco('iterations', v), '算法最大迭代次数')}
+                  {renderSlider('贪心因子 q0', config.aco.q0, 0, 1, 0.05, (v) => v && updateAco('q0', v), '开发vs探索概率阈值')}
+                </div>
+              ),
+            },
+            {
+              key: 'sa',
+              label: <span><ExperimentOutlined /> 模拟退火 (SA)</span>,
+              children: (
+                <div>
+                  <Text type="secondary" style={{ fontSize: 12 }}>
+                    模拟退火用于任务到AGV的最优分配。高温时接受较差解以跳出局部最优，降温后收敛到全局最优。
+                  </Text>
+                  <Divider style={{ margin: '12px 0' }} />
+                  {renderSlider('初始温度', config.sa.initial_temp, 1, 100000, 100, (v) => v && updateSa('initial_temp', v), '起始温度，越高探索越充分')}
+                  {renderSlider('冷却速率', config.sa.cooling_rate, 0.5, 0.999, 0.001, (v) => v && updateSa('cooling_rate', v), '每次迭代温度衰减因子')}
+                  {renderSlider('迭代次数', config.sa.iterations, 50, 10000, 50, (v) => v && updateSa('iterations', v), '算法最大迭代次数')}
+                  {renderSlider('最低温度', config.sa.min_temp, 1e-6, 100, 0.001, (v) => v && updateSa('min_temp', v), '温度低于此值时算法终止')}
+                </div>
+              ),
+            },
+            {
+              key: 'nlp',
+              label: <span><ThunderboltOutlined /> 非线性规划 (NLP)</span>,
+              children: (
+                <div>
+                  <Text type="secondary" style={{ fontSize: 12 }}>
+                    非线性规划用于输送线任务排序优化。通过SLSQP求解器最小化总完工时间和能量消耗。
+                  </Text>
+                  <Divider style={{ margin: '12px 0' }} />
+                  <div style={{ marginBottom: 16 }}>
+                    <Text style={{ fontSize: 13, color: '#a0a8c0' }}>求解器</Text>
+                    <Select
+                      value={config.nlp.solver}
+                      onChange={(v) => updateNlp('solver', v)}
+                      style={{ width: '100%', marginTop: 4 }}
+                      options={[
+                        { value: 'SLSQP', label: 'SLSQP - 序列最小二乘规划' },
+                        { value: 'COBYLA', label: 'COBYLA - 约束优化线性近似' },
+                      ]}
+                    />
+                  </div>
+                  {renderSlider('容差', config.nlp.tolerance, 1e-12, 1e-2, 1e-6, (v) => v && updateNlp('tolerance', v), '收敛容差，越小精度越高')}
+                  {renderSlider('最大迭代', config.nlp.max_iter, 50, 10000, 50, (v) => v && updateNlp('max_iter', v), '最大迭代次数')}
+                  <div style={{ marginTop: 8 }}>
+                    <Space>
+                      <Text style={{ fontSize: 13, color: '#a0a8c0' }}>详细输出</Text>
+                      <Switch checked={config.nlp.verbose} onChange={(v) => updateNlp('verbose', v)} />
+                    </Space>
+                  </div>
+                </div>
+              ),
+            },
+          ]}
+        />
+      ),
+    },
+    {
+      key: 'v2_algorithms',
+      label: <span><AimOutlined /> V2 工业级算法</span>,
+      children: (
+        <Alert
+          message="V2 工业级算法栈"
+          description={
+            <div>
+              <Row gutter={[16, 16]}>
+                <Col span={12}>
+                  <Card size="small" title={<span><AimOutlined style={{ color: '#52c41a' }} /> Theta* 改进A*</span>} style={{ borderLeft: '3px solid #52c41a' }}>
+                    <Text type="secondary" style={{ fontSize: 11 }}>
+                      任意角度路径规划，支持LOS检查和平滑优化。<br/>
+                      相比标准A*，路径长度减少20~30%。
+                    </Text>
+                    <div style={{ marginTop: 8 }}>
+                      {renderSlider('启发式权重', v2Config.theta_star.weight_heuristic, 1.0, 3.0, 0.1, (v) => v && updateThetaStar('weight_heuristic', v))}
+                      <Switch checked={v2Config.theta_star.los_check} onChange={(v) => updateThetaStar('los_check', v)} checkedChildren="LOS检查ON" unCheckedChildren="LOS检查OFF" style={{ marginRight: 16 }} />
+                      <Switch checked children="路径平滑" unCheckedChildren={<span />} defaultChecked />
+                    </div>
+                  </Card>
+                </Col>
+                <Col span={12}>
+                  <Card size="small" title={<span><TeamOutlined style={{ color: '#722ed1' }} /> ECBS 多Agent协同</span>} style={{ borderLeft: '3px solid #722ed1' }}>
+                    <Text type="secondary" style={{ fontSize: 11 }}>
+                      Enhanced Conflict-Based Search，有界次优多agent协同。<br/>
+                      保证解质量不超过最优解的(1+ω)倍。
+                    </Text>
+                    <div style={{ marginTop: 8 }}>
+                      {renderSlider('冲突权重 ω', v2Config.ecbs.omega, 1.0, 5.0, 0.5, (v) => v && updateEcbs('omega', v))}
+                      {renderSlider('运行时间上限(ms)', v2Config.ecbs.max_runtime_ms, 1000, 30000, 1000, (v) => v && updateEcbs('max_runtime_ms', v))}
+                    </div>
+                  </Card>
+                </Col>
+                <Col span={12}>
+                  <Card size="small" title={<span><SafetyCertificateOutlined style={{ color: '#1890ff' }} /> SIPP 安全间隔</span>} style={{ borderLeft: '3px solid #1890ff' }}>
+                    <Text type="secondary" style={{ fontSize: 11 }}>
+                      Safe Interval Path Planning，基于时间窗的防碰撞核心。<br/>
+                      确保AGV在同一节点不会发生时间冲突。
+                    </Text>
+                    <div style={{ marginTop: 8 }}>
+                      {renderSlider('安全间隔(s)', v2Config.sipp.safe_interval_margin, 0.1, 2.0, 0.1, (v) => v && updateSipp('safe_interval_margin', v))}
+                      {renderSlider('最大等待时间(s)', v2Config.sipp.max_wait_time, 10, 120, 5, (v) => v && updateSipp('max_wait_time', v))}
+                    </div>
+                  </Card>
+                </Col>
+                <Col span={12}>
+                  <Card size="small" title={<span><NodeIndexOutlined style={{ color: '#eb2f96' }} /> D* Lite 动态重规划</span>} style={{ borderLeft: '3px solid #eb2f96' }}>
+                    <Text type="secondary" style={{ fontSize: 11 }}>
+                      动态环境下的增量式路径重规划算法。<br/>
+                      当环境变化（如障碍物）时快速更新路径。
+                    </Text>
+                    <div style={{ marginTop: 8 }}>
+                      {renderSlider('重规划阈值', v2Config.d_star.replan_threshold, 1.0, 10.0, 0.5, (v) => v && updateDStar('replan_threshold', v))}
+                      {renderSlider('预测因子', v2Config.d_star.lookahead_factor, 1.0, 5.0, 0.5, (v) => v && updateDStar('lookahead_factor', v))}
+                    </div>
+                  </Card>
+                </Col>
+              </Row>
+
+              <Button
+                type="primary"
+                icon={<SaveOutlined />}
+                loading={v2Loading}
+                onClick={handleSaveV2Config}
+                style={{ marginTop: 16, background: '#722ed1', borderColor: '#722ed1' }}
+              >
+                保存V2算法配置
+              </Button>
+            </div>
+          }
+          type="success"
+          showIcon
+        />
+      ),
+    },
+    {
+      key: 'hybrid_scheduler',
+      label: <span><SettingOutlined /> 混合调度引擎</span>,
+      children: (
+        <div>
+          <Text type="secondary" style={{ fontSize: 12 }}>
+            HybridScheduler 统一调度引擎配置。支持三种模式自动切换和四层弹性降级。
+          </Text>
+          <Divider style={{ margin: '12px 0' }} />
+
+          {/* 调度模式选择 */}
+          <Card size="small" style={{ marginBottom: 16 }}>
+            <Row gutter={[24, 16]} align="middle">
+              <Col span={8}>
+                <Text strong>调度模式</Text>
+                <Select
+                  value={v2Config.hybrid_mode}
+                  onChange={(v) => setV2Config(prev => ({ ...prev, hybrid_mode: v as any }))}
+                  style={{ width: '100%', marginTop: 4 }}
+                  options={[
+                    { value: 'auto', label: '🤖 自动智能选择' },
+                    { value: 'force_theta', label: '🎯 强制 Theta*' },
+                    { value: 'force_ecbs', label: '🔗 强制 ECBS' },
+                  ]}
+                />
+              </Col>
+              <Col span={8}>
+                <Text strong>弹性降层</Text>
+                <Switch
+                  checked={v2Config.enable_fallback}
+                  onChange={(v) => setV2Config(prev => ({ ...prev, enable_fallback: v }))}
+                  style={{ marginTop: 8 }}
+                  checkedChildren="启用"
+                  unCheckedChildren="禁用"
+                />
+                <div style={{ marginTop: 4 }}>
+                  <Text type="secondary" style={{ fontSize: 11 }}>
+                    启用时：Theta*失败→ECBS→Dijkstra→BFS逐层降级
+                  </Text>
+                </div>
+              </Col>
+              <Col span={8}>
+                <Statistic title="当前模式" value={
+                  v2Config.hybrid_mode === 'auto' ? '🤖 自动选择' :
+                  v2Config.hybrid_mode === 'force_theta' ? '🎯 Theta*' : '🔗 ECBS'
+                } valueStyle={{ fontSize: 18 }} />
+              </Col>
+            </Row>
+          </Card>
+
+          {/* 权重配置 */}
+          {renderSlider('ACO权重', config.hybrid.aco_weight, 0, 1, 0.05, (v) => v && updateHybrid('aco_weight', v), '蚁群算法在总成本中的权重')}
+          {renderSlider('SA权重', config.hybrid.sa_weight, 0, 1, 0.05, (v) => v && updateHybrid('sa_weight', v), '模拟退火在总成本中的权重')}
+          {renderSlider('NLP权重', config.hybrid.nlp_weight, 0, 1, 0.05, (v) => v && updateHybrid('nlp_weight', v), '非线性规划在总成本中的权重')}
+
+          <div style={{ marginBottom: 16 }}>
+            <Text style={{ fontSize: 13, color: '#a0a8c0' }}>执行策略</Text>
+            <Select
+              value={config.hybrid.strategy}
+              onChange={(v) => updateHybrid('strategy', v)}
+              style={{ width: '100%', marginTop: 4 }}
+              options={[
+                { value: 'sequential', label: '顺序执行 - 依次运行SA→ACO→NLP' },
+                { value: 'parallel', label: '并行执行 - 同时运行后合并结果' },
+              ]}
+            />
+          </div>
+        </div>
+      ),
+    },
+    {
       key: 'aco',
-      label: <span><FireOutlined /> 蚁群算法 (ACO)</span>,
+      label: <span><ApiOutlined /> 蚁群优化 (ACO)</span>,
       children: (
         <div>
           <Text type="secondary" style={{ fontSize: 12 }}>

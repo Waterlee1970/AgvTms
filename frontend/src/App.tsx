@@ -15,6 +15,7 @@ import {
   ExperimentOutlined,
   BoxPlotOutlined,
   BulbOutlined,
+  CarOutlined,  // P1新增: 车型管理图标
 } from '@ant-design/icons';
 import Dashboard from './pages/Dashboard';
 import MapConfig from './pages/MapConfig';
@@ -26,6 +27,7 @@ import AlgorithmBenchmark from './pages/AlgorithmBenchmark';
 import StrategyAndProtocol from './pages/StrategyAndProtocol';
 import DigitalTwin from './pages/DigitalTwin';
 import RLExperiment from './pages/RLExperiment';
+import VehicleTypeManagement from './pages/VehicleType';  // P1新增: 车型管理页面
 
 const { Header, Sider, Content } = Layout;
 const { Text } = Typography;
@@ -35,6 +37,7 @@ const menuItems = [
   { key: '/map', icon: <EnvironmentOutlined />, label: '地图配置' },
   { key: '/tasks', icon: <UnorderedListOutlined />, label: '任务管理' },
   { key: '/agv', icon: <RobotOutlined />, label: 'AGV监控' },
+  { key: '/vehicles', icon: <CarOutlined />, label: '车型管理' },  // P1新增
   { key: '/conveyor', icon: <NodeIndexOutlined />, label: '输送线配置' },
   { type: 'divider' as const },
   { key: 'group-algo', type: 'group' as const, label: '算法引擎', children: [
@@ -143,6 +146,7 @@ const App: React.FC = () => {
             <Route path="/map" element={<MapConfig />} />
             <Route path="/tasks" element={<TaskManager />} />
             <Route path="/agv" element={<AgvMonitor />} />
+            <Route path="/vehicles" element={<VehicleTypeManagement />} />  {/* P1新增: 车型管理 */}
             <Route path="/conveyor" element={<ConveyorConfig />} />
             <Route path="/algorithm" element={<AlgorithmConfig />} />
             <Route path="/benchmark" element={<AlgorithmBenchmark />} />
