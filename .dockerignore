@@ -1,0 +1,79 @@
+# AGV-TMS .dockerignore — 排除不需要的文件以减小镜像大小和加速构建
+
+# Git
+.git
+.gitignore
+.github
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.next/
+out/
+
+# 测试 & 文档
+tests/
+test/
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+__tests__/
+coverage/
+.nyc_output/
+*.cover
+htmlcov/
+.tox/
+.pytest_cache/
+
+# 数据 & 临时文件
+*.db
+*.sqlite3
+data/
+logs/
+*.log
+tmp/
+temp/
+.env
+.env.*
+!.env.example
+
+# 缓存
+.cache/
+.parcel-cache/
+.eslintcache
+
+# Docker (避免嵌套)
+docker-compose*.yml
+Dockerfile*
+.docker
+
+# 文档 & 杂项
+docs/
+README.md
+CHANGELOG.md
+LICENSE
+Makefile
+*.md
+!backend/app/core/digital_twin.py  # 需要的代码文件

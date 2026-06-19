@@ -1,25 +1,36 @@
 /**
- * 3D 数字孪生页面 — 实时动态渲染版 (Phase 8)
+ * 3D 数字孪生产业化页面 — Three.js WebGL + Canvas 双引擎 (Phase 9)
  *
  * 功能:
- *  1. Canvas 2.5D 实时渲染: AGV 运动 / 轨迹绘制 / 热力图
- *  2. requestAnimationFrame 动画循环: AGV 沿路径平滑移动
- *  3. 轨迹回放: 播放/暂停/速度控制/进度条拖动
- *  4. 模拟调度模式: 无真实调度数据时可启动模拟演示
- *  5. AGV 3D 模型列表 / JSON 数据查看
+ *  1. **Three.js 3D 渲染** (默认): AGV 3D模型/光影/Bloom后处理/多视角
+ *  2. Canvas 2.5D 降级: 当 WebGL 不可用时的 fallback
+ *  3. requestAnimationFrame 动画循环: AGV 沿路径平滑移动
+ *  4. 轨迹回放: 播放/暂停/速度控制/进度条拖动
+ *  5. 模拟调度模式: 无真实调度数据时可启动模拟演示
+ *  6. AGV 聚焦跟随 / 自由视角 / 俯视图 / 等距视图
+ *  7. 实时性能监控 HUD (FPS / AGV数 / 延迟)
+ *
+ * 技术栈升级:
+ *   Phase 8: Canvas 2D (手写)
+ *   → Phase 9: Three.js + React Three Fiber (产业化)
  */
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import {
   Card, Row, Col, Button, Space, Statistic, Tag, Table, Switch, Slider,
   message, Tabs, Typography, Empty, Spin, Select, InputNumber, Tooltip,
+  Badge, Progress, Radio,
 } from 'antd';
 import {
   ReloadOutlined, PlayCircleOutlined, PauseCircleOutlined,
   BoxPlotOutlined, EnvironmentOutlined, ThunderboltOutlined,
   CameraOutlined, HeatMapOutlined, FastForwardOutlined, RocketOutlined,
+  EyeOutlined, ApiOutlined, WarningOutlined,
 } from '@ant-design/icons';
 import { get3DScene, SceneModel, Agv3DModel, MapElement3D } from '../../services/advancedApi';
+
+// 3D 引擎组件 (动态导入，避免无Three.js时报错)
+import ThreeDigitalTwin, { ThreeDigitalTwinProps as ThreeDigitalTwinPropsType } from '../../components/ThreeDigitalTwin';
 
 const { Text } = Typography;
 
@@ -130,6 +141,7 @@ const DigitalTwinPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [showHeatmap, setShowHeatmap] = useState(false);
+  const [renderMode, setRenderMode] = useState<'3d' | '2d'>('3d'); // Phase 9: 3D/2D 切换
   const [activeTab, setActiveTab] = useState('canvas');
   const [animSpeed, setAnimSpeed] = useState(1.0);
   const [simMode, setSimMode] = useState(true); // 模拟模式: 无调度数据也显示动画
@@ -442,26 +454,108 @@ const DigitalTwinPage: React.FC = () => {
             <Text type="secondary" style={{ fontSize: 12 }}>热力图</Text>
           </Space>
         </Col>
-        <Col span={12} style={{ textAlign: 'right' }}>
+        <Col span={6}>
+          <Radio.Group
+            value={renderMode}
+            onChange={(e) => setRenderMode(e.target.value)}
+            size="small"
+            optionType="button"
+          >
+            <Radio.Button value="3d">
+              <Badge status="processing" color="#4a90d9" /> 3D
+            </Radio.Button>
+            <Radio.Button value="2d">2D</Radio.Button>
+          </Radio.Group>
+        </Col>
+        <Col span={6} style={{ textAlign: 'right' }}>
           <Text type="secondary" style={{ fontSize: 11 }}>
             {playing
-              ? '实时动画中 — AGV 沿路径巡逻运动，带轨迹尾迹和电量消耗'
+              ? renderMode === '3d'
+                ? 'Three.js WebGL 渲染中 — 实时光影 + AGV 3D 模型 + Bloom 辉光'
+                : '实时动画中 — AGV 沿路径巡逻运动，带轨迹尾迹和电量消耗'
               : '点击「播放」或「启动模拟」查看 AGV 动态运动效果'}
           </Text>
         </Col>
       </Row>
 
-      <Card title={<><CameraOutlined /> 2.5D 场景视图 (实时动态渲染)</>} size="small">
-        <Spin spinning={loading}>
-          <canvas ref={canvasRef} width={900} height={500} style={{
-            width:'100%', height:'auto', background:'#0a0e27',
-            borderRadius:8, border:'1px solid rgba(24,144,255,0.2)',
-          }} />
-        </Spin>
-      </Card>
+      {/* ====== 3D / 2D 渲染切换区域 ======= */}
+      {renderMode === '3d' ? (
+        <Card
+          title={
+            <Space>
+              <RocketOutlined />
+              <span>3D 数字孪生视图</span>
+              <Tag color="blue">Three.js WebGL</Tag>
+              <Tag color="green">Bloom 后处理</Tag>
+            </Space>
+          }
+          size="small"
+        >
+          <Suspense
+            fallback={
+              <div style={{
+                height: 500, display: 'flex', alignItems: 'center',
+                justifyContent: 'center', background: '#0a0e27', borderRadius: 8,
+                color: '#fff'
+              }}>
+                <Spin tip="加载 3D 引擎..." size="large" />
+              </div>
+            }
+          >
+            <ThreeDigitalTwin
+              nodes={(scene?.mapElements || []).map((e) => ({
+                id: e.elementId,
+                x: e.position.x,
+                y: e.position.y,
+                nodeType: (e as any).node_type || undefined,
+                label: e.label,
+              }))}
+              edges={(scene?.mapEdges || []).map((edge, i) => ({
+                id: `edge-${i}`,
+                source: edge.source,
+                target: edge.target,
+              }))}
+              agvs={(playing ? simAgvsRef.current : (scene?.agvs || [])).map((a: any) => ({
+                id: a.id || a.agvId,
+                x: typeof a.x === 'number' ? a.x : (a as any)?.position?.x || 0,
+                y: typeof a.y === 'number' ? a.y : (a as any)?.position?.y || 0,
+                theta: (typeof a.rotation === 'number' ? a.rotation : 0) * Math.PI / 180,
+                speed: a.speed || 1.2,
+                battery: a.batteryLevel || a.battery || 100,
+                state: a.state || 'idle',
+                currentTask: a.currentTaskId || '',
+                loadStatus: a.loadStatus || false,
+                color: a.color || '#00aaff',
+              }))}
+              heatmap={
+                showHeatmap && scene?.heatmapData ?
+                  scene.heatmapData.map((h: any) => ({ x: h.x, y: h.y, value: h.value })) :
+                  []
+              }
+              mode="auto"
+              showStats={true}
+              showControls={true}
+              viewMode="free"
+              onAgvClick={(agvId) => message.info(`选中 AGV: ${agvId}`, 1.5)}
+              style={{ height: 500 }}
+            />
+          </Suspense>
+        </Card>
+      ) : (
+        <Card title={<><CameraOutlined /> 2.5D 场景视图 (Canvas 降级)</>} size="small">
+          <Spin spinning={loading}>
+            <canvas ref={canvasRef} width={900} height={500} style={{
+              width:'100%', height:'auto', background:'#0a0e27',
+              borderRadius:8, border:'1px solid rgba(24,144,255,0.2)',
+            }} />
+          </Spin>
+        </Card>
+      )}
       <Text type="secondary" style={{fontSize:12, marginTop:8, display:'block'}}>
-        技术栈: Canvas 2D + requestAnimationFrame 动画循环 + 线性插值运动 + 轨迹尾迹.
-        数据模型支持 Three.js 3D 渲染升级 (SceneModel 含完整 xyz 坐标).
+        技术栈: {renderMode === '3d'
+          ? 'Three.js r160 + React Three Fiber v8 + Bloom Post-processing + Real-time Shadows'
+          : 'Canvas 2D + requestAnimationFrame 动画循环 + 线性插值运动 + 轨迹尾迹 (Fallback)'
+        }
       </Text>
     </div>
   );

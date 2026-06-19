@@ -1,0 +1,160 @@
+# AGV-TMS .gitignore — Phase 5 工程化加固
+
+# ==================== Python ====================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+ENV/
+env/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+junit.xml
+
+# Translations
+*.mo
+
+# Django stuff:
+local_settings.py
+db.sqlite3
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# mypy
+.mypy_cache/
+
+# ==================== Node.js ====================
+node_modules/
+npm-debug.log*
+yarn-error.log*
+yarn.lock
+.pnpm-debug.log*
+
+# Vite cache (auto-generated, should NOT be committed)
+frontend/node_modules/.vite/
+
+# Build output (frontend)
+frontend/dist/
+frontend/.next/
+frontend/out/
+
+# ==================== IDE & Editor ====================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.sublime-workspace
+
+# ==================== OS Files ====================
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# ==================== Environment & Secrets ====================
+.env
+.env.local
+.env.*.local
+*.env
+!.env.example
+secrets.yaml
+credentials.json
+*.pem
+*.key
+*.crt
+
+# ==================== Logs & Temp ====================
+logs/
+*.log
+tmp/
+temp/
+tmp.*
+run/*.pid
+
+# ==================== Data Files ====================
+*.db
+*.sqlite3
+*.sqlite
+data/
+uploads/
+media/
+
+# ==================== Benchmark Results ====================
+benchmark_results/
+rl_models/
+*.onnx
+*.pt
+*.pth
+!backend/benchmark_results/rl_models/quick_dqn.pt  # 预训练模型保留
+
+# ==================== Docker (本地构建产物) ====================
+.docker/
+
+# ==================== Coverage Reports ====================
+coverage/
+.nyc_output/
+
+# ==================== Misc ====================
+Makefile
+*.bak
+*.orig

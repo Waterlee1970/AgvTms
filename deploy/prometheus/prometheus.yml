@@ -1,0 +1,78 @@
+# AGV-TMS Prometheus 监控配置 (Phase 5.5)
+#
+# 采集目标:
+#   - FastAPI 后端 (/metrics 端点)
+#   - Nginx (stub_status)
+#   - Node.js 前端 (可选)
+#   - PostgreSQL Exporter (可选)
+#   - Redis Exporter (optional)
+#   - Kafka Exporter (JMX, optional)
+
+global:
+  scrape_interval: 15s        # 默认采集间隔
+  evaluation_interval: 15s    # 规则评估间隔
+  scrape_timeout: 10s         # 单次采集超时
+
+# 告警规则文件
+rule_files:
+  # - "/etc/prometheus/alerts.yml"
+
+# Alertmanager 配置 (可选)
+alerting:
+  alertmanagers:
+    # - static_configs:
+    #     - targets:
+      #       - alertmanager:9093
+
+# ==================== 采集目标配置 ====================
+
+scrape_jobs:
+
+  # ---- FastAPI 后端指标 ----
+  - job_name: 'agvtms-backend'
+    static_configs:
+      - targets: ['backend:8000']
+        labels:
+          service: 'agvtms'
+          component: 'api'
+          
+    metrics_path: /metrics
+    
+    # 自定义采集参数
+    scrape_interval: 10s
+    sample_limit: 10000
+    
+    # 可靠性配置
+    relabel_configs:
+      # 添加实例标签
+      - source_labels: ['__address__']
+        target_label: instance
+
+  # ---- Nginx 监控 ----
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx:80']
+        
+    metrics_path: /nginx_status
+    scrape_interval: 15s
+
+  # ---- PostgreSQL Exporter (如果启用) ----
+  - job_name: 'postgresql'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+        
+    scrape_interval: 30s
+
+  # ---- Redis Exporter (如果启用) ----
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+        
+    scrape_interval: 15s
+
+  # ---- Kafka JMX Exporter (如果启用) ----
+  - job_name: 'kafka'
+    static_configs:
+      - targets: ['kafka-jmx-exporter:5556']
+        
+    scrape_interval: 15s
