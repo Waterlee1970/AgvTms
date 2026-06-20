@@ -1245,6 +1245,16 @@ const AlgorithmBenchmark: React.FC = () => {
         controller.signal,
       );
 
+      // 防御: result 可能为 null (HTTP 错误/网络异常)
+      if (!result) {
+        throw new Error('可视化评估返回空数据');
+      }
+
+      // 检查后端返回的错误结构
+      if (result.success === false) {
+        throw new Error(result.error || '可视化评估失败(后端错误)');
+      }
+
       if (result.task_id) {
         await pollProgress(result.task_id);
       }
@@ -1253,10 +1263,14 @@ const AlgorithmBenchmark: React.FC = () => {
       setVizResult(result);
       setActiveMainTab('visualize');
 
+      const totalSteps = result.trajectory?.total_steps || 0;
+      const completedTasks = result.trajectory?.summary?.completed_tasks || '?';
+      const totalTasks = result.trajectory?.summary?.total_tasks || '?';
+
       message.success(
         `可视化就绪！算法: ${result.visualization_algo}, ` +
-        `仿真${result.trajectory.total_steps}步, ` +
-        `预计完成任务${result.trajectory.summary.completed_tasks}/${result.trajectory.summary.total_tasks}`
+        `仿真${totalSteps}步, ` +
+        `预计完成任务${completedTasks}/${totalTasks}`
       );
       setTimeout(() => setProgressInfo(null), 2000);
     } catch (e: any) {

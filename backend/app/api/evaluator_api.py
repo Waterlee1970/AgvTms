@@ -567,29 +567,42 @@ async def get_evaluation_progress(task_id: str):
 async def evaluate_visualize(req: EvaluateVisualizeRequest):
     """
     带轨迹的算法评估 - 用于前端可视化展示
-    
+
     返回完整的数据:
     - 标准评估报告(用于评分排名)
     - 仿真轨迹数据(用于动画播放)
       - 每时间步的AGV位置快照
       - 任务状态变化事件
       - 故障发生/恢复事件
+
+    错误时统一返回包含 error 字段的 JSON 结构体 (非 HTTPException)，
+    以确保前端能通过 response.data.task_id 判断成功/失败。
     """
     task_id = f"viz_{int(time.time()*1000)}"
+    error_response = lambda msg, stage="error": {
+        "success": False,
+        "task_id": task_id,
+        "error": msg,
+        "stage": stage,
+    }
 
     try:
-        evaluator_mod = _import_module("app.algorithms.v2.evaluator")
-        simulator_mod = _import_module("app.algorithms.v2.evaluator.simulator")
-        AGVTMS_Scenario = evaluator_mod.AGVTMS_Scenario
-        ScenarioRunner = evaluator_mod.ScenarioRunner
-        EvaluatorConfig = evaluator_mod.EvaluatorConfig
-        SchedulingSimulator = simulator_mod.SchedulingSimulator
-    except (ImportError, AttributeError) as e:
-        raise HTTPException(status_code=500, detail=f"模块加载失败: {str(e)}")
-        _update_progress(task_id, "parsing", "正在解析场景数据...", 5)
+        # --- Step 1: 导入模块 ---
+        try:
+            evaluator_mod = _import_module("app.algorithms.v2.evaluator")
+            simulator_mod = _import_module("app.algorithms.v2.evaluator.simulator")
+            AGVTMS_Scenario = evaluator_mod.AGVTMS_Scenario
+            ScenarioRunner = evaluator_mod.ScenarioRunner
+            EvaluatorConfig = evaluator_mod.EvaluatorConfig
+            SchedulingSimulator = simulator_mod.SchedulingSimulator
+        except (ImportError, AttributeError) as e:
+            return safe_json_serialize(error_response(f"模块加载失败: {str(e)}", "parsing"))
 
-        # 重建场景
-        scenario = AGVTMS_Scenario.from_dict(req.scenario_data)
+        # --- Step 2: 解析场景 ---
+        try:
+            scenario = AGVTMS_Scenario.from_dict(req.scenario_data)
+        except Exception as e:
+            return safe_json_serialize(error_response(f"场景解析失败: {str(e)}", "parsing"))
 
         _update_progress(task_id, "parsing",
                          f"场景已加载: {scenario.metadata.num_agvs}辆AGV, {scenario.metadata.num_tasks}个任务",
@@ -602,39 +615,45 @@ async def evaluate_visualize(req: EvaluateVisualizeRequest):
 
         _update_progress(task_id, "evaluating", "正在运行算法评估...", 20)
 
-        # 运行评估获取结果
-        config = EvaluatorConfig(verbose=False)
-        runner = ScenarioRunner(config=config)
-        report = runner.run_comparison(scenario, algorithm_names=algo_names)
+        # --- Step 3: 运行评估 ---
+        try:
+            config = EvaluatorConfig(verbose=False)
+            runner = ScenarioRunner(config=config)
+            report = runner.run_comparison(scenario, algorithm_names=algo_names)
+        except Exception as e:
+            return safe_json_serialize(error_response(f"算法评估失败: {str(e)}", "evaluating"))
+
+        winner_algo_name = getattr(report, 'winner', str(algo_names[0] if algo_names else 'unknown'))
 
         _update_progress(task_id, "evaluating",
-                         f"算法评估完成，获胜算法: {report.winner}",
-                         50, {"winner": report.winner})
-
-        # 取获胜算法的结果做仿真
-        winner_algo_name = report.winner
+                         f"算法评估完成，获胜算法: {winner_algo_name}",
+                         50, {"winner": winner_algo_name})
 
         _update_progress(task_id, "simulating",
                          f"正在运行 {req.simulation_steps} 步仿真...", 60)
 
-        # 创建仿真器并运行
-        fault_dict = None
-        if req.fault_config:
-            fault_dict = req.fault_config.dict() if hasattr(req.fault_config, 'dict') else dict(req.fault_config)
+        # --- Step 4: 运行仿真 ---
+        try:
+            fault_dict = None
+            if req.fault_config:
+                fault_dict = req.fault_config.dict() if hasattr(req.fault_config, 'dict') else dict(req.fault_config)
 
-        simulator = SchedulingSimulator(scenario, seed=req.seed % 10000)
-        trajectory = simulator.simulate(
-            time_steps=req.simulation_steps,
-        )
+            simulator = SchedulingSimulator(scenario, seed=req.seed % 10000)
+            trajectory = simulator.simulate(
+                time_steps=req.simulation_steps,
+            )
+        except Exception as e:
+            return safe_json_serialize(error_response(f"仿真运行失败: {str(e)}", "simulating"))
 
         _update_progress(task_id, "comparing", "正在生成可视化数据...", 90)
 
+        # --- Step 5: 构建结果 ---
         result = {
             "success": True,
             "task_id": task_id,
-            "report": report.to_dict(),
-            "radar_data": report.radar_data(),
-            "trajectory": trajectory.to_dict(),
+            "report": report.to_dict() if hasattr(report, 'to_dict') else {},
+            "radar_data": report.radar_data() if hasattr(report, 'radar_data') else {},
+            "trajectory": trajectory.to_dict() if trajectory and hasattr(trajectory, 'to_dict') else {},
             "visualization_algo": winner_algo_name,
         }
 
@@ -643,13 +662,13 @@ async def evaluate_visualize(req: EvaluateVisualizeRequest):
                          100, {"winner": winner_algo_name, "steps": req.simulation_steps})
 
         return safe_json_serialize(result)
+
     except Exception as e:
+        # 兜底：未被上述步骤捕获的未知异常
         import traceback
         _update_progress(task_id, "error", f"可视化评估失败: {str(e)}", 100, {"error": str(e)})
-        raise HTTPException(
-            status_code=500,
-            detail=f"可视化评估失败: {str(e)}\n{traceback.format_exc()}"
-        )
+        # 返回统一错误结构体而非 HTTPException，保证前端兼容
+        return safe_json_serialize(error_response(f"内部错误: {str(e)}", "error"))
 
 
 @router.post("/evaluate/batch")
