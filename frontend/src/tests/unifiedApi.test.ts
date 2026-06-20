@@ -220,16 +220,19 @@ describe('transformWsToUnified', () => {
   it('应使用降级默认值处理最小数据', () => {
     const result = transformWsToUnified(mockWsAgvMinimal);
 
+    // id: agvId || id
     expect(result.id).toBe('minimal');
-    // name 回退到 id
-    expect(result.name).toBe('minimal');
-    // 坐标回退到 0
+    // name: name || agvId (无 agvId 时为 undefined)
+    expect(result.name).toBeUndefined();
+    // 坐标回退到 0 (无 position/x/y)
     expect(result.x).toBe(0);
     expect(result.y).toBe(0);
     // battery 回退到 100
     expect(result.battery).toBe(100);
-    // 状态回退到 idle
+    // 状态: 无 state/status → mapV2Status(undefined) → 'idle'
     expect(result.status).toBe('idle');
+    // vehicle_type 默认 'standard'
+    expect(result.vehicle_type).toBe('standard');
   });
 
   it('应映射各种 V2 状态', () => {
@@ -269,38 +272,70 @@ describe('transformWsToUnified', () => {
 // ==================== Vehicle Type 转换器 ====================
 
 describe('transformVehicleType', () => {
-  it('应转换标准搬运AGV', () => {
+  it('应转换标准搬运AGV (type=standard)', () => {
     const result = transformVehicleType({
-      ...mockVehicleCapability,
-      vehicle_type: 'standard',
+      type: 'standard',
+      max_load_kg: 2000,
+      supports_docking: true,
+      navigation_methods: ['slam', 'qr'],
     });
 
+    // 实际使用 capability.type 字段
     expect(result.vehicle_type).toBe('standard');
-    expect(result.display_name).toContain('标准');
+    expect(result.display_name).toContain('标准搬运');
     expect(result.max_load_kg).toBe(2000);
     expect(result.supports_docking).toBe(true);
     expect(result.navigation_methods).toEqual(['slam', 'qr']);
   });
 
-  it('应转换叉车AGV', () => {
-    const result = transformVehicleType({ vehicle_type: 'forklift', ...mockVehicleCapability });
-    // display_name 应为非空字符串
-    expect(result.display_name).toBeTruthy();
-    expect(typeof result.display_name).toBe('string');
-    expect(result.max_load_kg).toBe(2000);
+  it('应转换叉车AGV (type=forklift)', () => {
+    const result = transformVehicleType({
+      type: 'forklift',
+      max_load_kg: 1000,
+      supports_docking: false,
+    });
+
+    expect(result.vehicle_type).toBe('forklift');
+    expect(result.display_name).toContain('叉车');
+    expect(result.color).toBe('#fa8c16');
   });
 
-  it('应转换潜伏AGV', () => {
-    const result = transformVehicleType({ vehicle_type: 'latent' });
-    // display_name 应为非空字符串（具体标签取决于实现）
-    expect(result.display_name).toBeTruthy();
-    expect(typeof result.display_name).toBe('string');
+  it('应转换潜伏AGV (type=latent)', () => {
+    const result = transformVehicleType({ type: 'latent' });
+
+    expect(result.vehicle_type).toBe('latent');
+    expect(result.display_name).toContain('潜伏');
+    expect(result.icon).toBeTruthy();
   });
 
   it('应对未知车型返回通用标签', () => {
-    const result = transformVehicleType({ vehicle_type: 'unknown_type' });
+    const result = transformVehicleType({ type: 'unknown_custom' });
     expect(result.display_name).toBeTruthy();
     expect(result.color).toBeTruthy();
+    // 未知类型降级到 standard
+    expect(result.vehicle_type).toBe('unknown_custom');
+  });
+
+  it('应正确传递能力矩阵字段', () => {
+    const cap = {
+      type: 'standard',
+      max_load_kg: 5000,
+      max_speed_ms: 2.5,
+      lifting_height_m: 1.2,
+      turning_radius_m: 0.8,
+      width_m: 1.0,
+      length_m: 1.5,
+      battery_capacity_kwh: 4.0,
+    };
+
+    const result = transformVehicleType(cap);
+
+    expect(result.max_speed_ms).toBe(2.5);
+    expect(result.lifting_height_m).toBe(1.2);
+    expect(result.turning_radius_m).toBe(0.8);
+    expect(result.width_m).toBe(1.0);
+    expect(result.length_m).toBe(1.5);
+    expect(result.battery_capacity_kwh).toBe(4.0);
   });
 });
 

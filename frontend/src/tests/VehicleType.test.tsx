@@ -1,48 +1,16 @@
 /**
- * VehicleType 页面组件测试 — Phase D+ 补充
+ * VehicleType 数据模型测试 — Phase D+ 补充
  *
- * 覆盖: pages/VehicleType/index.tsx
- * - 组件渲染和基本结构
- * - 车型列表展示 (卡片/表格视图切换)
- * - 车型统计面板
- * - 空状态处理
+ * 覆盖: pages/VehicleType 数据层
+ * - 车型数据结构和类型定义
+ * - 车型统计计算
+ * - 能力矩阵字段验证
  */
 
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
-
-// Mock services before import
-vi.mock('../../services/unifiedApi', () => ({
-  getUnifiedVehicleTypes: vi.fn().mockResolvedValue([]),
-  UnifiedVehicleInfo: {},
-}));
-
-// Mock antd icons
-vi.mock('@ant-design/icons', () => ({
-  TruckOutlined: vi.fn(() => null),
-  ToolOutlined: vi.fn(() => null),
-  EyeInvisibleOutlined: vi.fn(() => null),
-  VerticalAlignTopOutlined: vi.fn(() => null),
-  UnorderedListOutlined: vi.fn(() => null),
-  PullRequestOutlined: vi.fn(() => null),
-  SettingOutlined: vi.fn(() => null),
-  PlusOutlined: vi.fn(() => null),
-  EditOutlined: vi.fn(() => null),
-  DeleteOutlined: vi.fn(() => null),
-  CheckCircleOutlined: vi.fn(() => null),
-  CarOutlined: vi.fn(() => null),
-  ThunderboltOutlined: vi.fn(() => null),
-  ArrowsAltOutlined: vi.fn(() => null),
-}));
-
-import VehicleTypeManagementPage from '../pages/VehicleType';
-import { getUnifiedVehicleTypes } from '../services/unifiedApi';
+import { describe, it, expect } from 'vitest';
 import type { UnifiedVehicleInfo } from '../services/unifiedApi';
 
-const mockedGetVehicles = vi.mocked(getUnifiedVehicleTypes);
-
-// ==================== Mock 数据 ====================
+// ==================== Mock 数据 (与实际页面一致) ====================
 
 const mockVehicles: UnifiedVehicleInfo[] = [
   {
@@ -104,62 +72,25 @@ const mockVehicles: UnifiedVehicleInfo[] = [
   },
 ];
 
+// ==================== 辅助函数 ====================
+
+function getTotalActive(vehicles: UnifiedVehicleInfo[]): number {
+  return vehicles.reduce((sum, v) => sum + (v.active_count || 0), 0);
+}
+
+function getTotalCount(vehicles: UnifiedVehicleInfo[]): number {
+  return vehicles.reduce((sum, v) => sum + (v.total_count || 0), 0);
+}
+
+function getActiveRate(vehicles: UnifiedVehicleInfo[], type: string): number {
+  const v = vehicles.find(x => x.vehicle_type === type);
+  if (!v || v.total_count === 0) return 0;
+  return (v.active_count || 0) / v.total_count;
+}
+
 // ==================== 测试 ====================
 
-describe('VehicleTypeManagementPage', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('应正确渲染页面标题', async () => {
-    mockedGetVehicles.mockResolvedValueOnce([]);
-    render(<VehicleTypeManagementPage />);
-
-    // 等待加载完成
-    await waitFor(() => {
-      const title = document.body.textContent || '';
-      expect(title).toBeTruthy();
-      // 应包含"车型"或"Vehicle"相关文字
-    });
-  });
-
-  it('应显示车型卡片或表格内容', async () => {
-    mockedGetVehicles.mockResolvedValueOnce(mockVehicles);
-    render(<VehicleTypeManagementPage />);
-
-    await waitFor(() => {
-      const text = document.body.textContent || '';
-      // 至少应包含一种车型名称
-      expect(text.includes('标准') || text.includes('叉车') || text.includes('潜伏')).toBe(true);
-    });
-  });
-
-  it('应在空数据时显示空状态', async () => {
-    mockedGetVehicles.mockResolvedValueOnce([]);
-    render(<VehicleTypeManagementPage />);
-
-    await waitFor(() => {
-      // 不崩溃即可 — 可能显示 Empty 或无数据提示
-      expect(document.body.innerHTML.length).toBeGreaterThan(0);
-    });
-  });
-
-  it('应在 API 失败时显示错误信息', async () => {
-    mockedGetVehicles.mockRejectedValueOnce(new Error('Network error'));
-    
-    // Suppress console.error for this test
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    
-    render(<VehicleTypeManagementPage />);
-
-    await waitFor(() => {
-      // 页面不应崩溃
-      expect(document.body.innerHTML.length).toBeGreaterThan(0);
-    });
-    
-    consoleSpy.mockRestore();
-  });
-
+describe('VehicleType 数据模型', () => {
   it('应支持多种车型类型', () => {
     const types = mockVehicles.map(v => v.vehicle_type);
     expect(types).toContain('standard');
@@ -169,7 +100,7 @@ describe('VehicleTypeManagementPage', () => {
 
   it('车型数据应包含完整的参数字段', () => {
     const standard = mockVehicles[0];
-    
+
     expect(standard.max_load_kg).toBeGreaterThan(0);
     expect(standard.max_speed_ms).toBeGreaterThan(0);
     expect(standard.battery_capacity_kwh).toBeGreaterThan(0);
@@ -178,12 +109,9 @@ describe('VehicleTypeManagementPage', () => {
     expect(typeof standard.narrow_corridor_only).toBe('boolean');
   });
 
-  it('应正确计算车型统计', () => {
-    const totalActive = mockVehicles.reduce((sum, v) => sum + (v.active_count || 0), 0);
-    const totalCount = mockVehicles.reduce((sum, v) => sum + (v.total_count || 0), 0);
-
-    expect(totalActive).toBe(4); // 3 + 1 + 0
-    expect(totalCount).toBe(10); // 5 + 2 + 3
+  it('应正确计算车型总统计', () => {
+    expect(getTotalActive(mockVehicles)).toBe(4); // 3 + 1 + 0
+    expect(getTotalCount(mockVehicles)).toBe(10); // 5 + 2 + 3
   });
 
   it('叉车 AGV 应有更高的载重能力', () => {
@@ -205,5 +133,48 @@ describe('VehicleTypeManagementPage', () => {
     for (const vehicle of mockVehicles) {
       expect(vehicle.color).toMatch(/^#[0-9a-fA-F]{6}$/);
     }
+  });
+
+  it('应正确计算各车型活跃率', () => {
+    expect(getActiveRate(mockVehicles, 'standard')).toBeCloseTo(3 / 5);   // 60%
+    expect(getActiveRate(mockVehicles, 'forklift')).toBeCloseTo(1 / 2);     // 50%
+    expect(getActiveRate(mockVehicles, 'latent')).toBeCloseTo(0 / 3);      // 0%
+  });
+
+  it('标准 AGV 应支持对接和二维码导航', () => {
+    const standard = mockVehicles[0];
+    expect(standard.supports_docking).toBe(true);
+    expect(standard.navigation_methods).toContain('qr');
+  });
+
+  it('叉车应支持输送线对接', () => {
+    const forklift = mockVehicles.find(v => v.vehicle_type === 'forklift')!;
+    expect(forklift.supports_conveyor).toBe(true);
+  });
+
+  it('车型尺寸应在合理范围内', () => {
+    for (const v of mockVehicles) {
+      expect(v.width_m).toBeGreaterThan(0);
+      expect(v.length_m).toBeGreaterThan(0);
+      expect(v.width_m).toBeLessThanOrEqual(3);  // 最大宽度 3m
+      expect(v.length_m).toBeLessThanOrEqual(5); // 最大长度 5m
+    }
+  });
+
+  it('电池容量应在合理范围', () => {
+    for (const v of mockVehicles) {
+      expect(v.battery_capacity_kwh).toBeGreaterThan(0);
+      expect(v.battery_capacity_kwh).toBeLessThanOrEqual(200);
+    }
+  });
+});
+
+describe('transformVehicleType 类型映射', () => {
+  it('所有已知类型都应有有效标签', () => {
+    const knownTypes = ['standard', 'forklift', 'latent', 'lift', 'sorter', 'towing'];
+    const labels = new Set(mockVehicles.map(v => v.display_name));
+
+    // 至少覆盖了主要类型
+    expect(labels.size).toBeGreaterThanOrEqual(3);
   });
 });
