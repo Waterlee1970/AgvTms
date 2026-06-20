@@ -12,7 +12,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import {
   Row, Col, Card, Statistic, Tag, Progress, Space, Button, Empty, Spin,
   Typography, Select, Slider, message, Timeline as AntTimeline, Badge, Tooltip,
-  Table, Alert,
+  Table, Alert, Tabs,
 } from 'antd';
 import {
   RobotOutlined, ThunderboltOutlined, ReloadOutlined,
@@ -516,10 +516,11 @@ const AgvMonitor: React.FC = () => {
                   key: 'agv_status',
                   label: <span><RobotOutlined /> AGV 状态 ({displayAgvs.length})</span>,
                   children: (
-                <div>displayAgvs.length === 0 ? (
-              <Empty description="暂无AGV数据" />
-            ) : (
-              <Row gutter={[12, 12]}>
+                    <div>
+                      {displayAgvs.length === 0 ? (
+                        <Empty description="暂无AGV数据" />
+                      ) : (
+                        <Row gutter={[12, 12]}>
                 {displayAgvs.map((agv) => {
                   const isFaulty = agvOverrides[agv.id];
                   return (
@@ -622,10 +623,10 @@ const AgvMonitor: React.FC = () => {
                   );
                 })}
               </Row>
-                  )}
-                </div>
-              ),
-            },
+                      )}
+                    </div>
+                  ),
+                },
                 {
                   key: 'traffic_control',
                   label: <span><SafetyCertificateOutlined style={{ color: '#722ed1' }} /> 交通管制</span>,

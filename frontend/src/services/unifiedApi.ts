@@ -270,7 +270,7 @@ export const getUnifiedAgvStatuses = async (): Promise<UnifiedAgvStatus[]> => {
 
 /** 执行统一调度 (自动选择V1/V2) */
 export const runUnifiedSchedule = async (
-  params?: { force_v2?: boolean; hybrid_mode?: string } = {}
+  params: { force_v2?: boolean; hybrid_mode?: string } = {}
 ): Promise<UnifiedScheduleResult> => {
   if (params.force_v2) {
     try {
