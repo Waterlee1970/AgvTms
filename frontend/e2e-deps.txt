@@ -1,0 +1,4 @@
+# Playwright Dependencies for Phase D E2E Testing
+# Install with: npm install -D @playwright/test
+
+@playwright/test@^49.1.0
