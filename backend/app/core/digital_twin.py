@@ -176,6 +176,27 @@ class MapElement3D:
 
 
 @dataclass
+class MapEdge3D:
+    """地图边 (连接两个节点)"""
+    edge_id: str = ""
+    source: str = ""   # source node element_id
+    target: str = ""   # target node element_id
+    edge_type: str = "path"  # path / corridor / door
+    weight: float = 1.0
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> Dict:
+        return {
+            "id": self.edge_id,
+            "source": self.source,
+            "target": self.target,
+            "type": self.edge_type,
+            "weight": self.weight,
+            "metadata": self.metadata,
+        }
+
+
+@dataclass
 class SceneModel:
     """
     完整 3D 场景模型 — 前端 Three.js 渲染所需的所有数据.
@@ -189,6 +210,7 @@ class SceneModel:
     scene_id: str = "default"
     timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
     map_elements: List[MapElement3D] = field(default_factory=list)
+    map_edges: List[MapEdge3D] = field(default_factory=list)  # 新增: 地图边
     agvs: List[Agv3DModel] = field(default_factory=list)
     trajectories: List[Trajectory3D] = field(default_factory=list)
     heatmaps: List[HeatmapData] = field(default_factory=list)
@@ -202,9 +224,12 @@ class SceneModel:
             "sceneId": self.scene_id,
             "timestamp": self.timestamp,
             "mapElements": [e.to_dict() for e in self.map_elements],
+            "mapEdges": [e.to_dict() for e in self.map_edges],  # 新增
             "agvs": [a.to_dict() for a in self.agvs],
             "trajectories": [t.to_dict() for t in self.trajectories],
             "heatmaps": [h.to_dict() for h in self.heatmaps],
+            # 兼容前端旧字段名
+            "heatmapData": [c for h in self.heatmaps for c in h.cells],
             "cameraDefault": self.camera_default,
         }
 
@@ -303,5 +328,34 @@ def build_scene_from_schedule(
                     )
             trajectory.total_duration = float(len(assignment.path)) * 2.0
             scene.trajectories.append(trajectory)
+
+    # 构建地图边
+    for i, edge in enumerate(edges):
+        src_id = getattr(edge, "source", edge.get("source", "")) if isinstance(edge, dict) else getattr(edge, "source", "")
+        tgt_id = getattr(edge, "target", edge.get("target", "")) if isinstance(edge, dict) else getattr(edge, "target", "")
+
+        # 尝试多种字段名
+        if not src_id:
+            src_id = getattr(edge, "from_node", edge.get("from_node", "")) if isinstance(edge, dict) else getattr(edge, "from_node", "")
+        if not tgt_id:
+            tgt_id = getattr(edge, "to_node", edge.get("to_node", "")) if isinstance(edge, dict) else getattr(edge, "to_node", "")
+
+        if src_id and tgt_id:
+            scene.map_edges.append(MapEdge3D(
+                edge_id=f"e_{i}",
+                source=str(src_id),
+                target=str(tgt_id),
+                edge_type="path",
+            ))
+
+    # 如果没有显式边数据，根据节点顺序自动生成邻接边（用于可视化展示）
+    if len(scene.map_edges) == 0 and len(scene.map_elements) >= 2:
+        for i in range(len(scene.map_elements) - 1):
+            scene.map_edges.append(MapEdge3D(
+                edge_id=f"auto_{i}",
+                source=scene.map_elements[i].element_id,
+                target=scene.map_elements[i + 1].element_id,
+                edge_type="auto_path",
+            ))
 
     return scene
