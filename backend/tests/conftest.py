@@ -1,12 +1,20 @@
 """
-AGV-TMS Backend Test Suite — Phase 5: 工程化加固
+AGV-TMS Backend Test Suite — Phase D: 测试基础设施完善
 
 标准化的 pytest 测试框架配置:
   - Fixtures (数据库/Redis/客户端)
   - 参数化测试
   - 异步测试支持
-  - 覆盖率报告
+  - 覆盖率报告 (目标: lines >= 50%)
   - Marker 分组
+
+测试文件清单 (Phase A-D):
+  - test_resilience*.py     — 断路器/限流/LeaderElection (26 tests)
+  - test_api_routes_*.py    — API路由边界条件 (31 tests)
+  - test_v2_algorithm_*.py  — V2算法引擎覆盖 (30 tests)
+  - test_v2_complete.py     — V2完整流程集成
+  - test_evaluator_full.py  — 算法基准评测
+  - ... (其他已有测试)
 """
 
 import pytest

@@ -18,7 +18,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main, develop, 'release/*']
+    branches: [main, develop, 'release/*', '2.1', 'feat/*', 'fix/*']
     paths-ignore:
       - '**.md'
       - 'docs/**'
@@ -202,7 +202,7 @@ jobs:
             --cov=app
             --cov-report=term-missing
             --cov-report=xml:coverage.xml
-            --cov-fail-under=30
+            --cov-fail-under=50
           markers =
             slow: marks tests as slow
             integration: integration test
@@ -293,7 +293,58 @@ jobs:
           retention-days: 7
 
   # ============================================================
-  # Job 5: Security Scanning (SAST + Dependency Audit)
+  # Job 5: E2E Tests (Playwright) — Phase D 新增
+  # ============================================================
+  e2e-tests:
+    name: 🎭 E2E Tests (Playwright)
+    runs-on: ubuntu-latest
+    needs: [frontend-tests]
+    if: |
+      github.event.inputs.run_e2e == 'true' ||
+      (github.ref == 'refs/heads/main' && github.event_name == 'push')
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Run E2E tests
+        run: npx playwright test --reporter=list
+        env:
+          CI: true
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: frontend/playwright-report/
+          retention-days: 7
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: frontend/test-results/
+          retention-days: 7
+
+  # ============================================================
+  # Job 6: Security Scanning (SAST + Dependency Audit)
   # ============================================================
   security-scan:
     name: 🔒 Security Scan
@@ -436,7 +487,7 @@ jobs:
   report:
     name: 📋 Pipeline Report
     runs-on: ubuntu-latest
-    needs: [backend-tests, frontend-tests, security-scan]
+    needs: [backend-tests, frontend-tests, security-scan, e2e-tests]
     if: always()
 
     steps:
@@ -450,4 +501,6 @@ jobs:
           echo "| Frontend Lint | ${{ needs.frontend-lint.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Backend Tests | ${{ needs.backend-tests.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Frontend Tests | ${{ needs.frontend-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| E2E Tests | ${{ needs.e2e-tests.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Security Scan | ${{ needs.security-scan.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Coverage Target | lines >= 50% (backend), lines >= 55% (frontend) |" >> $GITHUB_STEP_SUMMARY
