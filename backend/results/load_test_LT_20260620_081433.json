@@ -1,0 +1,101 @@
+{
+  "config": {
+    "num_agvs": 30,
+    "num_tasks": 50,
+    "rounds": 2,
+    "mode": "burst",
+    "duration_seconds": 300,
+    "rampup_max_agvs": 200,
+    "timeout_per_request": 30.0
+  },
+  "test_id": "LT_20260620_081433",
+  "timestamp": "2026-06-20T08:14:33.636132",
+  "summary": {
+    "total_rounds": 4,
+    "successful_rounds": 2,
+    "success_rate": "50.0%",
+    "avg_compute_time_ms": 390.7,
+    "max_compute_time_ms": 1348.8,
+    "overall_p50_ms": 171.6,
+    "overall_p95_ms": 1348.8,
+    "overall_p99_ms": 1348.8,
+    "throughput_tps": 127.98,
+    "peak_memory_mb": 45.2,
+    "g1_goals": {
+      "stable_30min": false,
+      "p99_under_5s": true,
+      "no_crashes": true,
+      "g1_ready": false
+    }
+  },
+  "rounds": [
+    {
+      "round_id": 1,
+      "agvs": 30,
+      "tasks": 50,
+      "algorithm": "fcfs",
+      "success": false,
+      "compute_time_ms": 40.796124999999996,
+      "assignments_count": 4,
+      "paths_count": 0,
+      "error_message": "Execution failed",
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "p99_ms": 0.0,
+      "completion_rate": 0.0,
+      "peak_memory_mb": 0.8180866241455078,
+      "cpu_time_s": 0.0
+    },
+    {
+      "round_id": 1,
+      "agvs": 30,
+      "tasks": 50,
+      "algorithm": "v2_mip",
+      "success": true,
+      "compute_time_ms": 1348.811875,
+      "assignments_count": 6,
+      "paths_count": 0,
+      "error_message": "",
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "p99_ms": 0.0,
+      "completion_rate": 0.0,
+      "peak_memory_mb": 45.15813732147217,
+      "cpu_time_s": 0.0
+    },
+    {
+      "round_id": 2,
+      "agvs": 30,
+      "tasks": 50,
+      "algorithm": "fcfs",
+      "success": false,
+      "compute_time_ms": 1.5320420000000112,
+      "assignments_count": 4,
+      "paths_count": 0,
+      "error_message": "Execution failed",
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "p99_ms": 0.0,
+      "completion_rate": 0.0,
+      "peak_memory_mb": 0.023324966430664062,
+      "cpu_time_s": 0.0
+    },
+    {
+      "round_id": 2,
+      "agvs": 30,
+      "tasks": 50,
+      "algorithm": "v2_mip",
+      "success": true,
+      "compute_time_ms": 171.61349999999987,
+      "assignments_count": 6,
+      "paths_count": 0,
+      "error_message": "",
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "p99_ms": 0.0,
+      "completion_rate": 0.0,
+      "peak_memory_mb": 1.0960321426391602,
+      "cpu_time_s": 0.0
+    }
+  ]
+}

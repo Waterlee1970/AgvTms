@@ -81,11 +81,29 @@ class Task:
     """任务定义"""
     id: str
     pickup_node: str
-    delivery_node: str
+    delivery_node: str  # internal name; accepts dropoff/dropoff_node/delivery externally
     priority: SchedulingPriority = SchedulingPriority.NORMAL
     payload_weight: float = 0.0  # kg
     deadline: Optional[float] = None  # Unix timestamp, None=无截止时间
     created_at: float = field(default_factory=time.time)
+
+    # [G1-FIX P0-2] 兼容多种字段名 (scenarios.py用pickup_node_id/dropoff_node_id, 外部可能用delivery)
+    @classmethod
+    def from_dict(cls, d: dict) -> "Task":
+        """从字典创建任务，兼容多种字段命名风格。"""
+        _pick_keys = ("pickup_node", "pickup", "pickup_node_id")
+        _drop_keys = ("delivery_node", "delivery", "dropoff_node", "dropoff", "dropoff_node_id")
+        pickup = next((d.get(k) for k in _pick_keys if d.get(k)), "")
+        delivery = next((d.get(k) for k in _drop_keys if d.get(k)), "")
+        return cls(
+            id=d.get("id", ""),
+            pickup_node=pickup,
+            delivery_node=delivery,
+            priority=SchedulingPriority(d.get("priority", SchedulingPriority.NORMAL.value)),
+            payload_weight=d.get("payload_weight", 0.0),
+            deadline=d.get("deadline"),
+            created_at=d.get("created_at", time.time()),
+        )
 
 
 @dataclass
@@ -182,7 +200,7 @@ class HybridScheduler:
         traffic_manager=None,                # TrafficControlSystem 实例 (可选)
         mode: SchedulerMode = SchedulerMode.AUTO,
         ebs_omega: float = 1.2,             # ECBS 子最优边界 (推荐 1.2-1.5)
-        default_dispatcher: str = "hungarian",  # 默认分派策略
+        default_dispatcher: str = "mip",  # [G1-FIX P1-3] 默认MIP(最优), 原来是"hungarian"(仅二分匹配)
         enable_deadlock_prevention: bool = True,
         enable_theta_star: bool = True,      # 是否启用 Theta* (需要 graph_builder 支持)
         congestion_threshold: str = "MEDIUM", # 触发重规划的拥堵阈值
@@ -233,6 +251,7 @@ class HybridScheduler:
         tasks: List[Task],
         agvs: List[AgvState],
         mode: Optional[SchedulerMode] = None,
+        timeout_seconds: float = 30.0,  # [G1-FIX P1-4] 全局超时 (原无限制)
         **kwargs
     ) -> SchedulingResult:
         """
@@ -248,23 +267,28 @@ class HybridScheduler:
             tasks: 待调度任务列表
             agvs: 可用AGV列表
             mode: 强制指定调度模式 (None=自动判断)
+            timeout_seconds: 全局超时时间(秒), 超时后降级到FCFS
             
         Returns:
             SchedulingResult 完整调度结果
         """
         t_start = time.perf_counter()
-        effective_mode = mode or self._mode or SchedulerMode.AUTO
+        
+        # [G1-FIX P1-4] 超时包装器
+        async def _run_with_timeout():
+            effective_mode = mode or self._mode or SchedulerMode.AUTO
 
-        if effective_mode == SchedulerMode.AUTO:
-            effective_mode = self._auto_select_mode(len(tasks), len(agvs))
+            if effective_mode == SchedulerMode.AUTO:
+                effective_mode = self._auto_select_mode(len(tasks), len(agvs))
 
-        logger.info(
-            "Batch scheduling started: %d tasks, %d AGVs, mode=%s",
-            len(tasks), len(agvs), effective_mode.value
-        )
+            logger.info(
+                "Batch scheduling started: %d tasks, %d AGVs, mode=%s, timeout=%.1fs",
+                len(tasks), len(agvs), effective_mode.value, timeout_seconds
+            )
 
-        try:
             # === Phase 1: 任务分派 ===
+            if time.perf_counter() - t_start > timeout_seconds * 0.5:
+                raise TimeoutError("Timeout before dispatch phase")
             dispatch_result = await self._dispatch_tasks(tasks, agvs)
             
             if not dispatch_result or not dispatch_result.get("assignments"):
@@ -276,6 +300,9 @@ class HybridScheduler:
                 )
 
             # === Phase 2: 路径规划 ===
+            if time.perf_counter() - t_start > timeout_seconds * 0.8:
+                raise TimeoutError("Timeout before path planning, using fallback")
+                
             if effective_mode == SchedulerMode.MULTI_AGENT and len(tasks) > 3:
                 paths_result = await self._plan_paths_multi_agent(
                     tasks, agvs, dispatch_result
@@ -310,13 +337,40 @@ class HybridScheduler:
 
             return result
 
-        except Exception as e:
-            logger.error("Batch scheduling failed: %s", exc_info=True)
+        try:
+            return await asyncio.wait_for(_run_with_timeout(), timeout=timeout_seconds)
+        except (asyncio.TimeoutError, TimeoutError) as e:
+            elapsed = (time.perf_counter() - t_start) * 1000
+            logger.warning("[P1-4] Schedule batch timed out (%.1fms), using FCFS fallback", elapsed)
             self._stats["fallback_uses"] += 1
+            return await self._fcfs_fallback_batch(tasks, agvs, t_start)
+
+    async def _fcfs_fallback_batch(
+        self, tasks: List[Task], agvs: List[AgvState], t_start: float
+    ) -> SchedulingResult:
+        """[G1-FIX P1-4] FCFS终极降级 — 保证在O(n*m)时间内返回有效结果"""
+        paths = {}
+        available = list(agvs)
+        
+        for task in sorted(tasks, key=lambda t: -t.priority.value):
+            if not available:
+                break
+            best_agv = min(available, key=lambda a: a.id)  # 简单取第一个空闲AGV
+            paths[best_agv.id] = ScheduledPath(
+                agv_id=best_agv.id, task_id=task.id,
+                path=[best_agv.current_node, task.pickup_node, task.delivery_node],
+                total_distance=0.0, estimated_time=10.0,
+                algorithm_used="FCFS-Fallback", success=True
+            )
+            available.remove(best_agv)
             
-            # 降级: 尝试纯单agent AStar
-            fallback_result = await self._fallback_schedule(tasks, agvs, t_start)
-            return fallback_result
+        return SchedulingResult(
+            task_id=f"fcfs_fallback_{int(time.time())}",
+            paths=paths,
+            scheduling_time_ms=(time.perf_counter()-t_start)*1000,
+            algorithm_used="FCFS-Fallback",
+            error_message="Timed out, used FCFS fallback"
+        )
 
     async def schedule_single(
         self,

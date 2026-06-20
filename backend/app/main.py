@@ -27,8 +27,15 @@ from .api.analytics_routes import router as analytics_router
 from .api.simulation_routes import router as simulation_router
 from .api.monitoring_routes import router as monitoring_router
 from .api.phase5_8_routes import router as phase5_8_router
-from .api import digital_twin_ws  # WebSocket for DigitalTwin3D
+from .api.digital_twin_ws import router as digital_twin_router  # WebSocket for DigitalTwin3D
 from .config import settings
+
+# Phase 5.5: InfluxDB 历史数据 API
+try:
+    from .core.influx_service import router as history_router
+    _influx_router_available = True
+except ImportError:
+    _influx_router_available = False
 
 # ==================== 结构化日志系统 (替换print/logging) ====================
 try:
@@ -93,6 +100,86 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning("Phase 5 integration init failed", error=str(e))
 
+    # Phase 5.5: 初始化 Kafka Event Bus (异步事件驱动)
+    if settings.ENABLE_KAFKA:
+        try:
+            from .core.kafka_service import (
+                EventBus, KafkaConfig, KafkaTopic,
+            )
+            config = KafkaConfig(
+                bootstrap_servers=settings.KAFKA_BOOTSTRAP_SERVERS,
+                group_id=settings.KAFKA_GROUP_ID,
+            )
+            bus = EventBus.get_instance(config)
+            await bus.initialize()
+            app.state.event_bus = bus
+
+            # 注册内置消息处理器: AGV状态变更 → 更新Redis缓存
+            @bus.subscribe(KafkaTopic.AGV_STATUS_UPDATE)  # type: ignore
+            async def _on_agv_status(msg):
+                """AGV状态变更 → 更新Redis缓存"""
+                try:
+                    from .services.redis_service import redis_service
+                    agv_id = msg.value.get('agv_id')
+                    if agv_id:
+                        await redis_service.hset(
+                            f"agv:{agv_id}:status",
+                            mapping=msg.value,
+                            ex=300,
+                        )
+                except Exception:
+                    pass
+
+            await bus.start_consuming()
+            logger.info("Kafka EventBus initialized & consuming")
+        except Exception as e:
+            logger.warning("Kafka init failed, events will be synchronous", error=str(e))
+    else:
+        logger.info("Kafka disabled (ENABLE_KAFKA=false), using sync mode")
+
+    # Phase 5.5: 初始化 InfluxDB 时序存储
+    if settings.ENABLE_INFLUXDB:
+        try:
+            from .core.influx_service import (
+                InfluxDBClientWrapper, InfluxConfig,
+                set_influx_client,
+            )
+            influx_client = InfluxDBClientWrapper(InfluxConfig(
+                url=settings.INFLUXDB_URL,
+                token=settings.INFLUXDB_TOKEN,
+                org=settings.INFLUXDB_ORG,
+                bucket=settings.INFLUXDB_BUCKET,
+            ))
+            await influx_client.connect()
+            set_influx_client(influx_client)
+            app.state.influx_client = influx_client
+            logger.info("InfluxDB connected")
+        except Exception as e:
+            logger.warning("InfluxDB init failed, using file fallback", error=str(e))
+    else:
+        logger.info("InfluxDB disabled (ENABLE_INFLUXDB=false)")
+
+    # Phase 5.5: 初始化 MQTT Broker 适配器
+    if settings.ENABLE_MQTT:
+        try:
+            from .adapters.mqtt_vehicle_adapter import MqttVehicleAdapter, MqttConnectionConfig
+            mqtt_config = MqttConnectionConfig(
+                broker_host=settings.MQTT_BROKER_HOST,
+                broker_port=settings.MQTT_BROKER_PORT,
+            )
+            mqtt_adapter = MqttVehicleAdapter(
+                mode=settings.MQTT_MODE,
+                config=mqtt_config,
+                vda5050_mode=True,
+            )
+            connected = await mqtt_adapter.connect()
+            app.state.mqtt_adapter = mqtt_adapter
+            logger.info(f"MQTT adapter initialized (mode={settings.MQTT_MODE}, connected={connected})")
+        except Exception as e:
+            logger.warning("MQTT init failed", error=str(e))
+    else:
+        logger.info("MQTT disabled (ENABLE_MQTT=False)")
+
     logger.info("Application ready")
 
     yield
@@ -105,6 +192,33 @@ async def lifespan(app: FastAPI):
         await stop_scheduler_loop()
     except Exception as e:
         logger.warning("Scheduler loop stop error", error=str(e))
+
+    # Phase 5.5: 关闭 MQTT
+    try:
+        mqtt = getattr(app.state, 'mqtt_adapter', None)
+        if mqtt:
+            await mqtt.disconnect()
+            logger.info("MQTT adapter disconnected")
+    except Exception as e:
+        logger.warning("MQTT shutdown error", error=str(e))
+
+    # Phase 5.5: 关闭 InfluxDB
+    try:
+        influx = getattr(app.state, 'influx_client', None)
+        if influx:
+            await influx.close()
+            logger.info("InfluxDB client closed")
+    except Exception as e:
+        logger.warning("InfluxDB shutdown error", error=str(e))
+
+    # Phase 5.5: 关闭 Kafka EventBus
+    try:
+        bus = getattr(app.state, 'event_bus', None)
+        if bus:
+            await bus.shutdown()
+            logger.info("Kafka EventBus shutdown")
+    except Exception as e:
+        logger.warning("Kafka shutdown error", error=str(e))
 
     try:
         # Phase 6: 停止分布式 Worker
@@ -183,7 +297,11 @@ app.include_router(monitoring_router)    # /metrics + /api/v2/system/info (监�
 app.include_router(evaluator_router)     # /api/v2/evaluator/* (算法评测API)
 app.include_router(industrial_integration_router)  # /api/v2/industrial/* (OPC UA + WMS/MES 集成)
 app.include_router(phase5_8_router)              # /api/v2/advanced/* (Phase 5-8 高级功能)
-app.include_router(digital_twin_ws.router)           # /api/v2/digital-tin/* (3D Digital Twin WebSocket)
+app.include_router(digital_twin_router)           # /api/v2/digital-tin/* (3D Digital Twin WebSocket)
+
+# Phase 5.5: InfluxDB 历史数据 API
+if _influx_router_available:
+    app.include_router(history_router)               # /api/v2/history/*
 
 # Prometheus metrics ticker (启动后开始计时)
 if _prometheus_enabled and metrics:
@@ -238,6 +356,10 @@ async def health_check():
         "active_algorithm": settings.ACTIVE_ALGORITHM_VERSION,
         "structured_logging": _structured_log_enabled,
         "prometheus_metrics": _prometheus_enabled,
+        # Phase 5.5 infrastructure status
+        "kafka": getattr(getattr(app, 'state', None), 'event_bus', None) is not None,
+        "influxdb": getattr(getattr(app, 'state', None), 'influx_client', None) is not None,
+        "mqtt": getattr(getattr(app, 'state', None), 'mqtt_adapter', None) is not None,
     }
 
 

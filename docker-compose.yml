@@ -200,6 +200,36 @@ services:
       - agvtms-network
 
   # ============================================================
+  # MQTT Broker (P0-4 - 设备轻量通信)
+  # ============================================================
+
+  # ---- Mosquitto MQTT Broker ----
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: agvtms-mosquitto
+    ports:
+      - "1883:1883"       # MQTT 标准端口
+      - "9001:9001"       # WebSocket 管理端口 (可选)
+    volumes:
+      - ./deploy/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_logs:/mosquitto/log
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_pub -h localhost -t '$$SYS/broker/#' -m 'ping' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.25'
+    restart: unless-stopped
+    networks:
+      - agvtms-network
+
+  # ============================================================
   # 应用层
   # ============================================================
 
@@ -236,6 +266,12 @@ services:
       INFLUXDB_ORG: agv-tms
       INFLUXDB_BUCKET: agv_data
       ENABLE_INFLUXDB: "true"
+      
+      # MQTT 连接 (Phase 5.5)
+      MQTT_BROKER_HOST: mosquitto
+      MQTT_BROKER_PORT: "1883"
+      MQTT_MODE: "live"              # Docker内用 live, 本地开发可用 simulation
+      ENABLE_MQTT: "true"
       
       # 功能开关
       USE_DB_PERSISTENCE: "true"
@@ -395,6 +431,10 @@ volumes:
   influxdb_data:
     driver: local
   influxdb_config:
+    driver: local
+  mosquitto_data:
+    driver: local
+  mosquitto_logs:
     driver: local
   backend_logs:
     driver: local

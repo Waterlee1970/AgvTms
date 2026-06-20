@@ -173,8 +173,24 @@ class MipTaskAssigner:
 
             # Estimate travel time for this task
             # = travel_AGV_to_pickup + travel_pickup_to_dropoff
-            min_travel = 60  # Minimum 60 seconds
-            max_travel = 600  # Maximum 600 seconds
+            # [G1-FIX P0-1] Use actual distance matrix when available
+            pickup = task.get('pickup_node', task.get('pickup', ''))
+            dropoff = task.get('dropoff_node', task.get('dropoff', ''))
+
+            # Try to get real distances from matrix
+            agv_travel_base = 30.0  # fallback
+            pickup_dropoff_dist = 45.0  # fallback
+            for j_idx in range(num_agvs):
+                agv_node = agvs[j_idx].get('current_node', '')
+                key1 = (agv_node, pickup)
+                key2 = (pickup, dropoff)
+                if key1 in distance_matrix:
+                    agv_travel_base = distance_matrix[key1]
+                if key2 in distance_matrix:
+                    pickup_dropoff_dist = distance_matrix[key2]
+
+            min_travel = max(5.0, agv_travel_base + pickup_dropoff_dist)  # [G1-FIX] dynamic from matrix
+            max_travel = min_travel * 10  # Upper bound
 
             # Add task duration constraints
             task_duration = model.NewIntVar(min_travel, max_travel, f"duration_{i}")

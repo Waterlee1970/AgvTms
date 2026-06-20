@@ -169,6 +169,11 @@ class HybridOrchestratorV2:
         # Auto-discover traffic zones
         self.zone_manager.auto_discover_zones(nodes, edges)
 
+        # [G1-FIX P0-1] Build distance matrix for MIP solver (was empty dict → random assignment)
+        from ..task_assignment.mip_solver import create_distance_matrix
+        self._distance_cache = create_distance_matrix(nodes, edges)
+        logger.debug(f"Distance cache built: {len(self._distance_cache)} entries")
+
         logger.info(
             f"Orchestrator initialized: {self.graph.node_count} nodes, "
             f"{self.graph.edge_count} edges, "

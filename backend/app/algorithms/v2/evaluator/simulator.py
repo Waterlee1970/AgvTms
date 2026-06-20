@@ -874,6 +874,8 @@ class SchedulingSimulator:
                                             self._completed_count += 1
                                         
                             elif tid_raw and tid_raw in task_states:
+                                    tid = str(tid_raw)                          # [G1-FIX P0-3] 变量定义
+                                    tstate = task_states[tid]                  # [G1-FIX P0-3] 变量定义
                                     tstate["status"] = "completed"
                                     tstate["complete_step"] = step
                                     tstate["progress"] = 1.0

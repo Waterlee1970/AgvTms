@@ -148,7 +148,7 @@ class TestHybridSchedulerInit:
         assert scheduler._mode == SchedulerMode.AUTO
         assert scheduler._enable_theta is True
         assert scheduler._ebs_omega == 1.2
-        assert scheduler._default_dispatcher == "hungarian"
+        assert scheduler._default_dispatcher == "mip"  # [G1-FIX] P1-3: 默认改为MIP最优求解器
         assert scheduler._enable_dp is True
 
     def test_init_custom_config(self, sample_graph):

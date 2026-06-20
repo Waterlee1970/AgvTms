@@ -64,5 +64,23 @@ class Settings:
     # ---- Industrial Protocol ----
     OPCUA_SERVER_URL: str = _env("OPCUA_SERVER_URL", "opc.tcp://localhost:4840")
 
+    # ---- Kafka (Phase 5.5) ----
+    ENABLE_KAFKA: bool = _env_bool("ENABLE_KAFKA", False)
+    KAFKA_BOOTSTRAP_SERVERS: str = _env("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
+    KAFKA_GROUP_ID: str = _env("KAFKA_GROUP_ID", "agv-tms-consumer-group")
+
+    # ---- InfluxDB (Phase 5.5) ----
+    ENABLE_INFLUXDB: bool = _env_bool("ENABLE_INFLUXDB", False)
+    INFLUXDB_URL: str = _env("INFLUXDB_URL", "http://localhost:8086")
+    INFLUXDB_TOKEN: str = _env("INFLUXDB_TOKEN", "my-super-secret-influxdb-token")
+    INFLUXDB_ORG: str = _env("INFLUXDB_ORG", "agv-tms")
+    INFLUXDB_BUCKET: str = _env("INFLUXDB_BUCKET", "agv_data")
+
+    # ---- MQTT (Mosquitto) ----
+    ENABLE_MQTT: bool = _env_bool("ENABLE_MQTT", False)
+    MQTT_BROKER_HOST: str = _env("MQTT_BROKER_HOST", "localhost")
+    MQTT_BROKER_PORT: int = _env_int("MQTT_BROKER_PORT", 1883)
+    MQTT_MODE: str = _env("MQTT_MODE", "simulation")  # simulation / live
+
 
 settings = Settings()
