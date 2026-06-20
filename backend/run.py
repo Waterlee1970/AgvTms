@@ -41,9 +41,9 @@ def start_dev_server(host: str, port: int, reload: bool = False):
 ╔══════════════════════════════════════════════════════════╗
 ║         AGV-TMS 柔性物流调度系统 v1.8.0                   ║
 ║                                                          ║
-║  模式: 🛠️  Development (Dev)                              ║
+║  Mode: Development (Dev)                                  ║
 ║  Workers: 1 (auto-reload enabled)                         ║
-║  API 文档: http://{host}:{port}/docs                       ║
+║  API Docs: http://{host}:{port}/docs                       ║
 ║  WebSocket: ws://{host}:{port}/ws/schedule/live            ║
 ╚══════════════════════════════════════════════════════════╝
     """)
@@ -101,7 +101,7 @@ def start_production_server(host: str, port: int, workers: int):
 ╔══════════════════════════════════════════════════════════╗
 ║         AGV-TMS 柔性物流调度系统 v1.8.0                   ║
 ║                                                          ║
-║  模式: 🏭 Production (Prod)                               ║
+║  Mode: Production (Prod)                                  ║
 ║  Workers: {workers} (CPU cores: {multiprocessing.cpu_count()})                      ║
 ║  API 文档: http://{host}:{port}/docs                       ║
 ║  Health:   http://{host}:{port}/health                     ║

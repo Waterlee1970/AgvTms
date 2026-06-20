@@ -24,11 +24,17 @@
  */
 
 import React, { useRef, useEffect, useCallback, useState, useMemo, Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Environment, Html, Stats } from '@react-three/drei';
 import * as THREE from 'three';
 
-import { SceneEngine, MapNode3D, MapEdge3D, AgvState3D, TrajectoryPoint3D, HeatmapCell, SceneEngineOptions } from './SceneEngine';
+// SceneEngine 类型定义 (内联 — 原 SceneEngine.ts 文件不存在，避免导入失败)
+export interface MapNode3D { id: string; x: number; y: number; nodeType?: string; label?: string; }
+export interface MapEdge3D { id: string; source: string; target: string; }
+export interface AgvState3D { id: string; x: number; y: number; z?: number; theta: number; speed: number; battery: number; state: string; currentTask?: string; loadStatus?: boolean; color?: string; }
+export interface TrajectoryPoint3D { t: number; pos: { x: number; y: number; z: number }; rot: number; speed: number; state: string; }
+export interface HeatmapCell { x: number; y: number; value: number; }
+export interface SceneEngineOptions { [key: string]: any; }
 
 // ==================== 类型定义 ====================
 
@@ -66,10 +72,47 @@ interface ThreeDigitalTwinProps {
 
 // ==================== 子组件 ====================
 
-/** AGV 模型组件 (React Three Fiber 集成) */
+/** AGV 模型组件 (React Three Fiber 集成 + 平滑动画) */
 function AgvModel({ agv, onClick }: { agv: AgvState3D; onClick?: () => void }) {
   const meshRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
+
+  // 目标位置（来自 props）
+  const targetPos = useMemo(() => new THREE.Vector3(agv.x, 0.3, agv.y), [agv.x, agv.y]);
+  const targetRotY = useMemo(() => -agv.theta + Math.PI / 2, [agv.theta]);
+
+  // 当前平滑位置
+  const currentPos = useRef(new THREE.Vector3(agv.x, 0.3, agv.y));
+  const currentRotY = useRef(-agv.theta + Math.PI / 2);
+
+  // useFrame: 每帧平滑插值到目标位置（lerp = 线性插值）
+  useFrame((_, delta) => {
+    if (!meshRef.current) return;
+
+    // 位置平滑插值 (lerp factor 5 = 快速跟随)
+    const lerpFactor = 1 - Math.pow(0.01, delta); // 约 5 的等效 lerp
+    currentPos.current.lerp(targetPos, Math.min(lerpFactor * delta * 10, 1));
+    meshRef.current.position.copy(currentPos.current);
+
+    // 旋转平滑插值（处理角度跨越 ±π 的情况）
+    let rotDiff = targetRotY - currentRotY.current;
+    while (rotDiff > Math.PI) rotDiff -= Math.PI * 2;
+    while (rotDiff < -Math.PI) rotDiff += Math.PI * 2;
+    currentRotY.current += rotDiff * Math.min(lerpFactor * delta * 8, 1);
+    meshRef.current.rotation.y = currentRotY.current;
+  });
+
+  // 当 AGV 数据大幅变化时（如首次加载），立即跳转
+  useEffect(() => {
+    if (currentPos.current.distanceTo(targetPos) > 20) {
+      currentPos.current.copy(targetPos);
+      currentRotY.current = targetRotY;
+      if (meshRef.current) {
+        meshRef.current.position.copy(targetPos);
+        meshRef.current.rotation.y = targetRotY;
+      }
+    }
+  }, [targetPos, targetRotY]);
 
   // 状态颜色映射
   const stateColor = useMemo(() => {
@@ -85,8 +128,8 @@ function AgvModel({ agv, onClick }: { agv: AgvState3D; onClick?: () => void }) {
   return (
     <group
       ref={meshRef}
+      // 初始位置（useFrame 会接管后续动画）
       position={[agv.x, 0.3, agv.y]}
-      rotation-y={-agv.theta + Math.PI / 2}
       onClick={onClick}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
@@ -293,23 +336,32 @@ function SceneContent({
   focusAgvId,
   onAgvClick,
 }: Pick<ThreeDigitalTwinProps, 'nodes' | 'edges' | 'agvs' | 'heatmap' | 'viewMode' | 'focusAgvId' | 'onAgvClick'>) {
-  // 计算相机位置基于视角模式
+  // 计算相机位置基于视角模式和场景数据范围（自适应居中）
   const getCameraPosition = useCallback(() => {
-    if (!nodes.length) return [30, 40, 30] as const;
+    if (nodes.length === 0) return [30, 40, 30] as const;
+
+    // 根据节点坐标范围自动计算相机位置，确保场景居中
+    const xs = nodes.map(n => n.x), ys = nodes.map(n => n.y);
+    const minX = Math.min(...xs), maxX = Math.max(...xs);
+    const minY = Math.min(...ys), maxY = Math.max(...ys);
+    const centerX = (minX + maxX) / 2;
+    const centerY = (minY + maxY) / 2;
+    const extent = Math.max(maxX - minX, maxY - minY, 10);
+    const camDist = Math.max(extent * 1.2, 20);  // 相机距离自适应
 
     switch (viewMode) {
       case 'top':
-        return [0, 60, 0.1] as const;
+        return [centerX, Math.max(extent * 1.5, 40), centerY] as const;
       case 'isometric':
-        return [35, 35, 35] as const;
+        return [centerX + camDist * 0.58, camDist * 0.58, centerY + camDist * 0.58] as const;
       case 'follow': {
         const focused = agvs.find(a => a.id === focusAgvId) || agvs[0];
-        if (focused) return [focused.x + 10, 15, focused.z ?? focused.y + 10] as const;
-        return [30, 40, 30] as const;
+        if (focused) return [(focused.x || 0) + 10, 15, ((focused.z ?? focused.y) || 0) + 10] as const;
+        return [centerX + camDist * 0.5, camDist * 0.8, centerY + camDist * 0.5] as const;
       }
       case 'free':
       default:
-        return [30, 40, 30] as const;
+        return [centerX + camDist * 0.5, camDist * 0.8, centerY + camDist * 0.5] as const;
     }
   }, [viewMode, nodes.length, agvs, focusAgvId]);
 

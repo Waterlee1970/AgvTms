@@ -217,18 +217,24 @@ async def stop_adapter(adapter_name: str):
 @router.get("/digital-twin/scene")
 async def get_3d_scene():
     """获取 3D 数字孪生场景数据"""
+    import asyncio
     from ..core.digital_twin import build_scene_from_schedule
     from ..services.schedule_service import schedule_service
     from ..services.map_service import map_service
 
-    agvs = schedule_service.get_agvs()
-    graph = map_service.get_graph()
+    loop = asyncio.get_event_loop()
+
+    # 使用 run_in_executor 避免阻塞 async 事件循环
+    agvs = await loop.run_in_executor(None, schedule_service.get_agvs)
+    graph = await loop.run_in_executor(None, map_service.get_graph)
+
+    # _results 是内存 dict，读取很快，不需要 executor
     results = list(schedule_service._results.values())
     latest_result = results[-1] if results else None
 
-    scene = build_scene_from_schedule(
-        agvs=agvs, nodes=graph.nodes, edges=graph.edges,
-        schedule_result=latest_result,
+    scene = await loop.run_in_executor(
+        None, build_scene_from_schedule,
+        agvs, graph.nodes, graph.edges, latest_result,
     )
     return scene.to_dict()
 

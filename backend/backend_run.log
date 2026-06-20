@@ -1,0 +1,1140 @@
+
+¨X¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨[
+¨U         AGV-TMS ÈáÐÔÎïÁ÷µ÷¶ÈÏµÍ³ v1.8.0                   ¨U
+¨U                                                          ¨U
+¨U  Mode: Development (Dev)                                  ¨U
+¨U  Workers: 1 (auto-reload enabled)                         ¨U
+¨U  API Docs: http://0.0.0.0:8000/docs                       ¨U
+¨U  WebSocket: ws://0.0.0.0:8000/ws/schedule/live            ¨U
+¨^¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨a
+    
+[32m    INFO[0m 07:06:05.106 [root] structured_logging_initialized  | json_mode=False, sampling_enabled=True, log_level=INFO
+structured_logging_initialized
+[32m    INFO[0m 07:06:05.170 [main] Starting AGV-TMS  | app_name=AGV-TMS, version=1.6.0
+Starting AGV-TMS
+EventToWebSocketBridge subscribed to 10 event types
+Phase 5 integration initialized (ws_bridge=True)
+[32m    INFO[0m 07:06:07.258 [main] Phase 5 integration initialized
+Phase 5 integration initialized
+[32m    INFO[0m 07:06:07.258 [main] Kafka disabled (ENABLE_KAFKA=false), using sync mode
+Kafka disabled (ENABLE_KAFKA=false), using sync mode
+[32m    INFO[0m 07:06:07.259 [main] InfluxDB disabled (ENABLE_INFLUXDB=false)
+InfluxDB disabled (ENABLE_INFLUXDB=false)
+[32m    INFO[0m 07:06:07.259 [main] MQTT disabled (ENABLE_MQTT=False)
+MQTT disabled (ENABLE_MQTT=False)
+[32m    INFO[0m 07:06:07.259 [main] Application ready
+Application ready
+[32m    INFO[0m 07:20:56.704 [main] Shutting down...
+Shutting down...
+Distributed scheduler worker stopped
+[32m    INFO[0m 07:20:58.227 [root] structured_logging_initialized  | json_mode=False, sampling_enabled=True, log_level=INFO
+structured_logging_initialized
+[32m    INFO[0m 07:20:58.287 [main] Starting AGV-TMS  | app_name=AGV-TMS, version=1.6.0
+Starting AGV-TMS
+EventToWebSocketBridge subscribed to 10 event types
+Phase 5 integration initialized (ws_bridge=True)
+[32m    INFO[0m 07:21:00.383 [main] Phase 5 integration initialized
+Phase 5 integration initialized
+[32m    INFO[0m 07:21:00.383 [main] Kafka disabled (ENABLE_KAFKA=false), using sync mode
+Kafka disabled (ENABLE_KAFKA=false), using sync mode
+[32m    INFO[0m 07:21:00.383 [main] InfluxDB disabled (ENABLE_INFLUXDB=false)
+InfluxDB disabled (ENABLE_INFLUXDB=false)
+[32m    INFO[0m 07:21:00.383 [main] MQTT disabled (ENABLE_MQTT=False)
+MQTT disabled (ENABLE_MQTT=False)
+[32m    INFO[0m 07:21:00.384 [main] Application ready
+Application ready
+, path=/api/agv/status, status_code=200, elapsed_ms=3.98, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:49725 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49727 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49726 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49742 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:06:15.895 [http.access] request_completed  | request_id=8b67a0b38036, trace_id=5c3770acec47411b, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.45, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:49745 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:06:15.896 [http.access] request_completed  | request_id=676f884b2e58, trace_id=52d88f21e00b4641, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.53, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:49746 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:06:20.885 [http.access] request_completed  | request_id=b9d9342ab3a3, trace_id=f0921dd0813349b1, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.55, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:53647 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:06:20.886 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=32b122d0a10d, trace_id=d7171a2919d9467a, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.65, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:53648 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53649 - "GET /api/metrics HTTP/1.1" 200 OK
+paho-mqtt not installed, MQTT adapter will run in simulation mode
+pymodbus not installed, Modbus adapter will run in simulation mode
+Registered vehicle adapter: opcua ¡ú OpcUaVehicleAdapter
+Registered vehicle adapter: mqtt ¡ú MqttVehicleAdapter
+Registered vehicle adapter: modbus ¡ú ModbusVehicleAdapter
+Registered vehicle adapter: vda5050 ¡ú Vda5050VehicleAdapter
+Registered vehicle adapter: http ¡ú HttpVehicleAdapter
+Registered vehicle adapter: tcp ¡ú TcpVehicleAdapter
+INFO:     127.0.0.1:57902 - "GET /api/v2/advanced/strategy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57909 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57912 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57913 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57950 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57951 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57953 - "GET /api/v2/system/info HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57952 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57955 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57956 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57960 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57961 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57962 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57963 - "GET /api/v2/system/info HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57964 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57965 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57970 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57971 - "GET /api/v2/system/info HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57974 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57975 - "GET /api/v2/system/info HTTP/1.1" 200 OK
+[32m    INFO[0m 07:06:34.728 [http.access] request_completed  | request_id=018849828d55, trace_id=d76d6a83286649eb, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.6, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:57986 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:06:34.729 [http.access] request_completed  | request_id=37f9aedab59a, trace_id=468a469240994cb5, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.16, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:57987 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:06:34.730 [http.access] request_completed  | request_id=e194f327dad9, trace_id=75a818e3d141498d, method=GET, path=/api/metrics, status_code=200, elapsed_ms=2.4, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:57988 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:06:35.055 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=71f9ae9fed69, trace_id=8543dfba78d04b09, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.69, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:57997 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57998 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57999 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58005 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58008 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58011 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58012 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58015 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58016 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:06:44.735 [http.access] request_completed  | request_id=5f96e1409113, trace_id=e23da065c59141ed, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.26, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58024 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:06:44.736 [http.access] request_completed  | request_id=5cb6ff4982f7, trace_id=0d6a4f0009b84cdf, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.27, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58025 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:06:44.737 [http.access] request_completed  | request_id=1e313f254497, trace_id=15a51154f383423b, method=GET, path=/api/metrics, status_code=200, elapsed_ms=2.5, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58026 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:06:45.060 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=310acbfe32ec, trace_id=24456861aa984b2a, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.5, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58033 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58036 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58037 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58047 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58050 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58051 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58054 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58057 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58058 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58071 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58072 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58073 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:06:55.052 [http.access] request_completed  | request_id=0bc0f7dc87a5, trace_id=855336b0d1004a3c, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.54, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58082 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:06:55.053 [http.access] request_completed  | request_id=50bd3f6c014d, trace_id=e871bd7ae30b4f12, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.89, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58083 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:06:55.053 [http.access] request_completed  | request_id=b85af508abab, trace_id=245f6fe586604d1e, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.93, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58084 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:06:59.426 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=10ba87e11d21, trace_id=7924a2c2aaa34b96, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.56, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58094 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58097 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58098 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58101 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58105 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58106 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58116 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58117 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58118 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58127 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58128 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58129 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:07:09.424 [http.access] request_completed  | request_id=8bea50b76ad1, trace_id=24c4576fb512441f, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.51, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58139 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:07:09.734 [http.access] request_completed  | request_id=b59689610725, trace_id=f840fffe22c946ab, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.39, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58142 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:07:09.735 [http.access] request_completed  | request_id=1a57ab3b9d18, trace_id=8aa5b8162dec4ed8, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.26, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58143 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:07:09.750 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=82b87776c0e6, trace_id=f72dd1c2de344115, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.65, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58146 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58149 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58150 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58158 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58159 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58160 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58175 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58176 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58177 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58183 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58187 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58188 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:07:19.755 [http.access] request_completed  | request_id=4006d9f293e6, trace_id=3bc7409c48724a84, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.69, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58190 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:07:20.066 [http.access] request_completed  | request_id=7c8d7d84a993, trace_id=852780b719e74cec, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.32, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58200 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:07:20.067 [http.access] request_completed  | request_id=36e96a58e722, trace_id=d66b444bb04844e1, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.51, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58201 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:07:24.743 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=90af2ac32979, trace_id=ccc73255c7bd4d5d, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.84, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58210 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58211 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58213 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58221 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58222 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58223 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58229 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58232 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58233 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58236 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58240 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58241 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:07:33.959 [http.access] request_completed  | request_id=870e3868c8c9, trace_id=3d44b664eaa84cd3, method=GET, path=/api/v2/advanced/strategy, status_code=200, elapsed_ms=0.44, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58250 - "GET /api/v2/advanced/strategy HTTP/1.1" 200 OK
+[32m    INFO[0m 07:07:34.364 [http.access] request_completed  | request_id=c80e238596e8, trace_id=ddfa91ffe0204249, method=GET, path=/api/v2/advanced/scheduler-loop/status, status_code=200, elapsed_ms=0.7, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58261 - "GET /api/v2/advanced/scheduler-loop/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:07:34.365 [http.access] request_completed  | request_id=006ed7129297, trace_id=54eae4a0457c4d8c, method=GET, path=/api/v2/advanced/adapters, status_code=200, elapsed_ms=1.88, client=127.0.0.1
+request_completed
+[32m    INFO[0m 07:07:34.366 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=b255e1c92842, trace_id=28394e4a210a402f, method=GET, path=/api/v2/advanced/strategy, status_code=200, elapsed_ms=2.31, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58263 - "GET /api/v2/advanced/adapters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58262 - "GET /api/v2/advanced/strategy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58264 - "GET /api/v2/system/info HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58265 - "GET /api/v2/advanced/scheduler-loop/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58266 - "GET /api/v2/advanced/adapters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58274 - "GET /api/v2/advanced/strategy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58275 - "GET /api/v2/system/info HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58280 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58281 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58282 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58289 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58292 - "GET /api/v2/advanced/digital-twin/scene HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58301 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58302 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58309 - "GET /api/v2/system/info HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58308 - "GET /api/v2/advanced/digital-twin/scene HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58310 - "GET /api/v2/system/info HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58311 - "GET /api/v2/advanced/digital-twin/scene HTTP/1.1" 200 OK
+[32m    INFO[0m 07:07:44.737 [http.access] request_completed  | request_id=759d05617db2, trace_id=2f45549720b4469a, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.34, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58326 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:07:44.738 [http.access] request_completed  | request_id=8b1a7dc03cea, trace_id=d719ee39595146c4, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.7, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58327 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:07:44.739 [http.access] request_completed  | request_id=5d68d0ceee45, trace_id=e9319d4675c04b92, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.88, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58328 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:07:49.436 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=2f8499dbecc1, trace_id=14d102a95edf4d17, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.51, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58332 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58335 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58336 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58347 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58348 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58349 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:07:59.430 [http.access] request_completed  | request_id=1c001bd0a398, trace_id=099ed334ee8c4169, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.59, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58358 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:07:59.739 [http.access] request_completed  | request_id=edf49fbd292f, trace_id=ec4992aeedb34c60, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.12, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58362 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:07:59.741 [http.access] request_completed  | request_id=10c24ae1a62f, trace_id=ea1ff5ded0e941ab, method=GET, path=/api/metrics, status_code=200, elapsed_ms=2.0, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58363 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:08:04.735 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=1da7b4b5108b, trace_id=1aecf3e686994af5, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.28, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58371 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58372 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58373 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58379 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58382 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58383 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:08:14.747 [http.access] request_completed  | request_id=902febad25be, trace_id=37d0dbc724344c59, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.49, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58392 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:08:14.748 [http.access] request_completed  | request_id=ee97d69cc3d2, trace_id=0360d137d6c14597, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.21, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58393 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:08:14.749 [http.access] request_completed  | request_id=5758423c89e4, trace_id=3e5600789c204b2f, method=GET, path=/api/metrics, status_code=200, elapsed_ms=2.52, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58394 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:08:19.435 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=a6f96735e5e0, trace_id=e69b2cd8f28b4f10, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.57, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58398 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58401 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58402 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58412 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58413 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58414 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:08:29.435 [http.access] request_completed  | request_id=a2e670a23c92, trace_id=26826dc25c024ed4, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.5, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58419 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:08:29.745 [http.access] request_completed  | request_id=fc782302731b, trace_id=c0ccc6ca4fdb4a56, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.47, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58422 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:08:29.746 [http.access] request_completed  | request_id=7afb4690c4a2, trace_id=e0686b10a3054abf, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.3, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58423 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:08:34.737 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=f738bd6d476f, trace_id=5bb10a6740484ea9, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.23, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58433 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58434 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58435 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58441 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58444 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58445 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:08:44.741 [http.access] request_completed  | request_id=601968f30692, trace_id=8d78245f38b04be5, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=3.17, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58455 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:08:44.742 [http.access] request_completed  | request_id=7ede5ff4ed50, trace_id=50f98a8353604c6b, method=GET, path=/api/metrics, status_code=200, elapsed_ms=3.77, client=127.0.0.1
+request_completed
+[32m    INFO[0m 07:08:44.743 [http.access] request_completed  | request_id=f7939c1271c6, trace_id=d2f8b632b53b43a4, method=GET, path=/api/tasks, status_code=200, elapsed_ms=4.34, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58457 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58456 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:08:49.431 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=08590db3192c, trace_id=abcc76d3ba8443db, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.82, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58463 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58466 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58467 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:08:54.748 [http.access] request_completed  | request_id=efb322507bb3, trace_id=970f25751bf04528, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.75, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58478 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:08:54.752 [http.access] request_completed  | request_id=bba932b25d81, trace_id=3102e01f21464b07, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.57, client=127.0.0.1
+request_completed
+[32m    INFO[0m 07:08:54.752 [http.access] request_completed  | request_id=1b91d57fcc21, trace_id=3cf8b5ca506f416d, method=GET, path=/api/metrics, status_code=200, elapsed_ms=4.06, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58479 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58480 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:08:59.431 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=5ee7a36b2a2e, trace_id=b33f5a9fb2634de0, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.94, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58489 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58492 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58493 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58501 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58502 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58503 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:09:09.433 [http.access] request_completed  | request_id=3638adbfd868, trace_id=80f505f4e0ab4ba6, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.61, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58507 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:09:09.738 [http.access] request_completed  | request_id=f19da11a9f34, trace_id=4a79db2fc7ac42e6, method=GET, path=/api/tasks, status_code=200, elapsed_ms=1.85, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58510 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:09:09.740 [http.access] request_completed  | request_id=dc0e16d4e01c, trace_id=027af305f33e4890, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.08, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58511 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:09:14.775 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=b309f54ab2a5, trace_id=943c4d20758d4b9a, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=41.8, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58520 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58521 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58522 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58527 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58530 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58531 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:09:24.733 [http.access] request_completed  | request_id=ce2f1732333e, trace_id=e323fa6cd24f403f, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.96, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58540 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:09:24.735 [http.access] request_completed  | request_id=081036109a25, trace_id=6d2f07b0c52a4dc0, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.17, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58541 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:09:24.735 [http.access] request_completed  | request_id=c508879099b5, trace_id=13bf07e4548d4671, method=GET, path=/api/metrics, status_code=200, elapsed_ms=2.03, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58542 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:09:29.431 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=470ad41b3815, trace_id=0443b57686904437, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=1.03, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58547 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58550 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58551 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58559 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58560 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58561 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:09:39.422 [http.access] request_completed  | request_id=9fdb6a70b46f, trace_id=5167d1e07a934589, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.52, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58565 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:09:39.725 [http.access] request_completed  | request_id=b1fe71a0a6b7, trace_id=f57d01fedcc74b7b, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.03, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58568 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:09:39.726 [http.access] request_completed  | request_id=3142d8b6bd1d, trace_id=fc8ddf923c514205, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.21, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58569 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:09:44.737 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=5cac67e527d7, trace_id=c1432d8ad4a0495c, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.55, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58577 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58579 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58580 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58584 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:09:49.739 [http.access] request_completed  | request_id=6b667e9db35c, trace_id=38d863f5e8514222, method=GET, path=/api/tasks, status_code=200, elapsed_ms=1.91, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58587 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:09:49.740 [http.access] request_completed  | request_id=d92ad3299820, trace_id=183da5c51b424cdc, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.14, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58588 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:09:54.747 [http.access] request_completed  | request_id=7367ab1c7302, trace_id=36b80cde5b454c5d, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.7, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58600 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:09:54.751 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=5f3586167233, trace_id=ca99c98074b6495b, method=GET, path=/api/tasks, status_code=200, elapsed_ms=4.48, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58601 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58602 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58612 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58615 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58616 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58630 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58631 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58632 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:10:09.427 [http.access] request_completed  | request_id=a22a3be7c8c7, trace_id=1577cdf03b8b468d, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.53, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58638 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:10:09.738 [http.access] request_completed  | request_id=c058847bc648, trace_id=e7a7ef961ec94c46, method=GET, path=/api/tasks, status_code=200, elapsed_ms=1.94, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58641 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:10:09.739 [http.access] request_completed  | request_id=7d73d7747c03, trace_id=baafc8a6f0c54c2c, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.45, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58642 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:10:14.742 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=1ee1015ca38f, trace_id=0ae4eea9294a433f, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.73, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58652 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58654 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58653 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58658 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58661 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58662 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:10:24.749 [http.access] request_completed  | request_id=5639e085bd18, trace_id=da669d43cb834f01, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.54, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58670 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:10:24.751 [http.access] request_completed  | request_id=22e7e94cbd91, trace_id=15e9d02296f04ee3, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.7, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58671 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:10:24.752 [http.access] request_completed  | request_id=ddf6282a4a1d, trace_id=b9922731eb84483f, method=GET, path=/api/metrics, status_code=200, elapsed_ms=3.56, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58672 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:10:29.421 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=a103ca21dee5, trace_id=bd04ba1a63f3427f, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.54, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58680 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58683 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58684 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58693 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58694 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58695 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:10:39.424 [http.access] request_completed  | request_id=85bb1e240749, trace_id=9450a815e0b044ab, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.82, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58701 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:10:39.736 [http.access] request_completed  | request_id=5eeb5c33eb56, trace_id=0654444f02d640c6, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.43, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58706 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:10:39.737 [http.access] request_completed  | request_id=83e13885af94, trace_id=4124e804995b4064, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.34, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58707 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:10:44.729 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=3a4d8f0f2387, trace_id=a0eeb71732ea48eb, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=3.05, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58717 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58719 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58718 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58725 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58728 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58729 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:10:54.732 [http.access] request_completed  | request_id=f70bc32f39d4, trace_id=1cb1da720f5e486a, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.69, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58738 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:10:54.735 [http.access] request_completed  | request_id=20ef421075cc, trace_id=837d9d4ddd1c40f5, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.4, client=127.0.0.1
+request_completed
+[32m    INFO[0m 07:10:54.736 [http.access] request_completed  | request_id=b73b9ba7ca15, trace_id=83365abf619743ab, method=GET, path=/api/metrics, status_code=200, elapsed_ms=4.6, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58739 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58740 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:10:59.423 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=3088ccdf5c09, trace_id=0a2577a52b8845a1, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.55, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58749 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58752 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58753 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58762 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58763 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58764 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:11:09.428 [http.access] request_completed  | request_id=2546ec2547ce, trace_id=cc257ccac4de4671, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.52, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58774 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:11:09.741 [http.access] request_completed  | request_id=30ce5215b0fb, trace_id=5ab889962a1e446b, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.0, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58777 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:11:09.742 [http.access] request_completed  | request_id=8fbeac89c5c7, trace_id=ec2c4df356764efa, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.38, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58778 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:11:14.739 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=198171509c64, trace_id=50b8afd2f0314ffe, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=3.21, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58830 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58831 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58832 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58850 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58854 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58855 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:11:24.744 [http.access] request_completed  | request_id=7e045f7f28f6, trace_id=2c4d312b4cdf4acb, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=3.07, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58868 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:11:24.745 [http.access] request_completed  | request_id=b05727936d4a, trace_id=d28f03642b0b45ec, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.34, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58869 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:11:24.746 [http.access] request_completed  | request_id=e237b6c1669e, trace_id=6ef968c3058f4085, method=GET, path=/api/metrics, status_code=200, elapsed_ms=2.24, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58870 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:11:29.426 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=9263ff201822, trace_id=e6453a8f4b4e414c, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.55, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58885 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58891 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58892 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:11:34.748 [http.access] request_completed  | request_id=9eb2575d4e50, trace_id=20fa920b321e4b0e, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.41, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58910 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:11:34.749 [http.access] request_completed  | request_id=8a704fe3ed5e, trace_id=d7323f7d6e3446ca, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.88, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58911 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:11:34.750 [http.access] request_completed  | request_id=d3fc1cc1f820, trace_id=57a16bf54c184f75, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.99, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:58912 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:11:39.435 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=b4e299104f08, trace_id=ac6add25bd5748d7, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.61, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:58919 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58924 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58925 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59078 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59079 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59080 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:11:49.428 [http.access] request_completed  | request_id=588941c19526, trace_id=6569eeb043044c0d, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=1.5, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59112 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:11:49.750 [http.access] request_completed  | request_id=8b0e78da36e1, trace_id=257cdd8cde6d410c, method=GET, path=/api/tasks, status_code=200, elapsed_ms=5.09, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59145 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:11:49.752 [http.access] request_completed  | request_id=4122db41b65d, trace_id=1c8f7198235e492f, method=GET, path=/api/metrics, status_code=200, elapsed_ms=2.33, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59146 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:11:54.751 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=75c6016c18a1, trace_id=d8581ea0c15d4d26, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=5.73, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:59517 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59518 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59519 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59557 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59561 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59562 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:12:04.746 [http.access] request_completed  | request_id=cd95db2083a6, trace_id=4dd69ca447c74b30, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.63, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59586 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:12:04.748 [http.access] request_completed  | request_id=830166a344a2, trace_id=ce475747e8f8404a, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.18, client=127.0.0.1
+request_completed
+[32m    INFO[0m 07:12:04.748 [http.access] request_completed  | request_id=3a4a315141f5, trace_id=d81aeb0e00484797, method=GET, path=/api/metrics, status_code=200, elapsed_ms=3.58, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59587 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59588 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:12:09.432 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=64ac93b68079, trace_id=15469289a2ec4092, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.52, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:59656 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59662 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59663 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59675 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59676 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59677 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:12:19.432 [http.access] request_completed  | request_id=7079dcce211e, trace_id=a9a94673271e4283, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.61, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59684 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:12:19.739 [http.access] request_completed  | request_id=84b1a4a8b1cd, trace_id=9ae7ddde2f644b73, method=GET, path=/api/tasks, status_code=200, elapsed_ms=1.92, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59687 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:12:19.740 [http.access] request_completed  | request_id=cd6a6ac694d2, trace_id=e39eb5d6bc0d48b8, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.38, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59688 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:12:24.731 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=262b83bb7f89, trace_id=49baa1fac07e4f99, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=4.43, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:59709 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59710 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59711 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59741 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59744 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:12:29.748 [http.access] request_completed  | request_id=cd302f215729, trace_id=f099c0cc63444ae2, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.14, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59745 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:12:34.748 [http.access] request_completed  | request_id=2a341f24761e, trace_id=46c70da2872c4fbe, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.71, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59765 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:12:34.749 [http.access] request_completed  | request_id=def06c1f44e2, trace_id=18de0755671a4dda, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.21, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59766 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:12:34.750 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=f1e7494d6bf0, trace_id=a980c1ce3f094f53, method=GET, path=/api/metrics, status_code=200, elapsed_ms=2.13, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:59767 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59771 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59774 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59775 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59798 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59799 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59800 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:12:49.421 [http.access] request_completed  | request_id=06914bfc6ac3, trace_id=bbb919976c1b45f8, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.53, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59814 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:12:49.738 [http.access] request_completed  | request_id=15bb16ca8e04, trace_id=c65764c5fb04402d, method=GET, path=/api/tasks, status_code=200, elapsed_ms=1.95, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59817 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:12:49.738 [http.access] request_completed  | request_id=6f6a0e97183c, trace_id=a4b0c06409bf41b8, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.16, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59818 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:12:54.737 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=67c2277098e1, trace_id=9992b469c5e44684, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.42, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:59857 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59858 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59859 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59873 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:12:59.750 [http.access] request_completed  | request_id=86d122f73e17, trace_id=62f4fb61f7704d5f, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.12, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59877 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:12:59.751 [http.access] request_completed  | request_id=e6db94527a1d, trace_id=4980291bbf2f44b1, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.39, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59878 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:13:04.737 [http.access] request_completed  | request_id=41bc044181b1, trace_id=1cdad4102c9d4d90, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.61, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59898 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:13:04.738 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=30a1284f0783, trace_id=5a79932afca14831, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.03, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:59899 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59900 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59926 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59929 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59930 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59947 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59948 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59949 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:13:19.422 [http.access] request_completed  | request_id=7aca6c88b86d, trace_id=5bfb52ac684d459e, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.52, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59964 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:13:19.734 [http.access] request_completed  | request_id=3b2cf2671bdc, trace_id=abd3f6fe6eac4251, method=GET, path=/api/tasks, status_code=200, elapsed_ms=1.96, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59967 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:13:19.735 [http.access] request_completed  | request_id=710b9d4e604d, trace_id=b6650d2c449f4596, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.18, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:59968 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:13:24.744 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=4b0ae6f0db6a, trace_id=b40d1ea01fec4836, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.83, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:59976 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59977 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59978 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59983 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59987 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59988 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:13:34.740 [http.access] request_completed  | request_id=708818455249, trace_id=7ac78d02fcd84058, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.42, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60002 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:13:34.741 [http.access] request_completed  | request_id=c33719ac30a2, trace_id=e9d531b875264aa6, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.9, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60003 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:13:34.742 [http.access] request_completed  | request_id=5f7846234d8a, trace_id=daa025e6eb864b04, method=GET, path=/api/metrics, status_code=200, elapsed_ms=2.12, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60004 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:13:39.421 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=92dbf59986f6, trace_id=fba44bcef6c14149, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.53, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:60015 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60018 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60019 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:13:44.753 [http.access] request_completed  | request_id=2e2376a811f9, trace_id=55205e51ae784576, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.54, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60039 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:13:44.754 [http.access] request_completed  | request_id=c795e54ed061, trace_id=abd5c933ab084d93, method=GET, path=/api/metrics, status_code=200, elapsed_ms=2.88, client=127.0.0.1
+request_completed
+[32m    INFO[0m 07:13:44.754 [http.access] request_completed  | request_id=9311ebf2066e, trace_id=48aacee6e00a4920, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.24, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60041 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60040 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:13:49.424 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=e67618bfe249, trace_id=9758ac65a4b841d6, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.52, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:60087 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60090 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60091 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60113 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60114 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60115 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:13:59.425 [http.access] request_completed  | request_id=4c7ddb66a976, trace_id=c94016c020f64bef, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.52, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60123 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:13:59.737 [http.access] request_completed  | request_id=e7be7abf9993, trace_id=d384df347c3c42b4, method=GET, path=/api/tasks, status_code=200, elapsed_ms=1.88, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60126 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:13:59.737 [http.access] request_completed  | request_id=98e8ffa68872, trace_id=97c229aadd4e489f, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.1, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60127 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:14:04.749 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=9cb5a72c8a82, trace_id=8b1dbca141da4a78, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.61, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:60141 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60142 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60143 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60150 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:14:09.748 [http.access] request_completed  | request_id=f1374880c246, trace_id=9d6d082f84854342, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.1, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60153 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:14:09.749 [http.access] request_completed  | request_id=66157298f1df, trace_id=50da399a02d848f6, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.42, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60154 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:14:14.738 [http.access] request_completed  | request_id=663ae81abf34, trace_id=a469cc52c5d145df, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.6, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60208 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:14:14.739 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=0cc625a2fc9c, trace_id=23adb7a7cfbd43bf, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.12, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:60209 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60210 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60232 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60247 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60248 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60349 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60350 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:14:24.748 [http.access] request_completed  | request_id=b61ed24089c7, trace_id=022197890d8b4a0f, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.45, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60351 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:14:29.434 [http.access] request_completed  | request_id=5f0038b70d76, trace_id=8cb6e67926f14ff9, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.53, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60417 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:14:29.745 [http.access] request_completed  | request_id=2e3446e247b0, trace_id=b2b11ce4530740c6, method=GET, path=/api/tasks, status_code=200, elapsed_ms=1.91, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60420 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:14:29.745 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=fcbafe92a33d, trace_id=f3ec69045d1a4c4e, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.07, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:60421 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60436 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60437 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60438 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60452 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60455 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60456 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:14:44.738 [http.access] request_completed  | request_id=6f78e65e56b1, trace_id=a6bc434bb7e746d6, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.56, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60473 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:14:44.740 [http.access] request_completed  | request_id=73469218763a, trace_id=706c407d6d6c4f9f, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.01, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60474 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:14:44.740 [http.access] request_completed  | request_id=e923547413f0, trace_id=1ea708bcced24d70, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.92, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60475 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:14:49.421 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=1b1a1bd22dfa, trace_id=d53dee9a4bc34946, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.51, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:60484 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60487 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60488 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60496 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60497 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60498 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:14:59.422 [http.access] request_completed  | request_id=86eb55efea4a, trace_id=0d2af7e5dcf64f7d, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.53, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60504 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:14:59.735 [http.access] request_completed  | request_id=3f0fc544ea65, trace_id=ceee4cfee49949f1, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.15, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60507 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:14:59.737 [http.access] request_completed  | request_id=a6133af3d570, trace_id=f99e7e247b784ee1, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.58, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60508 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:15:04.737 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=bec6a1fc9502, trace_id=2265c36a96c04788, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=3.04, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:60520 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60521 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60522 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60530 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60533 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60534 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:15:14.740 [http.access] request_completed  | request_id=21d4e65fe79b, trace_id=e932b6613b2b4c5f, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.45, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60542 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:15:14.742 [http.access] request_completed  | request_id=ac6ecfdb735d, trace_id=57cd7074d62b4b72, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.94, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60543 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:15:14.743 [http.access] request_completed  | request_id=68866e190d33, trace_id=fb549e234bfa4a22, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.89, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60544 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:15:19.437 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=d4e7ed78f68f, trace_id=9ae2998586ef48a1, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.52, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:60558 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60561 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60562 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60581 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60582 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60583 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:15:29.421 [http.access] request_completed  | request_id=3003a07d04ee, trace_id=5c919219c6144743, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.52, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60590 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:15:29.727 [http.access] request_completed  | request_id=3ac140b90aea, trace_id=3a10b1d555a84ce2, method=GET, path=/api/tasks, status_code=200, elapsed_ms=1.88, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60593 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:15:29.728 [http.access] request_completed  | request_id=70c67a521600, trace_id=467e425de0d34de9, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.11, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60594 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:15:34.743 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=67505f51e8ff, trace_id=16961de02f904c89, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.56, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:60605 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60606 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60607 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60614 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:15:39.738 [http.access] request_completed  | request_id=147a35651138, trace_id=47a42392cf774296, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.03, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60618 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:15:39.740 [http.access] request_completed  | request_id=74a900eea308, trace_id=b9cab1485ca6437c, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.67, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60619 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:15:44.740 [http.access] request_completed  | request_id=d8ed12f01918, trace_id=ec7c228cf0af4256, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.79, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60641 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:15:44.741 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=2e5b7938194a, trace_id=dd2e9009bcf04d52, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.2, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:60642 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60643 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60651 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60654 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60655 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60663 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60665 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60664 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:15:59.425 [http.access] request_completed  | request_id=aaea091a2bef, trace_id=a9f41f8b49b541e0, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.53, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60668 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:15:59.736 [http.access] request_completed  | request_id=e8417ae411cb, trace_id=543946c5c3cd44ef, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.26, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60674 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:15:59.737 [http.access] request_completed  | request_id=1347db57d9d4, trace_id=20968f8ae45442cd, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.42, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:60675 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:16:04.739 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=8354bc004fb2, trace_id=96ca7c43bbce4ff0, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.91, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:60685 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60686 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60687 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60702 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50471 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50472 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:16:14.739 [http.access] request_completed  | request_id=bd64bd67e50e, trace_id=f831d51ad46e411e, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=1.39, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50489 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:16:14.743 [http.access] request_completed  | request_id=eb8d876d5d15, trace_id=870c2c0131f74de4, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.77, client=127.0.0.1
+request_completed
+[32m    INFO[0m 07:16:14.744 [http.access] request_completed  | request_id=0f9d009639ef, trace_id=68d3b61b293b4e59, method=GET, path=/api/metrics, status_code=200, elapsed_ms=4.56, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50490 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50491 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:16:19.422 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=f616f0024021, trace_id=d9520d950dce4081, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.83, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:50500 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50503 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50504 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50512 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50513 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:16:24.748 [http.access] request_completed  | request_id=f14153fd7469, trace_id=20a41a9991c54982, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.59, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50514 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:16:29.421 [http.access] request_completed  | request_id=b5023f70db14, trace_id=ecaf6c19f7cb41c9, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.54, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50519 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:16:29.737 [http.access] request_completed  | request_id=2bbeff4e421d, trace_id=79bb95e2ee40424d, method=GET, path=/api/tasks, status_code=200, elapsed_ms=1.94, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50522 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:16:29.737 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=2adbb1de44a3, trace_id=2dffa581d422469f, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.18, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:50523 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50531 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50533 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50532 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50539 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50542 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50543 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:16:44.731 [http.access] request_completed  | request_id=8b6a04c49070, trace_id=9900d58d606e4080, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.52, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50554 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:16:44.732 [http.access] request_completed  | request_id=50752ff612c1, trace_id=a95512de1f4c48a0, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.88, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50555 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:16:44.732 [http.access] request_completed  | request_id=3728fc3598d0, trace_id=4500c4cdc3d94471, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.83, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50556 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:16:49.425 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=71370cea30bb, trace_id=a56b7c20c66742d7, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.54, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:50562 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50565 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50566 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50578 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50579 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50580 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:16:59.428 [http.access] request_completed  | request_id=47fd6569d4dc, trace_id=d58f45e86346458c, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.54, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50584 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:16:59.745 [http.access] request_completed  | request_id=713523eba86e, trace_id=af272cde0bd843c8, method=GET, path=/api/tasks, status_code=200, elapsed_ms=1.95, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50587 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:16:59.746 [http.access] request_completed  | request_id=1d66447319f0, trace_id=cad31bdfeaf74f80, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.16, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50588 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:17:04.740 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=178ea4c0b4ba, trace_id=162fd7f18ec443ef, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.55, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:50601 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50603 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50602 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50609 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50614 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50615 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:17:14.735 [http.access] request_completed  | request_id=daa7efca5567, trace_id=827e935a3ab14d46, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.64, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50625 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:17:14.736 [http.access] request_completed  | request_id=94bb9d4695e1, trace_id=f5073f976e2d4751, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.16, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50626 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:17:14.737 [http.access] request_completed  | request_id=1ca81f5446de, trace_id=58f3c2a747e24c02, method=GET, path=/api/metrics, status_code=200, elapsed_ms=2.2, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50627 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:17:19.422 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=8e2c5456a30d, trace_id=f5405d49cb414e89, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.51, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:50631 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50634 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50635 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50646 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50647 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50648 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:17:29.421 [http.access] request_completed  | request_id=2470d39f6654, trace_id=9a572d20645b4979, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.52, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50655 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:17:29.728 [http.access] request_completed  | request_id=3e3ba5a5eea6, trace_id=47044be1dd064007, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.76, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50658 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:17:29.729 [http.access] request_completed  | request_id=408d5befad56, trace_id=251188d1b06447d1, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.62, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50659 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:17:34.744 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=c3315f1620c7, trace_id=90ea6e5984854779, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.78, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:50670 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50671 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50672 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50683 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:17:39.744 [http.access] request_completed  | request_id=d1ee5fdf33c2, trace_id=cecd5f97b2734a02, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.08, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50686 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:17:39.745 [http.access] request_completed  | request_id=0b0053f0a8a9, trace_id=9149d001d66b4b87, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.21, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50687 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:17:44.748 [http.access] request_completed  | request_id=4c604a5404cd, trace_id=34d6e863c1de4670, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.6, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50704 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:17:44.749 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=33d0448a78ba, trace_id=7d86cb3a3fc54244, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.03, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:50705 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50706 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50719 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50726 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50727 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50739 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50741 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50740 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:17:59.423 [http.access] request_completed  | request_id=ea8a304a9898, trace_id=7b412a681d6940cf, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.54, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50757 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:17:59.737 [http.access] request_completed  | request_id=ef483afd1d70, trace_id=8b3dd4e953a54e9b, method=GET, path=/api/tasks, status_code=200, elapsed_ms=1.91, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50761 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:17:59.738 [http.access] request_completed  | request_id=3c7d6bd089f9, trace_id=4746976ce6e54156, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.12, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50762 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:18:04.746 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=dec961588192, trace_id=0af3bd0a21334054, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.74, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:50770 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50771 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50772 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50777 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50780 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50781 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:18:14.739 [http.access] request_completed  | request_id=8c2e89bec992, trace_id=d9ff289957c04764, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.39, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50793 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:18:14.741 [http.access] request_completed  | request_id=25738bcaf402, trace_id=5a92bc3a0be24799, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.91, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50794 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:18:14.742 [http.access] request_completed  | request_id=a3221a3cea86, trace_id=741e2db32d084efd, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.95, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50795 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:18:19.424 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=285e5d8bdaf1, trace_id=a77be25e9fb14659, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.51, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:50797 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50802 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50803 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50815 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50816 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50817 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:18:29.432 [http.access] request_completed  | request_id=81048e944a09, trace_id=ce3c6eba54a64895, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.56, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50827 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:18:29.743 [http.access] request_completed  | request_id=6b4ba1aba74b, trace_id=55dce4eecfa74423, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.04, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50832 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:18:29.744 [http.access] request_completed  | request_id=349b5210863d, trace_id=3c38c61facb94df7, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.27, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50833 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:18:34.732 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=2842912a8867, trace_id=f9004a535bdc41d9, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.59, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:50849 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50850 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50851 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50870 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50877 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50878 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:18:44.744 [http.access] request_completed  | request_id=a36ed61da9a1, trace_id=069154d575d444e8, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.6, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50898 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:18:44.745 [http.access] request_completed  | request_id=dc0238874501, trace_id=29b736bcb54245c9, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.04, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50899 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:18:44.746 [http.access] request_completed  | request_id=74da83b8bbc7, trace_id=91702e383f1c4f46, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.94, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50900 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:18:49.427 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=19d153d48d7a, trace_id=3e4b941647bf4f60, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.52, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:50908 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50911 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50912 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50920 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50921 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50922 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:18:59.434 [http.access] request_completed  | request_id=121557f87dba, trace_id=a482716165254a88, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.92, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50927 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:18:59.743 [http.access] request_completed  | request_id=8e77b4d60d72, trace_id=768429cccb154384, method=GET, path=/api/tasks, status_code=200, elapsed_ms=1.91, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50930 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:18:59.744 [http.access] request_completed  | request_id=901c795f17e8, trace_id=9903b87565d14297, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.09, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50931 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:19:04.744 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=a53177025083, trace_id=9c62d3ed795d4405, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=3.05, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:50944 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50945 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50946 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50950 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50953 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50954 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:19:14.742 [http.access] request_completed  | request_id=17433658f84f, trace_id=86d1b87a9c0e488c, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.62, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50964 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:19:14.744 [http.access] request_completed  | request_id=fa8e4b316c84, trace_id=bd16ad9aa01e4ced, method=GET, path=/api/tasks, status_code=200, elapsed_ms=3.62, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50965 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:19:14.745 [http.access] request_completed  | request_id=02d5d8ffefec, trace_id=e11cd49f77e94729, method=GET, path=/api/metrics, status_code=200, elapsed_ms=2.68, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50966 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:19:19.422 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=33dac13260f3, trace_id=d152b9821a2240dc, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.51, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:50972 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50975 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50976 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50984 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50985 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50986 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:19:29.431 [http.access] request_completed  | request_id=da99a549bd26, trace_id=f201d94183cb49e3, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.52, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50990 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:19:29.743 [http.access] request_completed  | request_id=d15b1b633cd0, trace_id=2d611b415f2146b2, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.15, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50993 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:19:29.744 [http.access] request_completed  | request_id=81aa918824de, trace_id=2796febf87344d0d, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.13, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:50994 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:19:34.749 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=ef15e791d94a, trace_id=2e889cb564c04e21, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.44, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:51002 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51003 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51004 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51010 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51013 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51014 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:19:44.741 [http.access] request_completed  | request_id=7ea44a82862e, trace_id=4e62f5223d834501, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.47, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:51025 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:19:44.742 [http.access] request_completed  | request_id=5231c42ebf7d, trace_id=4d20e0be2eaa4dac, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.8, client=127.0.0.1
+request_completed
+[32m    INFO[0m 07:19:44.742 [http.access] request_completed  | request_id=92909d623c20, trace_id=ff904dfd1d974651, method=GET, path=/api/metrics, status_code=200, elapsed_ms=3.24, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:51026 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51027 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:19:49.423 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=45eaebb244bb, trace_id=3285e87c4af84714, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.53, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:51046 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51050 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51051 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51060 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51061 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51062 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:19:59.422 [http.access] request_completed  | request_id=3e9200eac8e1, trace_id=327c906e97744c98, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.52, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:51067 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:19:59.731 [http.access] request_completed  | request_id=6c27e7d846ee, trace_id=c127699751ef43dd, method=GET, path=/api/tasks, status_code=200, elapsed_ms=1.94, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:51070 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:19:59.733 [http.access] request_completed  | request_id=c35610d0dc16, trace_id=4c26db016ed84b80, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.54, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:51071 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:20:04.747 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=27855fd72f01, trace_id=bb0da89ed7ff4e44, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.45, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:51079 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51080 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51081 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51086 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51089 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51090 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:20:14.740 [http.access] request_completed  | request_id=4ec59c32cdc0, trace_id=fe0a7e765add4e62, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=3.68, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:51104 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:20:14.741 [http.access] request_completed  | request_id=41be16a7422b, trace_id=29f8d8f211714717, method=GET, path=/api/tasks, status_code=200, elapsed_ms=4.48, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:51105 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:20:14.743 [http.access] request_completed  | request_id=bc983d44b913, trace_id=1261ba8b1cd446d5, method=GET, path=/api/metrics, status_code=200, elapsed_ms=3.22, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:51106 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:20:19.425 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=77ba1c5b6ead, trace_id=6413ab6a739b4d20, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.52, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:51111 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51115 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51116 - "GET /api/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51127 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51128 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51129 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:20:29.426 [http.access] request_completed  | request_id=09609c63064f, trace_id=a1185194a9424bc2, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=0.6, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:51138 - "GET /api/agv/status HTTP/1.1" 200 OK
+[32m    INFO[0m 07:20:29.739 [http.access] request_completed  | request_id=8604e3f7e399, trace_id=0964e364c8854cf6, method=GET, path=/api/tasks, status_code=200, elapsed_ms=2.23, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:51141 - "GET /api/tasks HTTP/1.1" 200 OK
+[32m    INFO[0m 07:20:29.740 [http.access] request_completed  | request_id=2691e66ecf2d, trace_id=c9b8f337ae7c435e, method=GET, path=/api/metrics, status_code=200, elapsed_ms=1.23, client=127.0.0.1
+request_completed
+INFO:     127.0.0.1:51142 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:20:34.742 [http.access] [SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)  | request_id=1b3433f14d70, trace_id=1f919887d3594b4e, method=GET, path=/api/agv/status, status_code=200, elapsed_ms=2.38, client=127.0.0.1
+[SAMPLED] request_completed (suppressed 1 additional occurrences in last 10s)
+INFO:     127.0.0.1:51162 - "GET /api/agv/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51163 - "GET /api/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51164 - "GET /api/metrics HTTP/1.1" 200 OK
+[32m    INFO[0m 07:20:56.689 [main] Shutting down...
+Shutting down...
+Distributed scheduler worker stopped
+[32m    INFO[0m 07:20:58.226 [root] structured_logging_initialized  | json_mode=False, sampling_enabled=True, log_level=INFO
+structured_logging_initialized
+[32m    INFO[0m 07:20:58.288 [main] Starting AGV-TMS  | app_name=AGV-TMS, version=1.6.0
+Starting AGV-TMS
+EventToWebSocketBridge subscribed to 10 event types
+Phase 5 integration initialized (ws_bridge=True)
+[32m    INFO[0m 07:21:00.383 [main] Phase 5 integration initialized
+Phase 5 integration initialized
+[32m    INFO[0m 07:21:00.384 [main] Kafka disabled (ENABLE_KAFKA=false), using sync mode
+Kafka disabled (ENABLE_KAFKA=false), using sync mode
+[32m    INFO[0m 07:21:00.384 [main] InfluxDB disabled (ENABLE_INFLUXDB=false)
+InfluxDB disabled (ENABLE_INFLUXDB=false)
+[32m    INFO[0m 07:21:00.384 [main] MQTT disabled (ENABLE_MQTT=False)
+MQTT disabled (ENABLE_MQTT=False)
+[32m    INFO[0m 07:21:00.385 [main] Application ready
+Application ready
