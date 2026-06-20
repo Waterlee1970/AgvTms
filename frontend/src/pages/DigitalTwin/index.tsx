@@ -616,10 +616,10 @@ const DigitalTwinPage: React.FC = () => {
           >
             <ThreeDigitalTwin
               nodes={(scene?.mapElements || []).map((e) => ({
-                id: e.elementId,
+                id: e.id || e.elementId,
                 x: e.position.x,
                 y: e.position.y,
-                nodeType: (e as any).node_type || undefined,
+                nodeType: (e as any).element_type || (e as any).node_type || undefined,
                 label: e.label,
               }))}
               edges={(scene?.mapEdges || []).map((edge, i) => ({
@@ -635,14 +635,27 @@ const DigitalTwinPage: React.FC = () => {
                 speed: a.speed || 1.2,
                 battery: a.batteryLevel || a.battery || 100,
                 state: a.state || 'idle',
-                currentTask: a.currentTaskId || '',
+                currentTask: a.currentTaskId || a.currentTask || '',
                 loadStatus: a.loadStatus || false,
                 color: a.color || '#00aaff',
               }))}
               heatmap={
-                showHeatmap && scene?.heatmapData ?
-                  scene.heatmapData.map((h: any) => ({ x: h.x, y: h.y, value: h.value })) :
-                  []
+                // 兼容后端 heatmaps[] 格式和前端 heatmapData 格式
+                showHeatmap
+                  ? (() => {
+                      // 优先使用 heatmapData（旧格式）
+                      if (scene?.heatmapData) {
+                        return (scene.heatmapData as any[]).map((h: any) => ({ x: h.x, y: h.y, value: h.value }));
+                      }
+                      // 使用 heatmaps（后端实际输出格式）
+                      if (scene?.heatmaps && Array.isArray(scene.heatmaps)) {
+                        return scene.heatmaps.flatMap((h: any) =>
+                          (h.cells || []).map((c: any) => ({ x: c.x, y: c.y, value: c.value }))
+                        );
+                      }
+                      return [];
+                    })()
+                  : []
               }
               mode="auto"
               showStats={true}

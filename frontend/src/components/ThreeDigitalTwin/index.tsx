@@ -28,7 +28,13 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Environment, Html, Stats } from '@react-three/drei';
 import * as THREE from 'three';
 
-import { SceneEngine, MapNode3D, MapEdge3D, AgvState3D, TrajectoryPoint3D, HeatmapCell, SceneEngineOptions } from './SceneEngine';
+// SceneEngine 类型定义 (内联 — 原 SceneEngine.ts 文件不存在，避免导入失败)
+export interface MapNode3D { id: string; x: number; y: number; nodeType?: string; label?: string; }
+export interface MapEdge3D { id: string; source: string; target: string; }
+export interface AgvState3D { id: string; x: number; y: number; z?: number; theta: number; speed: number; battery: number; state: string; currentTask?: string; loadStatus?: boolean; color?: string; }
+export interface TrajectoryPoint3D { t: number; pos: { x: number; y: number; z: number }; rot: number; speed: number; state: string; }
+export interface HeatmapCell { x: number; y: number; value: number; }
+export interface SceneEngineOptions { [key: string]: any; }
 
 // ==================== 类型定义 ====================
 
@@ -293,23 +299,32 @@ function SceneContent({
   focusAgvId,
   onAgvClick,
 }: Pick<ThreeDigitalTwinProps, 'nodes' | 'edges' | 'agvs' | 'heatmap' | 'viewMode' | 'focusAgvId' | 'onAgvClick'>) {
-  // 计算相机位置基于视角模式
+  // 计算相机位置基于视角模式和场景数据范围（自适应居中）
   const getCameraPosition = useCallback(() => {
-    if (!nodes.length) return [30, 40, 30] as const;
+    if (nodes.length === 0) return [30, 40, 30] as const;
+
+    // 根据节点坐标范围自动计算相机位置，确保场景居中
+    const xs = nodes.map(n => n.x), ys = nodes.map(n => n.y);
+    const minX = Math.min(...xs), maxX = Math.max(...xs);
+    const minY = Math.min(...ys), maxY = Math.max(...ys);
+    const centerX = (minX + maxX) / 2;
+    const centerY = (minY + maxY) / 2;
+    const extent = Math.max(maxX - minX, maxY - minY, 10);
+    const camDist = Math.max(extent * 1.2, 20);  // 相机距离自适应
 
     switch (viewMode) {
       case 'top':
-        return [0, 60, 0.1] as const;
+        return [centerX, Math.max(extent * 1.5, 40), centerY] as const;
       case 'isometric':
-        return [35, 35, 35] as const;
+        return [centerX + camDist * 0.58, camDist * 0.58, centerY + camDist * 0.58] as const;
       case 'follow': {
         const focused = agvs.find(a => a.id === focusAgvId) || agvs[0];
-        if (focused) return [focused.x + 10, 15, focused.z ?? focused.y + 10] as const;
-        return [30, 40, 30] as const;
+        if (focused) return [(focused.x || 0) + 10, 15, (focused.z ?? focused.y || 0) + 10] as const;
+        return [centerX + camDist * 0.5, camDist * 0.8, centerY + camDist * 0.5] as const;
       }
       case 'free':
       default:
-        return [30, 40, 30] as const;
+        return [centerX + camDist * 0.5, camDist * 0.8, centerY + camDist * 0.5] as const;
     }
   }, [viewMode, nodes.length, agvs, focusAgvId]);
 
