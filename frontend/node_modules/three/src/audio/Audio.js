@@ -158,7 +158,7 @@ class Audio extends Object3D {
 
 	}
 
-	stop() {
+	stop( delay = 0 ) {
 
 		if ( this.hasPlaybackControl === false ) {
 
@@ -171,7 +171,7 @@ class Audio extends Object3D {
 
 		if ( this.source !== null ) {
 
-			this.source.stop();
+			this.source.stop( this.context.currentTime + delay );
 			this.source.onended = null;
 
 		}
@@ -270,9 +270,7 @@ class Audio extends Object3D {
 
 		this.detune = value;
 
-		if ( this.source.detune === undefined ) return; // only set detune when available
-
-		if ( this.isPlaying === true ) {
+		if ( this.isPlaying === true && this.source.detune !== undefined ) {
 
 			this.source.detune.setTargetAtTime( this.detune, this.context.currentTime, 0.01 );
 

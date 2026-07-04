@@ -208,10 +208,23 @@ class HybridScheduler:
         total_runtime = (time.perf_counter() - total_start) * 1000
 
         # Calculate total cost (weighted combination)
+        _aco_cost = aco_result.best_cost if aco_result else 0.0
+        _sa_cost = sa_result.total_cost if sa_result else 0.0
+        _nlp_cost = nlp_result.total_completion_time if nlp_result else 0.0
+        # Fix: replace inf/nan with large finite value (JSON compliant)
+        import math
+        def _safe_float(v, default=999999.0):
+            try:
+                f = float(v)
+                if math.isnan(f) or math.isinf(f): return default
+                return f
+            except (TypeError, ValueError):
+                return default
+        
         total_cost = (
-            self.config.hybrid.aco_weight * aco_result.best_cost +
-            self.config.hybrid.sa_weight * sa_result.total_cost +
-            self.config.hybrid.nlp_weight * (nlp_result.total_completion_time if nlp_result else 0)
+            self.config.hybrid.aco_weight * _safe_float(_aco_cost) +
+            self.config.hybrid.sa_weight * _safe_float(_sa_cost) +
+            self.config.hybrid.nlp_weight * _safe_float(_nlp_cost)
         )
 
         # Makespan = max of AGV and conveyor completion

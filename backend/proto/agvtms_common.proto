@@ -1,0 +1,582 @@
+// AGV-TMS 多语言后端共享数据模型
+//
+// Protocol Buffers v3 定义文件
+// 用于 Python/Java/.NET/Go/Node.js 等多语言服务间通信
+//
+// 编译命令:
+//   pip install grpcio-tools
+//   python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. agvtms_common.proto
+//
+// Java:
+//   // 在 Maven pom.xml 中添加 protobuf-maven-plugin
+//
+// .NET:
+//   // 添加 Google.Protobuf NuGet 包, 然后编译 .proto 文件
+
+syntax = "proto3";
+
+package agvtms;
+
+option java_package = "com.agvtms.common";
+option java_multiple_files = true;
+option csharp_namespace = "AgvTms.Common";
+option go_package = "github.com/agvtms/proto/common";
+
+
+// ==================== 通用类型 ====================
+
+// 空请求/响应 (用于健康检查等)
+message Empty {}
+
+// 通用响应包装器
+message ApiResponse {
+    bool success = 1;
+    string message = 2;
+    int32 code = 3;
+    bytes data = 4;        // JSON序列化的业务数据
+    map<string, string> metadata = 5;
+}
+
+// 分页信息
+message Pagination {
+    int32 page = 1;         // 当前页 (从1开始)
+    int32 page_size = 2;    // 每页大小
+    int32 total_items = 3;  // 总记录数
+    int32 total_pages = 4;  // 总页数
+    bool has_next = 5;      // 是否有下一页
+    bool has_prev = 6;      // 是否有上一页
+}
+
+// 地理坐标 / 工厂坐标
+message Position {
+    double x = 1;           // X坐标 (米)
+    double y = 2;           // Y坐标 (米)
+    double z = 3;           // Z坐标 (可选, 用于多层仓库/立体库)
+    double theta = 4;       // 朝向角度 (弧度, 0=东, π/2=北)
+    
+    enum CoordinateSystem {
+        CARTESIAN = 0;      // 笛卡尔坐标
+        POLAR = 1;          // 极坐标
+        GPS = 2;            // GPS经纬度
+        GRID = 3;           // 网格坐标
+    }
+    CoordinateSystem system = 5;
+}
+
+
+// ==================== AGV 车辆相关 ====================
+
+// AGV状态枚举
+enum AgvState {
+    AGV_UNKNOWN = 0;
+    AGV_OFFLINE = 1;        // 离线
+    AGV_IDLE = 2;           // 空闲
+    AGV_MOVING = 3;         // 行驶中
+    AGV_LOADING = 4;        // 正在取货
+    AGV_UNLOADING = 5;      // 正在放货
+    AGV_CHARGING = 6;       // 充电中
+    AGV_ERROR = 7;          // 故障
+    AGV_MAINTENANCE = 8;    // 维护中
+    AGV_PAUSED = 9;         // 暂停
+    AGV_BLOCKED = 10;       // 被阻塞
+}
+
+// AGV车辆完整状态
+message AgvStatus {
+    string vehicle_id = 1;          // 唯一标识
+    string name = 2;                // 显示名称
+    AgvState state = 3;             // 当前状态
+    Position position = 4;          // 当前位置
+    Position destination = 5;       // 目标位置 (如有)
+    
+    double battery_level = 10;      // 电量百分比 (0-100)
+    double speed = 11;              // 当前速度 (m/s)
+    double heading = 12;            // 航向角 (度)
+    
+    // 任务信息
+    string current_task_id = 20;    // 当前任务ID
+    string current_order_id = 21;   // 当前订单ID
+    
+    // 错误信息
+    string error_code = 30;         // 错误代码
+    string error_message = 31;      // 错误描述
+    
+    // 能力信息
+    float max_payload_kg = 40;      // 最大载重(kg)
+    float max_speed_mps = 41;       // 最大速度(m/s)
+    
+    // 元数据
+    int64 timestamp = 50;           // 状态时间戳 (Unix毫秒)
+    map<string, string> attributes = 51;  // 扩展属性
+}
+
+// AGV车型定义
+message VehicleType {
+    string type_id = 1;             // 类型ID
+    string name = 2;                // 类型名称 (如 "潜伏顶升式AGV")
+    string manufacturer = 3;        // 制造商
+    string model = 4;               // 型号
+    
+    // 尺寸规格
+    double length_mm = 10;          // 长度(mm)
+    double width_mm = 11;           // 宽度(mm)
+    double height_mm = 12;          // 高度(mm)
+    
+    // 性能参数
+    float max_payload_kg = 20;      // 最大载重
+    float max_speed_mps = 21;       // 最大速度
+    float turning_radius_mm = 22;   // 转弯半径
+    
+    // 导航方式
+    repeated NavigationType navigation_types = 30;
+    
+    // 功能特性
+    repeated string capabilities = 31;  // ["lift", "conveyor", "pallet"]
+}
+
+enum NavigationType {
+    NAV_SLAM_LASER = 0;     // 激光SLAM
+    NAV_SLAM_VISUAL = 1;    // 视觉SLAM
+    NAV_QR_CODE = 2;        // 二维码导航
+    NAV_MAGNETIC = 3;       // 磁条导航
+    NAV_GPS = 4;            // GPS导航
+    NAV_GYRO = 5;           // 惯导
+}
+
+
+// ==================== 任务与订单 ====================
+
+// 任务状态
+enum TaskState {
+    TASK_UNKNOWN = 0;
+    TASK_PENDING = 1;       // 待处理
+    TASK_ASSIGNED = 2;      // 已分配
+    TASK_IN_PROGRESS = 3;   // 执行中
+    TASK_COMPLETED = 4;     // 已完成
+    TASK_FAILED = 5;        // 失败
+    TASK_CANCELLED = 6;     // 已取消
+    TASK_TIMEOUT = 7;       // 超时
+    TASK_PAUSED = 8;        // 已暂停
+}
+
+// 订单优先级
+enum OrderPriority {
+    PRIORITY_LOW = 0;
+    PRIORITY_NORMAL = 1;
+    PRIORITY_HIGH = 2;
+    PRIORITY_URGENT = 3;
+    PRIORITY_CRITICAL = 4;
+    PRIORITY_EMERGENCY = 5;
+}
+
+// 运输订单 (TransportOrder)
+message TransportOrder {
+    string order_id = 1;            // 唯一ID
+    string external_order_id = 2;   // 外部系统订单号 (如MES/WMS)
+    
+    OrderPriority priority = 10;
+    TaskState state = 11;
+    
+    // 路线信息
+    Location source = 20;           // 起点
+    Location destination = 21;      // 终点
+    
+    // 货物信息
+    Cargo cargo = 22;              // 货物描述
+    string container_id = 23;       // 容器/托盘ID
+    
+    // 分配信息
+    string assigned_vehicle_id = 30;
+    string task_id = 31;
+    
+    // 时间戳
+    int64 created_at = 40;          // 创建时间
+    int64 assigned_at = 41;         // 分配时间
+    int64 started_at = 42;          // 开始执行时间
+    int64 completed_at = 43;        // 完成时间
+    
+    // 其他
+    string creator = 50;            // 创建者 (用户/系统)
+    string reason_code = 51;        // 失败原因码
+    string remark = 52;             // 备注
+}
+
+// 位置点 (工位/站点)
+message Location {
+    string location_id = 1;         // 位置ID
+    string name = 2;                // 名称 (如 "入库口A", "产线3-工位5")
+    Position position = 3;          // 坐标
+    LocationType type = 4;          // 位置类型
+    string zone_id = 5;             // 所属区域
+    map<string, string> properties = 6;  // 扩展属性
+}
+
+enum LocationType {
+    LOC_UNKNOWN = 0;
+    LOC_PICKUP = 1;         // 取货点
+    LOC_DROPOFF = 2;        // 放货点
+    LOC_CHARGING_STATION = 3;  // 充电站
+    LOC_PARKING = 4;        // 停车位
+    LOC_INTERSECTION = 5;    // 交叉路口
+    LOC_ELEVATOR = 6;       // 电梯
+    LOC_BUFFER = 7;          // 缓冲区
+    LOC_INPUT = 8;           // 入口
+    LOC_OUTPUT = 9;          // 出口
+}
+
+// 货物描述
+message Cargo {
+    string cargo_type = 1;         // 货物类型
+    float weight_kg = 2;           // 重量(kg)
+    Dimensions dimensions = 3;      // 尺寸
+    bool fragile = 4;              // 是否易碎
+    bool requires_temp_control = 5; // 是否需要温控
+    float temperature_celsius = 6;  // 要求温度(℃)
+}
+
+message Dimensions {
+    float length_mm = 1;
+    float width_mm = 2;
+    float height_mm = 3;
+}
+
+
+// ==================== 调度结果 ====================
+
+// 调度请求
+message ScheduleRequest {
+    repeated string order_ids = 1;          // 待调度的订单ID列表
+    repeated AgvStatus available_vehicles = 2;  // 可用车辆列表
+    ScheduleOptions options = 3;
+}
+
+message ScheduleOptions {
+    string algorithm = 1;           // 算法选择 ("mip", "greedy", "aco", "hybrid")
+    int32 max_iterations = 2;       // 最大迭代次数
+    float time_limit_seconds = 3;   // 时间限制(秒)
+    bool optimize_for_energy = 4;   // 是否优化能耗
+    bool optimize_for_time = 5;     // 是否优化时间
+    bool avoid_crossing_paths = 6;  // 避免路径交叉
+}
+
+// 调度响应
+message ScheduleResponse {
+    bool success = 1;
+    repeated Assignment assignments = 2;
+    string error_message = 3;
+    ScheduleStatistics stats = 4;
+    repeated UnassignedOrder unassigned = 5;
+}
+
+// 分配结果
+message Assignment {
+    string order_id = 1;
+    string vehicle_id = 2;
+    repeated Waypoint path = 3;
+    int64 estimated_duration_ms = 4;    // 预估耗时(ms)
+    float distance_meters = 5;           // 总距离(米)
+    float energy_cost_wh = 6;           // 预估能耗(Wh)
+    float confidence_score = 7;          // 置信度 (0-1)
+}
+
+// 路径点 (含动作)
+message Waypoint {
+    int32 sequence_no = 1;      // 序号
+    Position position = 2;
+    WaypointAction action = 3;  // 到达后的动作
+    int32 dwell_time_ms = 4;    // 停留时间(ms)
+    string location_id = 5;     // 关联的位置ID
+}
+
+enum WaypointAction {
+    ACTION_PASS_THROUGH = 0;   // 直接过
+    ACTION_PICKUP = 1;          // 取货
+    ACTION_DROPOFF = 2;         // 放货
+    ACTION_CHARGE = 3;          // 充电
+    ACTION_WAIT = 4;            // 等待
+    ACTION_LOAD_CONVEYOR = 5;   // 上输送线
+    ACTION_UNLOAD_CONVEYOR = 6; // 下输送线
+    ACTION_ELEVATOR_UP = 7;     // 上电梯
+    ACTION_ELEVATOR_DOWN = 8;   // 下电梯
+    ACTION_CUSTOM = 99;         // 自定义动作
+}
+
+// 调度统计
+message ScheduleStatistics {
+    int64 computation_time_ms = 1;    // 计算耗时
+    int32 total_orders = 2;           // 总订单数
+    int32 assigned_orders = 3;        // 已分配订单数
+    int32 unassigned_orders = 4;      // 未分配订单数
+    float total_distance_km = 5;      // 总行驶距离(km)
+    float total_energy_kwh = 6;       // 总预估能耗(kWh)
+    float avg_utilization_rate = 7;   // 平均利用率
+    string algorithm_used = 8;        // 使用的算法
+    map<string, string> metadata = 9;
+}
+
+// 未分配的订单
+message UnassignedOrder {
+    string order_id = 1;
+    string reason = 2;
+}
+
+
+// ==================== 路径规划 ====================
+
+// 路径规划请求
+message PathPlanRequest {
+    string vehicle_id = 1;
+    Position start = 2;
+    Position goal = 3;
+    PathPlanOptions options = 4;
+}
+
+message PathPlanOptions {
+    string algorithm = 1;         // ("astar", "theta_star", "dijkstra", "rrt")
+    bool avoid_dynamic_obstacles = 2;  // 避障
+    float safety_margin_mm = 3;        // 安全距离(mm)
+    bool smooth_path = 4;             // 路径平滑
+    bool consider_traffic = 5;         // 考虑交通管制
+}
+
+// 路径规划响应
+message PathPlanResponse {
+    bool found = 1;
+    repeated Waypoint path = 2;
+    float total_distance_m = 3;
+    float estimated_time_s = 4;
+    string algorithm_used = 5;
+    repeated TrafficControl traffic_controls = 6;
+}
+
+// 交通管制
+message TrafficControl {
+    string control_id = 1;
+    Position position = 2;
+    ControlType type = 3;
+    ControlDirection direction = 4;
+    int32 duration_ms = 5;
+    string reason = 6;
+}
+
+enum ControlType {
+    CONTROL_STOP = 0;           // 停止
+    CONTROL_SLOW_DOWN = 1;      // 减速
+    CONTROL_YIELD = 2;          // 让行
+    CONTROL_ONE_WAY = 3;        // 单行道
+    CONTROL_EXCLUSIVE_ZONE = 4; // 独占区域
+}
+
+enum ControlDirection {
+    DIR_NORTH = 0;
+    DIR_SOUTH = 1;
+    DIR_EAST = 2;
+    DIR_WEST = 3;
+    DIR_ALL = 4;
+}
+
+
+// ==================== 地图数据 ====================
+
+// 工厂地图
+message FactoryMap {
+    string map_id = 1;
+    string name = 2;
+    string version = 3;
+    
+    MapMetadata metadata = 10;
+    repeated MapNode nodes = 20;       // 节点列表
+    repeated MapEdge edges = 21;       // 边列表
+    repeated MapZone zones = 22;       // 区域列表
+}
+
+message MapMetadata {
+    float resolution_mm_per_pixel = 1;  // 分辨率
+    int32 width_pixels = 2;
+    int32 height_pixels = 3;
+    Position origin = 4;
+    string coordinate_system = 5;
+}
+
+message MapNode {
+    string node_id = 1;
+    Position position = 2;
+    NodeType node_type = 3;
+    string name = 4;
+    bool is_blocked = 5;
+    map<string, string> attributes = 6;
+}
+
+enum NodeType {
+    NODE_STANDARD = 0;       // 标准节点
+    NODE_PARKING = 1;        // 停车位
+    NODE_CHARGING = 2;       // 充电桩
+    NODE_PICKUP = 3;         // 取货点
+    NODE_DROPOFF = 4;        // 放货点
+    NODE_JUNCTION = 5;       // 路口
+    NODE_ELEVATOR = 6;       // 电梯
+    NODE_ENTRANCE = 7;       // 入口
+    NODE_EXIT = 8;           // 出口
+}
+
+message MapEdge {
+    string edge_id = 1;
+    string source_node = 2;
+    string target_node = 3;
+    float length_meters = 4;
+    EdgeDirection direction = 5;
+    float max_speed_mps = 6;       // 限速
+    bool is_blocked = 7;
+}
+
+enum EdgeDirection {
+    BIDIRECTIONAL = 0;
+    SOURCE_TO_TARGET = 1;
+    TARGET_TO_SOURCE = 2;
+}
+
+message MapZone {
+    string zone_id = 1;
+    string name = 2;
+    ZoneType type = 3;
+    repeated string node_ids = 4;    // 区域内节点ID
+    Polygon boundary = 5;
+    AccessRule access_rule = 6;
+}
+
+enum ZoneType {
+    ZONE_NORMAL = 0;
+    ZONE_RESTRICTED = 1;    // 受限区
+    ZONE_DANGER = 2;        // 危险区域
+    ZONE_CHARGING_AREA = 3; // 充电区域
+    ZONE_PARKING_AREA = 4;  // 停车区域
+    ZONE_EXCLUSIVE = 5;     // 独占区 (同一时间只允许一辆车)
+}
+
+message Polygon {
+    repeated Position vertices = 1;
+}
+
+enum AccessRule {
+    ACCESS_ALL_VEHICLES = 0;
+    ACCESS_AUTHORIZED_ONLY = 1;
+    ACCESS_FORBIDDEN = 2;
+    ACCESS_SPECIFIC_TYPES = 3;
+}
+
+
+// ==================== 事件消息 (Kafka) ====================
+
+// CloudEvents 1.0 格式的事件
+message CloudEvent {
+    string specversion = 1;       // 固定 "1.0"
+    string type = 2;              // 事件类型
+    string source = 3;            // 事件源
+    string id = 4;                // 事件ID (UUID)
+    string time = 5;              // ISO8601 时间戳
+    string datacontenttype = 6;   // 数据格式
+    bytes data = 7;               // JSON序列化的事件数据
+    map<string, string> extensions = 8;  // 扩展属性
+}
+
+// AGV状态变更事件
+message AgvStatusChangedEvent {
+    string vehicle_id = 1;
+    AgvState old_state = 2;
+    AgvState new_state = 3;
+    Position position = 4;
+    string reason = 5;
+    int64 timestamp = 6;
+}
+
+// 任务事件
+message TaskEvent {
+    string task_id = 1;
+    string order_id = 2;
+    string vehicle_id = 3;
+    TaskEventAction action = 4;
+    TaskState state = 5;
+    string message = 6;
+    int64 timestamp = 7;
+}
+
+enum TaskEventAction {
+    TASK_CREATED = 0;
+    TASK_ASSIGNED = 1;
+    TASK_STARTED = 2;
+    TASK_PROGRESS_UPDATE = 3;
+    TASK_COMPLETED = 4;
+    TASK_FAILED = 5;
+    TASK_CANCELLED = 6;
+}
+
+// 告警事件
+message AlertEvent {
+    string alert_id = 1;
+    AlertLevel level = 2;
+    AlertCategory category = 3;
+    string source_id = 4;          // 关联的资源ID (车辆/设备)
+    string title = 5;
+    string description = 6;
+    string suggested_action = 7;  // 建议处理措施
+    int64 triggered_at = 8;
+    int64 acknowledged_at = 9;
+    string acknowledged_by = 10;
+    AlertState state = 11;
+}
+
+enum AlertLevel {
+    ALERT_INFO = 0;
+    ALERT_WARNING = 1;
+    ALERT_CRITICAL = 2;
+    ALERT_EMERGENCY = 3;
+}
+
+enum AlertCategory {
+    ALERT_VEHICLE_ERROR = 0;
+    ALERT_COMMUNICATION_LOST = 1;
+    ALERT_LOW_BATTERY = 2;
+    ALERT_TRAFFIC_JAM = 3;
+    ALERT_DEADLOCK = 4;
+    ALERT_SCHEDULE_DELAY = 5;
+    ALERT_SYSTEM_ERROR = 6;
+}
+
+enum AlertState {
+    ALERT_ACTIVE = 0;
+    ALERT_ACKNOWLEDGED = 1;
+    ALERT_RESOLVED = 2;
+    ALERT_SUPPRESSED = 3;
+}
+
+
+// ==================== 配置与管理 ====================
+
+// 服务配置
+message ServiceConfig {
+    string service_name = 1;
+    string version = 2;
+    map<string, string> settings = 3;
+    repeated FeatureFlag feature_flags = 4;
+}
+
+message FeatureFlag {
+    string key = 1;
+    bool enabled = 2;
+    string rollout_percentage = 3;  // 百分比灰度
+    map<string, string> conditions = 4;
+}
+
+// 健康检查响应
+message HealthCheckResponse {
+    string status = 1;             // "healthy" | "degraded" | "unhealthy"
+    string version = 2;
+    int64 uptime_seconds = 3;
+    repeated DependencyHealth dependencies = 4;
+}
+
+message DependencyHealth {
+    string name = 1;
+    string status = 2;             // "up" | "down" | "degraded"
+    int64 latency_ms = 3;
+}

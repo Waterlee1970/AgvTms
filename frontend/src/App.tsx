@@ -16,6 +16,7 @@ import {
   BoxPlotOutlined,
   BulbOutlined,
   CarOutlined,  // P1新增: 车型管理图标
+  SafetyCertificateOutlined,  // 新增: 集成测试图标
 } from '@ant-design/icons';
 import Dashboard from './pages/Dashboard';
 import MapConfig from './pages/MapConfig';
@@ -28,6 +29,7 @@ import StrategyAndProtocol from './pages/StrategyAndProtocol';
 import DigitalTwin from './pages/DigitalTwin';
 import RLExperiment from './pages/RLExperiment';
 import VehicleTypeManagement from './pages/VehicleType';  // P1新增: 车型管理页面
+import IntegrationTest from './pages/IntegrationTest';  // 新增: 多语言集成测试页面
 
 const { Header, Sider, Content } = Layout;
 const { Text } = Typography;
@@ -48,6 +50,9 @@ const menuItems = [
   { key: 'group-advanced', type: 'group' as const, label: '高级功能 (Phase 5-8)', children: [
     { key: '/strategy', icon: <ApiOutlined />, label: '策略与协议' },
     { key: '/digital-twin', icon: <BoxPlotOutlined />, label: '3D 数字孪生' },
+  ]},
+  { key: 'group-integration', type: 'group' as const, label: '集成测试 (多语言后端)', children: [
+    { key: '/integration-test', icon: <SafetyCertificateOutlined />, label: '后端兼容性测试' },
   ]},
 ];
 
@@ -153,6 +158,7 @@ const App: React.FC = () => {
             <Route path="/rl-experiment" element={<RLExperiment />} />
             <Route path="/strategy" element={<StrategyAndProtocol />} />
             <Route path="/digital-twin" element={<DigitalTwin />} />
+            <Route path="/integration-test" element={<IntegrationTest />} />  {/* 新增: 集成测试页面 */}
           </Routes>
         </Content>
       </Layout>

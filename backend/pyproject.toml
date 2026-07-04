@@ -1,0 +1,54 @@
+[tool.pytest.ini_options]
+# ==================== 测试发现规则 ====================
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+# ==================== 自定义标记分类 ====================
+markers = [
+    "unit: 单元测试 (无需外部依赖)",
+    "integration: 集成测试 (需要数据库/MQTT等)",
+    "e2e: 端到端测试 (需要完整环境部署)",
+    "slow: 耗时较长的测试 (>5s)",
+    "performance: 性能基准测试",
+    "mqtt: 需要MQTT Broker的测试",
+    "opcua: 需要OPC UA Server的测试",
+]
+
+# ==================== 默认选项 ====================
+addopts = [
+    "-v",                              # 详细输出
+    "--strict-markers",                 # 未定义的标记报错
+    "--tb=short",                      # 简短traceback
+    "-p no:warnings",                  # 抑制警告输出
+]
+
+# ==================== 异步支持 ====================
+asyncio_mode = "auto"
+
+# ==================== 覆盖率配置 (需要pip install pytest-cov) ====================
+# 注意: 覆盖率在CI中单独启用，本地开发默认关闭以加速测试
+# addopts = [
+#     "--cov=app",
+#     "--cov-report=term-missing",
+#     "--cov-report=html:coverage_html",
+#     "--cov-fail-under=60",           # 最低覆盖率要求
+# ]
+
+# ==================== 过滤器 ====================
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+# ==================== 日志配置 ====================
+log_cli = true
+log_cli_level = "INFO"
+log_cli_format = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+
+# ==================== 超时配置 (需要pip install pytest-timeout) ====================
+# timeout = 300  # 单个测试最长运行时间(秒)
+
+# ==================== 并行测试 (需要pip install pytest-xdist) ====================
+# addopts = ["-n auto"]  # 自动检测CPU核心数并行执行

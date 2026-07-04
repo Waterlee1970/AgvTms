@@ -180,12 +180,79 @@ async def lifespan(app: FastAPI):
     else:
         logger.info("MQTT disabled (ENABLE_MQTT=False)")
 
+    # Phase 6: 多语言后端 API Gateway (路由转发/服务发现/熔断降级)
+    try:
+        from .core.multi_lang_gateway import gateway as multi_lang_gateway
+        redis_client = None
+        if settings.USE_REDIS_CACHE:
+            from .services.redis_service import redis_service
+            redis_client = redis_service._redis_client
+        
+        await multi_lang_gateway.initialize(
+            redis_client=redis_client,
+            http_timeout=30.0,
+            enable_health_check=True,
+        )
+        
+        # 注册预设的多语言服务 (Java/.NET/Go/Node.js)
+        await multi_lang_gateway.setup_preset_services()
+        
+        # 挂载网关路由 (catch-all, 优先级最低)
+        from .core.multi_lang_gateway import create_gateway_router
+        gateway_router = create_gateway_router(multi_lang_gateway)
+        app.include_router(gateway_router)  # /gateway/* + catch-all
+        
+        app.state.multi_lang_gateway = multi_lang_gateway
+        logger.info("Phase 6 MultiLangGateway initialized with %d preset services",
+                    len(multi_lang_gateway._local_services))
+    except Exception as e:
+        logger.warning("MultiLang Gateway init failed, running in standalone mode", error=str(e))
+
+    # Phase 6: 初始化多语言 Kafka 事件桥接器 (CloudEvents标准格式)
+    if settings.ENABLE_KAFKA:
+        try:
+            from .core.multi_lang_kafka import (
+                init_event_producer, get_event_producer, Topics,
+            )
+            kafka_servers = getattr(settings, 'KAFKA_BOOTSTRAP_SERVERS', 'kafka:9092')
+            producer = await init_event_producer(bootstrap_servers=kafka_servers)
+            app.state.multi_lang_event_producer = producer
+            
+            # 注册事件发布便捷方法到 app.state
+            async def publish_multi_lang_event(topic: str, data: dict, source: str = "/agvtms/python"):
+                """统一的事件发布接口 (CloudEvents格式)"""
+                event = producer.create_event(event_type=topic, source=source, data=data)
+                return await producer.publish(topic, event)
+            
+            app.state.publish_event = publish_multi_lang_event
+            logger.info("Phase 6 MultiLang Kafka Event Producer initialized")
+        except Exception as e:
+            logger.warning("MultiLang Kafka init failed", error=str(e))
+
     logger.info("Application ready")
 
     yield
 
     # ---- Shutdown ----
     logger.info("Shutting down...")
+    
+    # Phase 6: 关闭多语言网关
+    try:
+        ml_gw = getattr(app.state, 'multi_lang_gateway', None)
+        if ml_gw:
+            await ml_gw.shutdown()
+            logger.info("MultiLangGateway shutdown")
+    except Exception as e:
+        logger.warning("MultiLang Gateway shutdown error", error=str(e))
+    
+    # Phase 6: 关闭多语言Kafka生产者
+    try:
+        ml_producer = getattr(app.state, 'multi_lang_event_producer', None)
+        if ml_producer:
+            await ml_producer.close()
+            logger.info("MultiLang Kafka Event Producer closed")
+    except Exception as e:
+        logger.warning("MultiLang Kafka shutdown error", error=str(e))
     try:
         # Phase 5: 停止调度循环
         from .core.integration import stop_scheduler_loop
@@ -261,6 +328,13 @@ app = FastAPI(
 ### 协议标准 (Sprint 2)
 - **VDA5050**: AGV标准协议适配
 
+### Phase 2: API专业化升级 ✨
+- 📄 统一响应格式 (ApiResponse[T])
+- 🔍 分页/过滤/排序参数标准化
+- ✅ Pydantic v2 严格请求校验
+- 📦 批量操作框架 (部分失败处理)
+- 📚 OpenAPI 3.0 文档增强 (安全定义+示例)
+
 对标：海康威视RCS-2000 V4.0、博世输送线、罗克韦尔APS
     """,
     version=settings.APP_VERSION,
@@ -269,8 +343,19 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# ==================== Phase 2: OpenAPI增强配置 ====================
+try:
+    from app.api.openapi_config import custom_openapi_schema, OPENAPI_TAGS
+    
+    # 注入自定义OpenAPI Schema生成器 (覆盖默认行为)
+    app.openapi = lambda: custom_openapi_schema(app) if hasattr(app, 'openapi_schema') or True else custom_openapi_schema(app)
+    
+    logger.info("Phase 2 OpenAPI enhanced configuration loaded")
+except ImportError as e:
+    logger.warning(f"OpenAPI enhancement not available: {e}")
+
 # CORS middleware — 开发环境允许全量，生产环境应收紧
-_origins = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:5173").split(",")
+_origins = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:5173,http://localhost:5174").split(",")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_origins,
@@ -281,9 +366,35 @@ app.add_middleware(
 
 # 结构化日志中间件 (自动绑定request_id + 记录请求耗时)
 if _structured_log_enabled:
+    from .middleware.request_context import RequestContextMiddleware
+    app.add_middleware(RequestContextMiddleware)  # Phase 1: 请求追踪中间件
+    logger.info("RequestContextMiddleware enabled")
+    
+    # 可选: 启用结构化日志中间件 (如果可用)
     log_mw_cls = create_logging_middleware()
     if log_mw_cls:
         app.add_middleware(log_mw_cls)
+
+# API限流中间件 (Phase 1.3: 对标Resilience4j)
+try:
+    from .middleware.rate_limit import RateLimitMiddleware
+    _rate_limit_enabled = os.getenv("ENABLE_RATE_LIMIT", "false").lower() == "true"  # 默认禁用 (修复兼容性)
+
+    if _rate_limit_enabled:
+        rate_per_second = float(os.getenv("RATE_LIMIT_PER_SECOND", "100.0"))
+        burst = int(os.getenv("RATE_LIMIT_BURST", "20"))
+        
+        app.add_middleware(
+            RateLimitMiddleware,
+            rate_per_second=rate_per_second,
+            burst=burst,
+            excluded_paths=["/health", "/docs", "/redoc", "/openapi.json", "/metrics"],
+            enable_circuit_breaker=True,  # 启用熔断保护
+        )
+        logger.info(f"RateLimitMiddleware enabled (rate={rate_per_second}/s, burst={burst})")
+except ImportError as e:
+    logger.warning(f"RateLimitMiddleware not available: {e}")
+    _rate_limit_enabled = False
 
 # Include API routes
 app.include_router(routes_router)        # /api/* (核心业务API, V1兼容)
@@ -294,10 +405,63 @@ app.include_router(vehicle_router)       # /api/v2/vehicles/* + /api/v2/traffic/
 app.include_router(analytics_router)     # /api/v2/analytics/* (数据分析)
 app.include_router(simulation_router)    # /api/v2/simulation/* (仿真引擎)
 app.include_router(monitoring_router)    # /metrics + /api/v2/system/info (监控)
+
+# Phase 3: 可观测性增强路由 (SLO/告警/K8s探针)
+try:
+    from .api.observability_routes import router as observability_router
+    app.include_router(observability_router)  # /api/v3/*
+    logger.info("Phase 3 Observability routes loaded")
+except ImportError as e:
+    logger.warning(f"Observability routes not available: {e}")
+
 app.include_router(evaluator_router)     # /api/v2/evaluator/* (算法评测API)
 app.include_router(industrial_integration_router)  # /api/v2/industrial/* (OPC UA + WMS/MES 集成)
 app.include_router(phase5_8_router)              # /api/v2/advanced/* (Phase 5-8 高级功能)
 app.include_router(digital_twin_router)           # /api/v2/digital-tin/* (3D Digital Twin WebSocket)
+
+# 多语言集成测试路由 (修复 TC-004/TC-005)
+try:
+    from .api.integration_test_routes import router as integration_test_router
+    app.include_router(integration_test_router)  # /api/v2/events/publish, /api/v2/test/*
+    logger.info("Integration test routes loaded (TC-004, TC-005 fix)")
+except ImportError as e:
+    logger.warning(f"Integration test routes not available: {e}")
+
+# Phase 4: 数字孪生增强路由 (模型库/仿真加速/CAD导入/看板/MQTT桥接)
+try:
+    from .core.model_library import model_router as model_lib_router
+    app.include_router(model_lib_router)       # /api/v3/models/* (3D Model Library)
+    logger.info("Phase 4 Model Library routes loaded")
+except ImportError as e:
+    logger.warning(f"Model Library not available: {e}")
+
+try:
+    from .core.timewarp_engine import timewarp_router as timewarp_r
+    app.include_router(timewarp_r)             # /api/v3/simulation/* (TimeWarp Engine)
+    logger.info("Phase 4 TimeWarp Engine routes loaded")
+except ImportError as e:
+    logger.warning(f"TimeWarp Engine not available: {e}")
+
+try:
+    from .core.cad_importer import map_import_router as cad_importer_r
+    app.include_router(cad_importer_r)         # /api/v3/map-import/* (CAD/DXF Import)
+    logger.info("Phase 4 CAD Import routes loaded")
+except ImportError as e:
+    logger.warning(f"CAD Import not available: {e}")
+
+try:
+    from .core.dashboard_engine import dashboard_router as dashboard_r
+    app.include_router(dashboard_r)            # /api/v3/dashboard/* (Digital Twin Dashboard)
+    logger.info("Phase 4 Dashboard routes loaded")
+except ImportError as e:
+    logger.warning(f"Dashboard Engine not available: {e}")
+
+try:
+    from .core.mqtt_ws_bridge import bridge_router as mqtt_bridge_r
+    app.include_router(mqtt_bridge_r)          # /api/v3/bridge/* (MQTT-WS Bridge)
+    logger.info("Phase 4 MQTT-WS Bridge routes loaded")
+except ImportError as e:
+    logger.warning(f"MQTT-WS Bridge not available: {e}")
 
 # Phase 5.5: InfluxDB 历史数据 API
 if _influx_router_available:

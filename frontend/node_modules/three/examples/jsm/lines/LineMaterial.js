@@ -1,24 +1,10 @@
-/**
- * parameters = {
- *  color: <hex>,
- *  linewidth: <float>,
- *  dashed: <boolean>,
- *  dashScale: <float>,
- *  dashSize: <float>,
- *  dashOffset: <float>,
- *  gapSize: <float>,
- *  resolution: <Vector2>, // to be set by renderer
- * }
- */
-
 import {
 	ShaderLib,
 	ShaderMaterial,
 	UniformsLib,
 	UniformsUtils,
-	Vector2
+	Vector2,
 } from 'three';
-
 
 UniformsLib.line = {
 
@@ -419,11 +405,16 @@ ShaderLib[ 'line' ] = {
 
 class LineMaterial extends ShaderMaterial {
 
+
+	static get type() {
+
+		return 'LineMaterial';
+
+	}
+
 	constructor( parameters ) {
 
 		super( {
-
-			type: 'LineMaterial',
 
 			uniforms: UniformsUtils.clone( ShaderLib[ 'line' ].uniforms ),
 
@@ -603,12 +594,10 @@ class LineMaterial extends ShaderMaterial {
 		if ( value === true ) {
 
 			this.defines.USE_ALPHA_TO_COVERAGE = '';
-			this.extensions.derivatives = true;
 
 		} else {
 
 			delete this.defines.USE_ALPHA_TO_COVERAGE;
-			this.extensions.derivatives = false;
 
 		}
 

@@ -1,0 +1,18 @@
+{
+  "name": "_auto_881ba5cb1be64d5aa8fe5cb66c6a5a15",
+  "leadAgentId": "881ba5cb1be64d5aa8fe5cb66c6a5a15",
+  "workspacePath": "/Users/water/Documents/AgvTms",
+  "createdAt": "2026-07-04T15:39:07.544Z",
+  "options": {
+    "workspacePath": "/Users/water/Documents/AgvTms",
+    "isAutoTeam": true
+  },
+  "members": [
+    {
+      "memberId": "team-lead@_auto_881ba5cb1be64d5aa8fe5cb66c6a5a15",
+      "name": "team-lead",
+      "role": "Team Lead - coordinates the team and interacts with the user"
+    }
+  ],
+  "isAutoTeam": true
+}
