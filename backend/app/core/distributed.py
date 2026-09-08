@@ -203,6 +203,9 @@ class MessageQueue:
                         messages.append(QueueMessage(
                             id=msg_id_str, stream=stream, data=data
                         ))
+            else:
+                # Redis 不可用 (内存模式): 休眠避免消费循环空转占满 CPU
+                await asyncio.sleep(block_ms / 1000.0)
         except Exception as e:
             logger.debug("MQ consume error: %s", e)
 
